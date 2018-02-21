@@ -6,6 +6,7 @@ import com.crioprecipitati.androidpervasive1718.model.Boundary
 import java.lang.ClassCastException
 import java.sql.Timestamp
 import java.util.*
+import com.crioprecipitati.androidpervasive1718.model.Activity
 
 
 interface Payload<T, D> {
@@ -50,7 +51,10 @@ enum class WSOperations(val objectifier: (String) -> Any) {
     REMOVE_TASK({ GsonInitializer.fromJson(it, TaskAssignment::class.java) }),
     CHANGE_TASK_STATUS({ GsonInitializer.fromJson(it, TaskAssignment::class.java) }),
     ERROR_REMOVING_TASK({ GsonInitializer.fromJson(it, TaskError::class.java) }),
-    ERROR_CHANGING_STATUS({ GsonInitializer.fromJson(it, StatusError::class.java) });
+    ERROR_CHANGING_STATUS({ GsonInitializer.fromJson(it, StatusError::class.java) }),
+
+    // ACTIVITIES
+    GET_ALL_ACTIVITIES({ GsonInitializer.fromJson(it, model.MembersAdditionNotification::class.java) });
 }
 
 data class Notification(val lifeParameter: LifeParameters, val boundaries: List<Boundary>)

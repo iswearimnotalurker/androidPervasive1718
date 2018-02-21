@@ -18,7 +18,7 @@ class TeamMonitoringPresenterTest {
         loginPresenter = LoginPresenterImpl()
     }
 
-    /* Should print on console Server Error */
+    /* Should print on console Not Found */
     @Test
     fun deleteNotExistingSession() {
         teamMonitoringPresenter.onSessionClosed(-1)
