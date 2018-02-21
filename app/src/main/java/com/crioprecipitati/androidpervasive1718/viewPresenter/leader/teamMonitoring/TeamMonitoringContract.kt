@@ -22,5 +22,7 @@ interface TeamMonitoringContract {
 
         fun onMemberSelected()
 
+        fun onSessionClosed(sessionId: Int)
+
     }
 }

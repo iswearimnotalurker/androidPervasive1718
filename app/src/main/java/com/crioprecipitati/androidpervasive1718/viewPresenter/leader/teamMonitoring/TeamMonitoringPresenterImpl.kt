@@ -2,10 +2,28 @@ package com.crioprecipitati.androidpervasive1718.viewPresenter.leader.teamMonito
 
 import com.crioprecipitati.androidpervasive1718.networking.TaskWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.WSLeaderCallbacks
+import com.crioprecipitati.androidpervasive1718.networking.handlers.SessionApiHandler
+import io.reactivex.schedulers.Schedulers
 
 class TeamMonitoringPresenterImpl : TeamMonitoringContract.TeamMonitoringPresenter,WSLeaderCallbacks {
 
-    private val webSocketHelper: TaskWSAdapter = TaskWSAdapter(this)
+    override fun onSessionClosed(sessionId: Int) {
+        SessionApiHandler().closeSessionBySessionId(sessionId)
+                .subscribeOn(Schedulers.io())
+                .subscribe(
+                        { message ->
+                            //(session_list.adapter as SessionAdapter).addSession(retrievedSessions)
+                            println(message)
+                            // MT.addLeader(myself)
+                        },
+                        { e ->
+                            //Snackbar.make(session_list, e.message ?: "", Snackbar.LENGTH_LONG).show()
+                            println(e.message)
+                        }
+                )
+    }
+
+    //private val webSocketHelper: TaskWSAdapter = TaskWSAdapter(this)
 
 
     override fun attachView(view: TeamMonitoringContract.TeamMonitoringView) {

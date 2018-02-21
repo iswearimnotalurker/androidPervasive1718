@@ -19,9 +19,9 @@ interface LoginContract {
 
     interface LoginPresenter : BasePresenter<LoginView> {
 
-        fun onConnectRequested(cf: String, memberType: MemberType)
+        fun onConnectRequested()
 
-        fun onNewSessionRequested()
+        fun onNewSessionRequested(cf: String, memberType: MemberType)
 
         fun onSessionSelected() // TODO dovrà prendere un parametro sessione o qualcosa del genere
 
