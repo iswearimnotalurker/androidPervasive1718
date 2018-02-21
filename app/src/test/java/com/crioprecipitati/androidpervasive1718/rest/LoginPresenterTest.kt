@@ -1,4 +1,4 @@
-package com.crioprecipitati.androidpervasive1718
+package com.crioprecipitati.androidpervasive1718.rest
 
 import com.crioprecipitati.androidpervasive1718.viewPresenter.login.LoginContract
 import com.crioprecipitati.androidpervasive1718.viewPresenter.login.LoginPresenterImpl
@@ -18,7 +18,19 @@ class LoginPresenterTest {
 
     @Test
     fun openSessionApi() {
-        presenter.onConnectRequested("asd", MemberType.MEMBER)
-        Thread.sleep(100000)
+        presenter.onConnectRequested()
+        Thread.sleep(10000)
+    }
+
+    @Test
+    fun newSessionApiShouldOpen() {
+        presenter.onNewSessionRequested("asd", MemberType.LEADER)
+        Thread.sleep(10000)
+    }
+
+    @Test
+    fun newSessionApiShouldNotOpen() {
+        presenter.onNewSessionRequested("asd", MemberType.MEMBER)
+        Thread.sleep(10000)
     }
 }

@@ -1,14 +1,30 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.leader.teamMonitoring
 
 import com.crioprecipitati.androidpervasive1718.model.Member
-import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
-import com.crioprecipitati.androidpervasive1718.networking.webSockets.WSCallbacks
+import com.crioprecipitati.androidpervasive1718.networking.TaskWSAdapter
+import com.crioprecipitati.androidpervasive1718.networking.WSLeaderCallbacks
 import com.crioprecipitati.androidpervasive1718.utils.toJson
 import model.MembersAdditionNotification
 import model.PayloadWrapper
 import model.WSOperations
 
 class TeamMonitoringPresenterImpl : TeamMonitoringContract.TeamMonitoringPresenter, WSCallbacks {
+
+    override fun onSessionClosed(sessionId: Int) {
+        SessionApiHandler().closeSessionBySessionId(sessionId)
+                .subscribeOn(Schedulers.io())
+                .subscribe(
+                        { message ->
+                            //(session_list.adapter as SessionAdapter).addSession(retrievedSessions)
+                            println(message)
+                            // MT.addLeader(myself)
+                        },
+                        { e ->
+                            //Snackbar.make(session_list, e.message ?: "", Snackbar.LENGTH_LONG).show()
+                            println(e.message)
+                        }
+                )
+    }
 
     private val webSocketHelper: TaskWSAdapter = TaskWSAdapter(this)
 

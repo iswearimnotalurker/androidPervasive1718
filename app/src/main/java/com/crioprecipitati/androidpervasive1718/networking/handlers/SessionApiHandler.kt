@@ -14,13 +14,52 @@ class SessionApiHandler(private val api: RestApiManager = RestApiManager()) {
             val response = callResponse.execute()
 
             if (response.isSuccessful) {
-                val sessions = response.body()!!.map {
-                    SessionDNS(it.sessionId, it.patId, it.microTaskAddress)
-                }
+                val sessions = response.body()!!
                 subscriber.onNext(sessions)
                 subscriber.onComplete()
             } else {
                 subscriber.onError(Throwable(response.message()))
+            }
+        }
+    }
+
+    fun createNewSession(cf: String): Observable<SessionDNS> {
+        return Observable.create {
+            subscriber ->
+            val callResponse = api.createNewSession(cf)
+            val response = callResponse.execute()
+
+            if (response.isSuccessful) {
+                val session = response.body()!!.also {
+                    SessionDNS(it.sessionId, it.patId, it.microTaskAddress)
+                }
+                subscriber.onNext(session)
+                subscriber.onComplete()
+            } else {
+                subscriber.onError(Throwable(response.message()))
+            }
+        }
+    }
+
+    fun closeSessionBySessionId(sessionId: Int): Observable<String> {
+        return Observable.create {
+            subscriber ->
+            val callResponse = api.closeSessionBySessionId(sessionId)
+            val response = callResponse.execute()
+
+            if (response.isSuccessful) {
+                println("Session closed")
+                subscriber.onNext(response.body().toString())
+                subscriber.onComplete()
+            } else {
+                if (response.code()==404) {
+                    println("Session not found")
+                    subscriber.onNext(response.message())
+                }
+                else {
+                    println("Internal server error")
+                    subscriber.onError(Throwable(response.message()))
+                }
             }
         }
     }
