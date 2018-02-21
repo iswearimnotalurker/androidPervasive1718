@@ -13,6 +13,7 @@ class TaskWSAdapter(private val messageCallback: WSLeaderCallbacks){
         set(value) {
             field = "ws://$value"
             value.split("ws://").last()
+            println("Now connecting to $value")
             Log.d("Now connecting to $value")
         }
 
@@ -23,6 +24,7 @@ class TaskWSAdapter(private val messageCallback: WSLeaderCallbacks){
     fun initWS(){
         taskWS = BaseWebSocket(baseAddress,messageCallback::onMemberArrived)
         taskWS.send("dodo")
+        println("dodo sent")
     }
 
     fun closeWS(){
