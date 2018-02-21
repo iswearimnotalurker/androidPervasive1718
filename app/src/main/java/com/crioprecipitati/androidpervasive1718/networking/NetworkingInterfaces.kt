@@ -5,29 +5,29 @@ import okhttp3.WebSocketListener
 /**
  * Created by Edoardo Antonini on 21/02/2018.
  */
+interface WSCallbacks{
 
-interface WSMessageCallbacks {
+    fun onAlarmReceived(alarmString: String?)
 
-    /**
-     * Message received after a request for contact is fired.
-     *
-     * @param connectMessage can be different depending on the request message
-     */
-    fun onConnectMessageReceived(connectMessage: String?)
+}
 
-    /**
-     * Received without it being requested (push notification kind of thing)
-     *
-     * @param alarmMessage is a list of RoomIDs
-     */
-    fun onAlarmMessageReceived(alarmMessage: String?)
+interface WSLeaderCallbacks:WSCallbacks {
 
-    /**
-     * Received after a route request is fired by the user
-     *
-     * @param routeMessage is a list of @see RoomID
-     */
-    fun onRouteMessageReceived(routeMessage: String?)
+    fun onMemberArrived(memberString: String?)
+
+    fun onTaskCompleted(taskCompletedString: String?)
+
+}
+
+interface WSMemberCallBacks:WSCallbacks {
+
+    fun onTaskAssigned(taskAssignedString: String?)
+
+    fun onTaskRemoved(taskRemovedString: String?)
+
+    fun onTaskChanged(taskChangedString: String?)
+
+    fun onDataReceived(dataString: String?)
 
 }
 
