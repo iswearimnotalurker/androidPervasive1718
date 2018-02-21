@@ -1,9 +1,11 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.leader.teamMonitoring
 
 import com.crioprecipitati.androidpervasive1718.model.Member
-import com.crioprecipitati.androidpervasive1718.networking.TaskWSAdapter
-import com.crioprecipitati.androidpervasive1718.networking.WSLeaderCallbacks
+import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
+import com.crioprecipitati.androidpervasive1718.networking.handlers.SessionApiHandler
+import com.crioprecipitati.androidpervasive1718.networking.webSockets.WSCallbacks
 import com.crioprecipitati.androidpervasive1718.utils.toJson
+import io.reactivex.schedulers.Schedulers
 import model.MembersAdditionNotification
 import model.PayloadWrapper
 import model.WSOperations
