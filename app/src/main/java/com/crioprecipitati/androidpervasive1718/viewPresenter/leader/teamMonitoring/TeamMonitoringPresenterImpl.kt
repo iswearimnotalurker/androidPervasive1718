@@ -1,9 +1,9 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.leader.teamMonitoring
 
-import com.crioprecipitati.androidpervasive1718.networking.TaskWSAdapter
-import com.crioprecipitati.androidpervasive1718.networking.WSLeaderCallbacks
+import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
+import com.crioprecipitati.androidpervasive1718.networking.webSockets.WSLeaderCallbacks
 
-class TeamMonitoringPresenterImpl : TeamMonitoringContract.TeamMonitoringPresenter,WSLeaderCallbacks {
+class TeamMonitoringPresenterImpl : TeamMonitoringContract.TeamMonitoringPresenter, WSLeaderCallbacks {
 
     private val webSocketHelper: TaskWSAdapter = TaskWSAdapter(this)
 

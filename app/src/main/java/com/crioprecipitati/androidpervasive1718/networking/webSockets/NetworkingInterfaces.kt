@@ -1,4 +1,4 @@
-package com.crioprecipitati.androidpervasive1718.networking
+package com.crioprecipitati.androidpervasive1718.networking.webSockets
 
 import okhttp3.WebSocketListener
 
@@ -11,7 +11,7 @@ interface WSCallbacks{
 
 }
 
-interface WSLeaderCallbacks:WSCallbacks {
+interface WSLeaderCallbacks: WSCallbacks {
 
     fun onMemberArrived(memberString: String?)
 
@@ -19,7 +19,7 @@ interface WSLeaderCallbacks:WSCallbacks {
 
 }
 
-interface WSMemberCallBacks:WSCallbacks {
+interface WSMemberCallBacks: WSCallbacks {
 
     fun onTaskAssigned(taskAssignedString: String?)
 

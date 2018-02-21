@@ -1,4 +1,4 @@
-package com.crioprecipitati.androidpervasive1718.networking
+package com.crioprecipitati.androidpervasive1718.networking.webSockets
 
 import okhttp3.OkHttpClient
 import okhttp3.Request

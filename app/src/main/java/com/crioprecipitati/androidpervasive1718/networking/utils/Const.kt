@@ -1,4 +1,4 @@
-package com.crioprecipitati.androidpervasive1718.networking
+package com.crioprecipitati.androidpervasive1718.networking.utils
 
 /**
  * Created by Edoardo Antonini on 21/02/2018.
