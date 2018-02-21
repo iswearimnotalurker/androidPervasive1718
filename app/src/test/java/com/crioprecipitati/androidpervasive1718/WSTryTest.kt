@@ -10,7 +10,7 @@ import org.junit.Test
 class WSTryTest{
     @Test
     fun WSStart(){
-        TeamMonitoringPresenterImpl()
-        Thread.sleep(10000)
+        Thread(Runnable { TeamMonitoringPresenterImpl().sendAddLeaderRequest() }).start()
+        Thread.sleep(20000)
     }
 }

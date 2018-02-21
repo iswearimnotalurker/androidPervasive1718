@@ -5,29 +5,12 @@ import okhttp3.WebSocketListener
 /**
  * Created by Edoardo Antonini on 21/02/2018.
  */
+/**
+ * We have only one function for message handling this one will find unpack the payload and do the right operation
+ */
 interface WSCallbacks{
 
-    fun onAlarmReceived(alarmString: String?)
-
-}
-
-interface WSLeaderCallbacks: WSCallbacks {
-
-    fun onMemberArrived(memberString: String?)
-
-    fun onTaskCompleted(taskCompletedString: String?)
-
-}
-
-interface WSMemberCallBacks: WSCallbacks {
-
-    fun onTaskAssigned(taskAssignedString: String?)
-
-    fun onTaskRemoved(taskRemovedString: String?)
-
-    fun onTaskChanged(taskChangedString: String?)
-
-    fun onDataReceived(dataString: String?)
+    fun onMessageReceived(messageString: String?)
 
 }
 

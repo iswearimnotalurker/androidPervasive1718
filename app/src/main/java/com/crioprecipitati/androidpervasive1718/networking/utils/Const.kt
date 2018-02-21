@@ -5,4 +5,4 @@ package com.crioprecipitati.androidpervasive1718.networking.utils
  */
 
 const val WS_DEFAULT_TASK_URI= "ws://127.0.0.1:8200/task"
-const val WS_DEFAULT_NOTIFIER_URI= "ws://127.0.0.1:8300"
+const val WS_DEFAULT_NOTIFIER_URI= "ws://127.0.0.1:8300/notifier"

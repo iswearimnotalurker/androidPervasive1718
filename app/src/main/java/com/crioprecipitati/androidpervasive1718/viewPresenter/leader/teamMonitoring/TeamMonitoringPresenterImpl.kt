@@ -1,9 +1,14 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.leader.teamMonitoring
 
+import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
-import com.crioprecipitati.androidpervasive1718.networking.webSockets.WSLeaderCallbacks
+import com.crioprecipitati.androidpervasive1718.networking.webSockets.WSCallbacks
+import com.crioprecipitati.androidpervasive1718.utils.toJson
+import model.MembersAdditionNotification
+import model.PayloadWrapper
+import model.WSOperations
 
-class TeamMonitoringPresenterImpl : TeamMonitoringContract.TeamMonitoringPresenter, WSLeaderCallbacks {
+class TeamMonitoringPresenterImpl : TeamMonitoringContract.TeamMonitoringPresenter, WSCallbacks {
 
     private val webSocketHelper: TaskWSAdapter = TaskWSAdapter(this)
 
@@ -24,15 +29,15 @@ class TeamMonitoringPresenterImpl : TeamMonitoringContract.TeamMonitoringPresent
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun onAlarmReceived(alarmString: String?) {
-        println(alarmString)
+    override fun onMessageReceived(messageString: String?) {
+        println("Ricevuto: "+messageString) //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun onMemberArrived(memberString: String?) {
-        println(memberString)
+    fun sendAddLeaderRequest(){
+        var members: List<Member> = listOf(Member(1,"Leader"))
+        val message = PayloadWrapper(0, WSOperations.ADD_LEADER, MembersAdditionNotification(members).toJson())
+        webSocketHelper.webSocket.send(message.toJson())
     }
 
-    override fun onTaskCompleted(taskCompletedString: String?) {
-        println(taskCompletedString)
-    }
+
 }
