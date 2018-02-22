@@ -8,6 +8,8 @@ import com.crioprecipitati.androidpervasive1718.networking.webSockets.NotifierWS
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.WSCallbacks
 import com.crioprecipitati.androidpervasive1718.utils.toJson
+import com.crioprecipitati.androidpervasive1718.viewPresenter.login.LoginContract
+import com.crioprecipitati.androidpervasive1718.viewPresenter.login.LoginPresenterImpl
 import io.reactivex.android.schedulers.AndroidSchedulers
 import model.MembersAdditionNotification
 import model.PayloadWrapper
@@ -18,6 +20,7 @@ object TeamMonitoringPresenterImpl : TeamMonitoringContract.TeamMonitoringPresen
 
     private val taskWebSocketHelper: TaskWSAdapter = TaskWSAdapter
     private val notifierWebSocketHelper: NotifierWSAdapter = NotifierWSAdapter
+    private val loginPresenter: LoginContract.LoginPresenter = LoginPresenterImpl
     override lateinit var view:TeamMonitoringContract.TeamMonitoringView
 
     override fun onSessionClosed(sessionId: Int) {
@@ -51,7 +54,7 @@ object TeamMonitoringPresenterImpl : TeamMonitoringContract.TeamMonitoringPresen
     }
 
     override fun onTaskDeleted() {
-        taskWebSocketHelper.webSocket.send(PayloadWrapper(0,WSOperations.REMOVE_TASK,TaskAssignment(Member.defaultMember(), Task.defaultTask()).toJson()).toJson())
+        taskWebSocketHelper.webSocket.send(PayloadWrapper(loginPresenter.sessionId,WSOperations.REMOVE_TASK,TaskAssignment(Member.defaultMember(), Task.defaultTask()).toJson()).toJson())
     }
 
     override fun onMemberSelected() {
