@@ -5,15 +5,12 @@ import com.crioprecipitati.androidpervasive1718.base.BaseView
 import com.crioprecipitati.androidpervasive1718.model.Activity
 import com.crioprecipitati.androidpervasive1718.model.Member
 
-enum class ActivityTypes {
-    DRUGS, MANOEUVRES, DIAGNOSTICS
-}
 
 interface ActivitySelectionContract {
 
     interface ActivitySelectionView : BaseView {
 
-        fun showActivityByActivityType(activityTypes: ActivityTypes)
+        fun showActivityByActivityType(activityList: List<Activity>)
 
     }
 
@@ -21,7 +18,7 @@ interface ActivitySelectionContract {
 
         var activityList: List<Activity>
 
-        fun onActivityTypeSelected(activityTypes: ActivityTypes)
+        fun onActivityTypeSelected(activityTypeId: Int)
 
         fun onActivitySelected(currentMember: Member)
 

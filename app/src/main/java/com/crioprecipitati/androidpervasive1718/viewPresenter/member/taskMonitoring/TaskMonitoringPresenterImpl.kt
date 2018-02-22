@@ -26,8 +26,8 @@ object TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.Ta
     override fun onTaskCompletionRequested() {
         //mock
         val member: Member = Member.emptyMember()
-        val activity: Activity = Activity(1,"Ciao",1,"FGT",2)
-        val task: Task = Task(loginPresenter.sessionId, loginPresenter.sessionId,member.id, Timestamp(Date().time - 1000),Timestamp(Date().time),activity.id,Status.FINISHED.id)
+        val activity = Activity(1,"Ciao",1,"FGT",2)
+        val task = Task(loginPresenter.sessionId, loginPresenter.sessionId,member.id, Timestamp(Date().time - 1000),Timestamp(Date().time),activity.id,Status.FINISHED.id)
 
         taskWebSocketHelper.webSocket.send(PayloadWrapper(loginPresenter.sessionId,WSOperations.CHANGE_TASK_STATUS,TaskAssignment(member,task).toJson()).toJson())
         notifierWebSocketHelper.webSocket.send(PayloadWrapper(loginPresenter.sessionId,WSOperations.CLOSE,Member.defaultMember().toJson()).toJson())

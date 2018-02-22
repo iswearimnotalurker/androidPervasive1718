@@ -23,8 +23,10 @@ object ActivitySelectionPresenterImpl : BasePresenterImpl<ActivitySelectionContr
     private val loginPresenter: LoginContract.LoginPresenter = LoginPresenterImpl
     override var view: ActivitySelectionContract.ActivitySelectionView? = null
 
-    override fun onActivityTypeSelected(activityTypes: ActivityTypes) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun onActivityTypeSelected(activityTypeId: Int) {
+        val selectedActivities: List<Activity> = activityList.filter { it.activityTypeId == activityTypeId }
+        view?.showActivityByActivityType(selectedActivities)
+
     }
 
     override fun onActivitySelected(member: Member) {
