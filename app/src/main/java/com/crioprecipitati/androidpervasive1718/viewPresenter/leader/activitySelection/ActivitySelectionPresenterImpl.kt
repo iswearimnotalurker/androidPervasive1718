@@ -4,6 +4,7 @@ import com.crioprecipitati.androidpervasive1718.base.BasePresenter
 import com.crioprecipitati.androidpervasive1718.model.Activity
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.Task
+import com.crioprecipitati.androidpervasive1718.networking.webSockets.NotifierWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
 import com.crioprecipitati.androidpervasive1718.utils.toJson
 import model.MembersAdditionNotification
@@ -15,7 +16,8 @@ object ActivitySelectionPresenterImpl : BasePresenter<ActivitySelectionContract.
 
     override var activityList: List<Activity> = listOf()
     override lateinit var view: ActivitySelectionContract.ActivitySelectionView
-    private val webSocketHelper: TaskWSAdapter = TaskWSAdapter
+    private val taskWebSocketHelper: TaskWSAdapter = TaskWSAdapter
+    private val notifierWebSocket: NotifierWSAdapter = NotifierWSAdapter
 
     override fun attachView(view: ActivitySelectionContract.ActivitySelectionView) {
         this.view=view
@@ -30,11 +32,13 @@ object ActivitySelectionPresenterImpl : BasePresenter<ActivitySelectionContract.
     }
 
     override fun onActivitySelected(member: Member) {
-        webSocketHelper.webSocket.send(PayloadWrapper(0,WSOperations.ADD_TASK,TaskAssignment(member, Task.emptyTask()).toJson()).toJson())
+        taskWebSocketHelper.webSocket.send(PayloadWrapper(0,WSOperations.ADD_TASK,TaskAssignment(member, Task.emptyTask()).toJson()).toJson())
+        notifierWebSocket.webSocket.send(PayloadWrapper(0,WSOperations.SUBSCRIBE,member.toJson()).toJson())
+
     }
 
     override fun getActivityByActivityType() {
         var members: List<Member> = listOf(Member(1,"Leader"))
-        webSocketHelper.webSocket.send(PayloadWrapper(0,WSOperations.GET_ALL_ACTIVITIES,MembersAdditionNotification(members).toJson()).toJson())
+        taskWebSocketHelper.webSocket.send(PayloadWrapper(0,WSOperations.GET_ALL_ACTIVITIES,MembersAdditionNotification(members).toJson()).toJson())
     }
 }

@@ -21,7 +21,7 @@ class CallbackHandler:WSCallbacks {
         messageWrapper?.let {
             with(messageWrapper) {
 
-                fun taskAssignementHanding(){
+                fun taskAssignmentHandling(){
                     val taskAssignment: TaskAssignment = it.objectify(body)
                     teamMonitoringPresenter.view.showAndUpdateTaskList(taskAssignment.member,taskAssignment.task)
                 }
@@ -48,15 +48,16 @@ class CallbackHandler:WSCallbacks {
                 }
 
                 when (subject) {
+                    WSOperations.LIST_MEMBERS -> memberAdditionHandling()
                     WSOperations.ADD_MEMBER -> memberAdditionHandling()
-                    WSOperations.ADD_TASK -> taskAssignementHanding()
-                    WSOperations.CHANGE_TASK_STATUS -> taskAssignementHanding()
-                    WSOperations.REMOVE_TASK -> taskAssignementHanding()
+                    WSOperations.ADD_TASK -> taskAssignmentHandling()
+                    WSOperations.CHANGE_TASK_STATUS -> taskAssignmentHandling()
+                    WSOperations.REMOVE_TASK -> taskAssignmentHandling()
                     WSOperations.ERROR_CHANGING_STATUS -> taskErrorHandling()
                     WSOperations.ERROR_REMOVING_TASK -> taskErrorHandling()
-                    WSOperations.UPDATE -> updateHandling()
                     WSOperations.SET_ALL_ACTIVITIES -> activityAdditionHandling()
-                    W
+                    WSOperations.UPDATE -> updateHandling()
+                    //TODO NOTIFY
                     }
                 }
                 }
