@@ -1,5 +1,6 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.login
 
+import com.crioprecipitati.androidpervasive1718.base.BasePresenterImpl
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.SessionDNS
 import com.crioprecipitati.androidpervasive1718.networking.RestApiManager
@@ -19,15 +20,6 @@ object LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginC
     override var sessionId: Int = -1
     private lateinit var member: Member
     override var view: LoginContract.LoginView? = null
-
-
-    override fun attachView(view: LoginContract.LoginView) {
-        view = view
-    }
-
-    override fun detachView() {
-        view = null
-    }
 
     override fun onConnectRequested(memberType: MemberType, id: Int, name: String) {
 

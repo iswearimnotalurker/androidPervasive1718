@@ -1,5 +1,6 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.leader.teamMonitoring
 
+import com.crioprecipitati.androidpervasive1718.base.BasePresenterImpl
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.Task
 import com.crioprecipitati.androidpervasive1718.networking.RestApiManager
@@ -21,15 +22,6 @@ object TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Te
     private val loginPresenter: LoginContract.LoginPresenter = LoginPresenterImpl
     override var view:TeamMonitoringContract.TeamMonitoringView? = null
     override var member: Member? = null
-
-
-    override fun attachView(view: TeamMonitoringContract.TeamMonitoringView) {
-        this.view = view
-    }
-
-    override fun detachView() {
-        this.view = null
-    }
 
     override fun onTaskDeleted() {
         taskWebSocketHelper.webSocket.send(PayloadWrapper(loginPresenter.sessionId,WSOperations.REMOVE_TASK,TaskAssignment(Member.defaultMember(), Task.defaultTask()).toJson()).toJson())
