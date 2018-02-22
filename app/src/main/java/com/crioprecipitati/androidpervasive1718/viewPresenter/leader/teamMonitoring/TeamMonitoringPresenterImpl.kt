@@ -20,7 +20,7 @@ object TeamMonitoringPresenterImpl : TeamMonitoringContract.TeamMonitoringPresen
     private val notifierWebSocketHelper: NotifierWSAdapter = NotifierWSAdapter
     private val loginPresenter: LoginContract.LoginPresenter = LoginPresenterImpl
     override var view:TeamMonitoringContract.TeamMonitoringView? = null
-
+    override var member: Member? = null
 
 
     override fun attachView(view: TeamMonitoringContract.TeamMonitoringView) {
@@ -36,8 +36,7 @@ object TeamMonitoringPresenterImpl : TeamMonitoringContract.TeamMonitoringPresen
     }
 
     override fun onMemberSelected() {
-        //TODO APERTURA DIALOG
-        TODO("Start ActivitySelectionActivity") //To change body of created functions use File | Settings | File Templates.
+        member?.also { view?.showActivitySelectionActivity(it) }
     }
 
     //per fine intervento
