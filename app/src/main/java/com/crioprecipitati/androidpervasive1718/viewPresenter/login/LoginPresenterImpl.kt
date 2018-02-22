@@ -19,6 +19,7 @@ object LoginPresenterImpl : LoginContract.LoginPresenter, WSCallbacks {
 
     private lateinit var loginView: LoginContract.LoginView
     private val webSocketHelper: TaskWSAdapter = TaskWSAdapter
+    private lateinit var member: Member
     // This will be removed from here
     lateinit var activities: List<Activity>
 
@@ -36,14 +37,17 @@ object LoginPresenterImpl : LoginContract.LoginPresenter, WSCallbacks {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun onConnectRequested(memberType: MemberType) {
+    override fun onConnectRequested(memberType: MemberType, id: Int, name: String) {
+
+        member = Member(id, name)
+
         val service = RestApiManager.createService(SessionApi::class.java)
         var observable: Observable<List<SessionDNS>>
 
         if (memberType.equals(MemberType.MEMBER))
             observable = service.getAllSessions()
         else
-            observable = service.getAllSessionsByLeaderId(Member(1,"Leader").id)
+            observable = service.getAllSessionsByLeaderId(member.id)
 
         observable.observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { /*loginView?.startLoadingState()*/ }

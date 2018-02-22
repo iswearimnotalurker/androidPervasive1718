@@ -19,7 +19,7 @@ interface LoginContract {
 
     interface LoginPresenter : BasePresenter<LoginView> {
 
-        fun onConnectRequested(memberType: MemberType)
+        fun onConnectRequested(memberType: MemberType, id: Int, name: String)
 
         fun onNewSessionRequested(cf: String, memberType: MemberType)
 
