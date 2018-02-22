@@ -9,6 +9,7 @@ import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdap
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.WSCallbacks
 import com.crioprecipitati.androidpervasive1718.utils.GsonInitializer.gson
 import com.crioprecipitati.androidpervasive1718.utils.toJson
+import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import model.GenericResponse
 import model.MembersAdditionNotification
@@ -29,12 +30,16 @@ object LoginPresenterImpl : LoginContract.LoginPresenter {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun onConnectRequested() {
+    override fun onConnectRequested(memberType: MemberType) {
+        val service = RestApiManager.createService(SessionApi::class.java)
+        var observable: Observable<List<SessionDNS>>
 
-        RestApiManager
-            .createService(SessionApi::class.java)
-            .getAllSessions()
-            .observeOn(AndroidSchedulers.mainThread())
+        if (memberType.equals(MemberType.MEMBER))
+            observable = service.getAllSessions()
+        else
+            observable = service.getAllSessionsByLeaderId(Member(1,"Leader").id)
+
+        observable.observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { /*loginView?.startLoadingState()*/ }
             .doAfterTerminate { /*loginView?.stopLoadingState()*/ }
             .subscribe(

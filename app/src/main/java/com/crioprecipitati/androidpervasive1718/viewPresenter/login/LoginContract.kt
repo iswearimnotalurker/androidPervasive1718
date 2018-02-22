@@ -20,9 +20,9 @@ interface LoginContract {
 
     interface LoginPresenter : BasePresenter<LoginView> {
 
-        var sessionId:Int
+        var sessionId :Int
 
-        fun onConnectRequested()
+        fun onConnectRequested(memberType: MemberType)
 
         fun onNewSessionRequested(cf: String, memberType: MemberType)
 

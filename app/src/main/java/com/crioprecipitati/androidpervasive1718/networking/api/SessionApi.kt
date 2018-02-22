@@ -12,6 +12,9 @@ interface SessionApi {
     @GET("session/all")
     fun getAllSessions(): Observable<List<SessionDNS>>;
 
+    @GET("session/all/{memberId}")
+    fun getAllSessionsByLeaderId(@Path("memberId") memberId: Int): Observable<List<SessionDNS>>
+
     @POST("session/new/{patId}")
     fun createNewSession(@Path("patId") patId: String): Observable<SessionDNS>;
 
