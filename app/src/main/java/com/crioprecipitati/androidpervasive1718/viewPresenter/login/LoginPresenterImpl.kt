@@ -1,5 +1,6 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.login
 
+import com.crioprecipitati.androidpervasive1718.base.BasePresenterImpl
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.SessionDNS
 import com.crioprecipitati.androidpervasive1718.networking.RestApiManager
@@ -13,28 +14,13 @@ import model.MembersAdditionNotification
 import model.PayloadWrapper
 import model.WSOperations
 
-object LoginPresenterImpl : LoginContract.LoginPresenter {
+object LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginContract.LoginPresenter {
 
-    private var loginView: LoginContract.LoginView? = null
     private val webSocketHelper: TaskWSAdapter = TaskWSAdapter
     override var sessionId: Int = -1
     private lateinit var member: Member
-    // This will be removed from here
-    lateinit var activities: List<Activity>
+    override var view: LoginContract.LoginView? = null
 
-    // Should be used only from onSessionSelected
-    override fun onMessageReceived(messageString: String?) {
-        activities = gson.fromJson((gson.fromJson(messageString, PayloadWrapper::class.java).body), Array<Activity>::class.java).toList()
-        if (activities.isNotEmpty()) println("We got activities!")
-    }
-
-    override fun attachView(view: LoginContract.LoginView) {
-        loginView = view
-    }
-
-    override fun detachView() {
-        loginView = null
-    }
 
     override fun onConnectRequested(memberType: MemberType, id: Int, name: String) {
 
@@ -49,11 +35,13 @@ object LoginPresenterImpl : LoginContract.LoginPresenter {
             observable = service.getAllSessionsByLeaderId(member.id)
 
         observable.observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { /*loginView?.startLoadingState()*/ }
-            .doAfterTerminate { /*loginView?.stopLoadingState()*/ }
+            .doOnSubscribe { /*view
+           ?.startLoadingState()*/ }
+            .doAfterTerminate { /*view
+           ?.stopLoadingState()*/ }
             .subscribe(
                     { sessionList ->
-                        loginView?.toggleViewForMemberType(memberType)
+                        view?.toggleViewForMemberType(memberType)
                         // View logic here
                         sessionList.forEach {
                             it -> println(it)
@@ -73,8 +61,10 @@ object LoginPresenterImpl : LoginContract.LoginPresenter {
                 .createService(SessionApi::class.java)
                 .createNewSession(cf)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { /*loginView?.startLoadingState()*/ }
-                .doAfterTerminate { /*loginView?.stopLoadingState()*/ }
+                .doOnSubscribe { /*view
+               ?.startLoadingState()*/ }
+                .doAfterTerminate { /*view
+               ?.stopLoadingState()*/ }
                 .subscribe(
                         { sessionInfo ->
                             println(sessionInfo as SessionDNS)

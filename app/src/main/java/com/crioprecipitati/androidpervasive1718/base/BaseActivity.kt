@@ -20,7 +20,7 @@ interface BaseView {
 
 }
 
-abstract class BaseActivity<in V : BaseView, P : BasePresenter<V>> : AppCompatActivity(), BaseView {
+abstract class BaseActivity<V : BaseView, P : BasePresenter<V>> : AppCompatActivity(), BaseView {
 
     protected abstract var presenter: P
 

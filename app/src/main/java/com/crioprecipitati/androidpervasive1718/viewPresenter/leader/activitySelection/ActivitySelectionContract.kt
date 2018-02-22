@@ -20,7 +20,6 @@ interface ActivitySelectionContract {
     interface ActivitySelectionPresenter : BasePresenter<ActivitySelectionView> {
 
         var activityList: List<Activity>
-        var view: ActivitySelectionContract.ActivitySelectionView
 
         fun onActivityTypeSelected(activityTypes: ActivityTypes)
 

@@ -1,6 +1,6 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonitoring
 
-import com.crioprecipitati.androidpervasive1718.base.BasePresenter
+import com.crioprecipitati.androidpervasive1718.base.BasePresenterImpl
 import com.crioprecipitati.androidpervasive1718.model.Activity
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.Status
@@ -16,19 +16,12 @@ import model.WSOperations
 import java.sql.Timestamp
 import java.util.*
 
-object TaskMonitoringPresenterImpl : BasePresenter<TaskMonitoringContract.TaskMonitoringView>, TaskMonitoringContract.TaskMonitoringPresenter {
+object TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.TaskMonitoringView>(), TaskMonitoringContract.TaskMonitoringPresenter {
 
     private val taskWebSocketHelper: TaskWSAdapter = TaskWSAdapter
     private val notifierWebSocketHelper: NotifierWSAdapter = NotifierWSAdapter
     private val loginPresenter: LoginContract.LoginPresenter = LoginPresenterImpl
-
-    override fun attachView(view: TaskMonitoringContract.TaskMonitoringView) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun detachView() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override var view: TaskMonitoringContract.TaskMonitoringView? = null
 
     override fun onTaskCompletionRequested() {
         //mock

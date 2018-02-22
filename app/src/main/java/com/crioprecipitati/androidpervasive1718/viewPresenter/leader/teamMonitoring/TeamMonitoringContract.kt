@@ -21,8 +21,6 @@ interface TeamMonitoringContract {
 
     interface TeamMonitoringPresenter : BasePresenter<TeamMonitoringView> {
 
-        var view: TeamMonitoringContract.TeamMonitoringView?
-
         fun onTaskDeleted()
 
         fun onMemberSelected()
