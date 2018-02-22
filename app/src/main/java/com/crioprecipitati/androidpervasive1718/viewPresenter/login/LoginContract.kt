@@ -22,7 +22,7 @@ interface LoginContract {
 
         var sessionId :Int
 
-        fun onConnectRequested(memberType: MemberType)
+        fun onConnectRequested(memberType: MemberType, id: Int, name: String)
 
         fun onNewSessionRequested(cf: String, memberType: MemberType)
 

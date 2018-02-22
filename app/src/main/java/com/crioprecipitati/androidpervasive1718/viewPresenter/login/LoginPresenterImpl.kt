@@ -18,6 +18,15 @@ object LoginPresenterImpl : LoginContract.LoginPresenter {
     private var loginView: LoginContract.LoginView? = null
     private val webSocketHelper: TaskWSAdapter = TaskWSAdapter
     override var sessionId: Int = -1
+    private lateinit var member: Member
+    // This will be removed from here
+    lateinit var activities: List<Activity>
+
+    // Should be used only from onSessionSelected
+    override fun onMessageReceived(messageString: String?) {
+        activities = gson.fromJson((gson.fromJson(messageString, PayloadWrapper::class.java).body), Array<Activity>::class.java).toList()
+        if (activities.isNotEmpty()) println("We got activities!")
+    }
 
     override fun attachView(view: LoginContract.LoginView) {
         loginView = view
@@ -27,14 +36,17 @@ object LoginPresenterImpl : LoginContract.LoginPresenter {
         loginView = null
     }
 
-    override fun onConnectRequested(memberType: MemberType) {
+    override fun onConnectRequested(memberType: MemberType, id: Int, name: String) {
+
+        member = Member(id, name)
+
         val service = RestApiManager.createService(SessionApi::class.java)
         val observable: Observable<List<SessionDNS>>
 
         if (memberType == MemberType.MEMBER)
             observable = service.getAllSessions()
         else
-            observable = service.getAllSessionsByLeaderId(Member(1,"Leader").id)
+            observable = service.getAllSessionsByLeaderId(member.id)
 
         observable.observeOn(AndroidSchedulers.mainThread())
             .doOnSubscribe { /*loginView?.startLoadingState()*/ }
