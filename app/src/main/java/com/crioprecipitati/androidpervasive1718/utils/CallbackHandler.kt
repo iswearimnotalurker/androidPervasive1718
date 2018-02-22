@@ -1,11 +1,12 @@
 package com.crioprecipitati.androidpervasive1718.utils
 
-import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.WSCallbacks
 import com.crioprecipitati.androidpervasive1718.viewPresenter.leader.activitySelection.ActivitySelectionContract
 import com.crioprecipitati.androidpervasive1718.viewPresenter.leader.activitySelection.ActivitySelectionPresenterImpl
 import com.crioprecipitati.androidpervasive1718.viewPresenter.leader.teamMonitoring.TeamMonitoringContract
 import com.crioprecipitati.androidpervasive1718.viewPresenter.leader.teamMonitoring.TeamMonitoringPresenterImpl
+import com.crioprecipitati.androidpervasive1718.viewPresenter.login.LoginContract
+import com.crioprecipitati.androidpervasive1718.viewPresenter.login.LoginPresenterImpl
 import model.*
 
 /**
@@ -13,8 +14,9 @@ import model.*
  */
 class CallbackHandler:WSCallbacks {
 
-    val teamMonitoringPresenter : TeamMonitoringContract.TeamMonitoringPresenter = TeamMonitoringPresenterImpl
-    val activitySelectionPresenter: ActivitySelectionContract.ActivitySelectionPresenter = ActivitySelectionPresenterImpl
+    private val teamMonitoringPresenter : TeamMonitoringContract.TeamMonitoringPresenter = TeamMonitoringPresenterImpl
+    private val activitySelectionPresenter: ActivitySelectionContract.ActivitySelectionPresenter = ActivitySelectionPresenterImpl
+    private val loginPresenter: LoginContract.LoginPresenter = LoginPresenterImpl
     override fun onMessageReceived(messageString: String?) {
 
         val messageWrapper: PayloadWrapper = GsonInitializer.fromJson(messageString!!,PayloadWrapper::class.java)
@@ -47,6 +49,12 @@ class CallbackHandler:WSCallbacks {
                     activitySelectionPresenter.activityList = activityAddition.activities
                 }
 
+                fun leaderResponseHandling(){
+                    val leaderResponse: GenericResponse = it.objectify(body)
+                    loginPresenter.onLeaderCreationResponse(leaderResponse)
+
+                }
+
                 when (subject) {
                     WSOperations.LIST_MEMBERS -> memberAdditionHandling()
                     WSOperations.ADD_MEMBER -> memberAdditionHandling()
@@ -57,6 +65,7 @@ class CallbackHandler:WSCallbacks {
                     WSOperations.ERROR_REMOVING_TASK -> taskErrorHandling()
                     WSOperations.SET_ALL_ACTIVITIES -> activityAdditionHandling()
                     WSOperations.UPDATE -> updateHandling()
+                    WSOperations.LEADER_RESPONSE -> leaderResponseHandling()
                     //TODO NOTIFY
                     }
                 }

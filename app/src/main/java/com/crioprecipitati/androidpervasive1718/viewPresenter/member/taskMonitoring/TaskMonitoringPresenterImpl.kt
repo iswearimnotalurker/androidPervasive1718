@@ -8,6 +8,8 @@ import com.crioprecipitati.androidpervasive1718.model.Task
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.NotifierWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
 import com.crioprecipitati.androidpervasive1718.utils.toJson
+import com.crioprecipitati.androidpervasive1718.viewPresenter.login.LoginContract
+import com.crioprecipitati.androidpervasive1718.viewPresenter.login.LoginPresenterImpl
 import model.PayloadWrapper
 import model.TaskAssignment
 import model.WSOperations
@@ -18,6 +20,8 @@ object TaskMonitoringPresenterImpl : BasePresenter<TaskMonitoringContract.TaskMo
 
     private val taskWebSocketHelper: TaskWSAdapter = TaskWSAdapter
     private val notifierWebSocketHelper: NotifierWSAdapter = NotifierWSAdapter
+    private val loginPresenter: LoginContract.LoginPresenter = LoginPresenterImpl
+
     override fun attachView(view: TaskMonitoringContract.TaskMonitoringView) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -30,9 +34,9 @@ object TaskMonitoringPresenterImpl : BasePresenter<TaskMonitoringContract.TaskMo
         //mock
         val member: Member = Member.emptyMember()
         val activity: Activity = Activity(1,"Ciao",1,"FGT",2)
-        val task: Task = Task(1,0,member.id, Timestamp(Date().time - 1000),Timestamp(Date().time),activity.id,Status.FINISHED.id)
+        val task: Task = Task(loginPresenter.sessionId, loginPresenter.sessionId,member.id, Timestamp(Date().time - 1000),Timestamp(Date().time),activity.id,Status.FINISHED.id)
 
-        taskWebSocketHelper.webSocket.send(PayloadWrapper(0,WSOperations.CHANGE_TASK_STATUS,TaskAssignment(member,task).toJson()).toJson())
-        notifierWebSocketHelper.webSocket.send(PayloadWrapper(0,WSOperations.CLOSE,Member.defaultMember().toJson()).toJson())
+        taskWebSocketHelper.webSocket.send(PayloadWrapper(loginPresenter.sessionId,WSOperations.CHANGE_TASK_STATUS,TaskAssignment(member,task).toJson()).toJson())
+        notifierWebSocketHelper.webSocket.send(PayloadWrapper(loginPresenter.sessionId,WSOperations.CLOSE,Member.defaultMember().toJson()).toJson())
     }
 }

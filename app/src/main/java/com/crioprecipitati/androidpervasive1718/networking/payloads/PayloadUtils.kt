@@ -11,7 +11,7 @@ import com.crioprecipitati.androidpervasive1718.model.Activity
 
 interface Payload<T, D> {
 
-    val sid: Long // Session model.Payload
+    val sid: Int // Session model.Payload
     val subject: T
     val body: D
     val time: String
@@ -28,7 +28,7 @@ inline fun <reified X> PayloadWrapper.objectify(json: String): X {
     } else throw ClassCastException("Class Cast Error")
 }
 
-data class PayloadWrapper(override val sid: Long,
+data class PayloadWrapper(override val sid: Int,
                           override val subject: WSOperations,
                           override val body: String,
                           override val time: String = Payload.getTime()) :
@@ -56,10 +56,10 @@ enum class WSOperations(val objectifier: (String) -> Any) {
     ERROR_CHANGING_STATUS({ GsonInitializer.fromJson(it, StatusError::class.java) }),
 
     // ACTIVITIES
-    GET_ALL_ACTIVITIES({ GsonInitializer.fromJson(it, model.MembersAdditionNotification::class.java) }),
+    GET_ALL_ACTIVITIES({ GsonInitializer.fromJson(it, MembersAdditionNotification::class.java) }),
     SET_ALL_ACTIVITIES({ GsonInitializer.fromJson(it, ActivityAdditionNotification::class.java) });
 }
-data class GenericResponse(val response: String)
+data class GenericResponse(val message: String)
 
 data class Notification(val lifeParameter: LifeParameters, val boundaries: List<Boundary>)
 
