@@ -1,9 +1,11 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonitoring
 
 import com.crioprecipitati.androidpervasive1718.base.BasePresenter
+import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
 
-class TaskMonitoringPresenterImpl : BasePresenter<TaskMonitoringContract.TaskMonitoringView>, TaskMonitoringContract.TaskMonitoringPresenter {
+object TaskMonitoringPresenterImpl : BasePresenter<TaskMonitoringContract.TaskMonitoringView>, TaskMonitoringContract.TaskMonitoringPresenter {
 
+    private val webSocketHelper: TaskWSAdapter = TaskWSAdapter
     override fun attachView(view: TaskMonitoringContract.TaskMonitoringView) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
@@ -13,6 +15,6 @@ class TaskMonitoringPresenterImpl : BasePresenter<TaskMonitoringContract.TaskMon
     }
 
     override fun onTaskCompletionRequested() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("change status to finished") //To change body of created functions use File | Settings | File Templates.
     }
 }

@@ -14,10 +14,10 @@ import model.MembersAdditionNotification
 import model.PayloadWrapper
 import model.WSOperations
 
-class LoginPresenterImpl : LoginContract.LoginPresenter, WSCallbacks {
+object LoginPresenterImpl : LoginContract.LoginPresenter, WSCallbacks {
 
     private lateinit var loginView: LoginContract.LoginView
-    private val webSocketHelper: TaskWSAdapter = TaskWSAdapter(this)
+    private val webSocketHelper: TaskWSAdapter = TaskWSAdapter
     // This will be removed from here
     lateinit var activities: List<Activity>
 
@@ -82,11 +82,13 @@ class LoginPresenterImpl : LoginContract.LoginPresenter, WSCallbacks {
     override fun onSessionSelected(memberType: MemberType) {
         if (memberType.equals(MemberType.LEADER)) {
             var members: List<Member> = listOf(Member(1,"Leader"))
-            val message = PayloadWrapper(0, WSOperations.GET_ALL_ACTIVITIES, MembersAdditionNotification(members).toJson())
+            val message = PayloadWrapper(0, WSOperations.ADD_LEADER, MembersAdditionNotification(members).toJson())
             webSocketHelper.webSocket.send(message.toJson())
         }
         else {
-            TODO("not implemented")
+            var members: List<Member> = listOf(Member(2,"Member"))
+            val message = PayloadWrapper(0, WSOperations.ADD_MEMBER, MembersAdditionNotification(members).toJson())
+            webSocketHelper.webSocket.send(message.toJson())
         } //To change body of created functions use File | Settings | File Templates.
     }
 }

@@ -1,6 +1,7 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.leader.teamMonitoring
 
 import com.crioprecipitati.androidpervasive1718.model.Member
+import com.crioprecipitati.androidpervasive1718.model.Task
 import com.crioprecipitati.androidpervasive1718.networking.RestApiManager
 import com.crioprecipitati.androidpervasive1718.networking.api.SessionApi
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
@@ -9,11 +10,12 @@ import com.crioprecipitati.androidpervasive1718.utils.toJson
 import io.reactivex.android.schedulers.AndroidSchedulers
 import model.MembersAdditionNotification
 import model.PayloadWrapper
+import model.TaskAssignment
 import model.WSOperations
 
-object TeamMonitoringPresenterImpl : TeamMonitoringContract.TeamMonitoringPresenter, WSCallbacks {
+object TeamMonitoringPresenterImpl : TeamMonitoringContract.TeamMonitoringPresenter {
 
-    private val webSocketHelper: TaskWSAdapter = TaskWSAdapter()
+    private val webSocketHelper: TaskWSAdapter = TaskWSAdapter
     override lateinit var view:TeamMonitoringContract.TeamMonitoringView
 
     override fun onSessionClosed(sessionId: Int) {
@@ -47,20 +49,11 @@ object TeamMonitoringPresenterImpl : TeamMonitoringContract.TeamMonitoringPresen
     }
 
     override fun onTaskDeleted() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        webSocketHelper.webSocket.send(PayloadWrapper(0,WSOperations.REMOVE_TASK,TaskAssignment(Member.defaultMember(), Task.defaultTask()).toJson()).toJson())
     }
 
     override fun onMemberSelected() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun onMessageReceived(messageString: String?) {
-        println("Ricevuto: "+messageString) //To change body of created functions use File | Settings | File Templates.
-    }
-
-    fun sendAddLeaderRequest(){
-        var members: List<Member> = listOf(Member(1,"Leader"))
-        val message = PayloadWrapper(0, WSOperations.ADD_LEADER, MembersAdditionNotification(members).toJson())
-        webSocketHelper.webSocket.send(message.toJson())
-    }
 }

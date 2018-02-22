@@ -6,7 +6,6 @@ import com.crioprecipitati.androidpervasive1718.viewPresenter.leader.activitySel
 import com.crioprecipitati.androidpervasive1718.viewPresenter.leader.activitySelection.ActivitySelectionPresenterImpl
 import com.crioprecipitati.androidpervasive1718.viewPresenter.leader.teamMonitoring.TeamMonitoringContract
 import com.crioprecipitati.androidpervasive1718.viewPresenter.leader.teamMonitoring.TeamMonitoringPresenterImpl
-import com.google.gson.Gson
 import model.*
 
 /**
@@ -57,6 +56,7 @@ class CallbackHandler:WSCallbacks {
                     WSOperations.ERROR_REMOVING_TASK -> taskErrorHandling()
                     WSOperations.UPDATE -> updateHandling()
                     WSOperations.SET_ALL_ACTIVITIES -> activityAdditionHandling()
+                    W
                     }
                 }
                 }

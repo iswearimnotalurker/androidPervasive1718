@@ -21,6 +21,6 @@ abstract class WSAdapter(val baseAddress:String, val messageCallback: WSCallback
         webSocket.close()
     }
 }
-class TaskWSAdapter:WSAdapter(WS_DEFAULT_TASK_URI, CallbackHandler())
+object TaskWSAdapter:WSAdapter(WS_DEFAULT_TASK_URI, CallbackHandler())
 
-class NotifierWSAdapter:WSAdapter(WS_DEFAULT_TASK_URI,CallbackHandler())
+object NotifierWSAdapter:WSAdapter(WS_DEFAULT_TASK_URI,CallbackHandler())
