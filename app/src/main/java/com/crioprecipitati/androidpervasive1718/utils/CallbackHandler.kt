@@ -25,23 +25,23 @@ class CallbackHandler:WSCallbacks {
 
                 fun taskAssignmentHandling(){
                     val taskAssignment: TaskAssignment = it.objectify(body)
-                    teamMonitoringPresenter.view.showAndUpdateTaskList(taskAssignment.member,taskAssignment.task)
+                    teamMonitoringPresenter.view?.showAndUpdateTaskList(taskAssignment.member,taskAssignment.task)
                 }
 
                 fun taskErrorHandling(){
                     val taskError: TaskError = it.objectify(body)
-                    teamMonitoringPresenter.view.showError(taskError.error)
+                    teamMonitoringPresenter.view?.showError(taskError.error)
                 }
 
                 fun updateHandling(){
                     val update: Update = it.objectify(body)
-                    teamMonitoringPresenter.view.showAndUpdateHealthParameters(update.lifeParameter,update.value)
+                    teamMonitoringPresenter.view?.showAndUpdateHealthParameters(update.lifeParameter,update.value)
                 }
 
                 fun memberAdditionHandling(){
 
                     val membersAddition: MembersAdditionNotification = it.objectify(body)
-                    teamMonitoringPresenter.view.showAndUpdateMemberList(membersAddition.members)
+                    teamMonitoringPresenter.view?.showAndUpdateMemberList(membersAddition.members)
                 }
 
                 fun activityAdditionHandling(){

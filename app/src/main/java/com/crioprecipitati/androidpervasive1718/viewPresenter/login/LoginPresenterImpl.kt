@@ -13,19 +13,20 @@ import model.MembersAdditionNotification
 import model.PayloadWrapper
 import model.WSOperations
 
-object LoginPresenterImpl : LoginContract.LoginPresenter {
+object LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginContract.LoginPresenter {
 
-    private var loginView: LoginContract.LoginView? = null
     private val webSocketHelper: TaskWSAdapter = TaskWSAdapter
     override var sessionId: Int = -1
     private lateinit var member: Member
+    override var view: LoginContract.LoginView? = null
+
 
     override fun attachView(view: LoginContract.LoginView) {
-        loginView = view
+        view = view
     }
 
     override fun detachView() {
-        loginView = null
+        view = null
     }
 
     override fun onConnectRequested(memberType: MemberType, id: Int, name: String) {
@@ -41,11 +42,13 @@ object LoginPresenterImpl : LoginContract.LoginPresenter {
             observable = service.getAllSessionsByLeaderId(member.id)
 
         observable.observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { /*loginView?.startLoadingState()*/ }
-            .doAfterTerminate { /*loginView?.stopLoadingState()*/ }
+            .doOnSubscribe { /*view
+           ?.startLoadingState()*/ }
+            .doAfterTerminate { /*view
+           ?.stopLoadingState()*/ }
             .subscribe(
                     { sessionList ->
-                        loginView?.toggleViewForMemberType(memberType)
+                        view?.toggleViewForMemberType(memberType)
                         // View logic here
                         sessionList.forEach {
                             it -> println(it)
@@ -65,8 +68,10 @@ object LoginPresenterImpl : LoginContract.LoginPresenter {
                 .createService(SessionApi::class.java)
                 .createNewSession(cf)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { /*loginView?.startLoadingState()*/ }
-                .doAfterTerminate { /*loginView?.stopLoadingState()*/ }
+                .doOnSubscribe { /*view
+               ?.startLoadingState()*/ }
+                .doAfterTerminate { /*view
+               ?.stopLoadingState()*/ }
                 .subscribe(
                         { sessionInfo ->
                             println(sessionInfo as SessionDNS)
@@ -93,7 +98,7 @@ object LoginPresenterImpl : LoginContract.LoginPresenter {
             val members: List<Member> = listOf(Member(2,"Member"))
             val message = PayloadWrapper(sessionId, WSOperations.ADD_MEMBER, MembersAdditionNotification(members).toJson())
             webSocketHelper.webSocket.send(message.toJson())
-            loginView?.startTaskMonitoringActivity(member)
+            view?.startTaskMonitoringActivity(member)
         }
     }
 
@@ -107,7 +112,7 @@ object LoginPresenterImpl : LoginContract.LoginPresenter {
 
     override fun onLeaderCreationResponse(response: GenericResponse){
         if(response.message == "ok"){
-            loginView?.startTeamMonitoringActivity(member)
+            view?.startTeamMonitoringActivity(member)
         }
     }
 }

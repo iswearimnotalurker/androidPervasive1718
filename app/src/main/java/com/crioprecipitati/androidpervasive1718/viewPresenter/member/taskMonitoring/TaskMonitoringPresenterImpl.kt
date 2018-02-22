@@ -1,6 +1,6 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonitoring
 
-import com.crioprecipitati.androidpervasive1718.base.BasePresenter
+import com.crioprecipitati.androidpervasive1718.base.BasePresenterImpl
 import com.crioprecipitati.androidpervasive1718.model.Activity
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.Status
@@ -16,25 +16,18 @@ import model.WSOperations
 import java.sql.Timestamp
 import java.util.*
 
-object TaskMonitoringPresenterImpl : BasePresenter<TaskMonitoringContract.TaskMonitoringView>, TaskMonitoringContract.TaskMonitoringPresenter {
+object TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.TaskMonitoringView>(), TaskMonitoringContract.TaskMonitoringPresenter {
 
     private val taskWebSocketHelper: TaskWSAdapter = TaskWSAdapter
     private val notifierWebSocketHelper: NotifierWSAdapter = NotifierWSAdapter
     private val loginPresenter: LoginContract.LoginPresenter = LoginPresenterImpl
-
-    override fun attachView(view: TaskMonitoringContract.TaskMonitoringView) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun detachView() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
+    override var view: TaskMonitoringContract.TaskMonitoringView? = null
 
     override fun onTaskCompletionRequested() {
         //mock
         val member: Member = Member.emptyMember()
-        val activity: Activity = Activity(1,"Ciao",1,"FGT",2)
-        val task: Task = Task(loginPresenter.sessionId, loginPresenter.sessionId,member.id, Timestamp(Date().time - 1000),Timestamp(Date().time),activity.id,Status.FINISHED.id)
+        val activity = Activity(1,"Ciao",1,"FGT",2)
+        val task = Task(loginPresenter.sessionId, loginPresenter.sessionId,member.id, Timestamp(Date().time - 1000),Timestamp(Date().time),activity.id,Status.FINISHED.id)
 
         taskWebSocketHelper.webSocket.send(PayloadWrapper(loginPresenter.sessionId,WSOperations.CHANGE_TASK_STATUS,TaskAssignment(member,task).toJson()).toJson())
         notifierWebSocketHelper.webSocket.send(PayloadWrapper(loginPresenter.sessionId,WSOperations.CLOSE,Member.defaultMember().toJson()).toJson())

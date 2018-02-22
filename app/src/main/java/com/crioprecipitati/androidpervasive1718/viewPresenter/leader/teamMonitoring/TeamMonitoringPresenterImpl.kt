@@ -14,7 +14,7 @@ import model.PayloadWrapper
 import model.TaskAssignment
 import model.WSOperations
 
-object TeamMonitoringPresenterImpl : TeamMonitoringContract.TeamMonitoringPresenter {
+object TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.TeamMonitoringView>(),TeamMonitoringContract.TeamMonitoringPresenter {
 
     private val taskWebSocketHelper: TaskWSAdapter = TaskWSAdapter
     private val notifierWebSocketHelper: NotifierWSAdapter = NotifierWSAdapter
