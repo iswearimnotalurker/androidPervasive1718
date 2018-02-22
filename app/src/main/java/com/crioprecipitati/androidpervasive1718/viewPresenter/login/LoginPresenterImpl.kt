@@ -21,7 +21,6 @@ object LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginC
     private lateinit var member: Member
     override var view: LoginContract.LoginView? = null
 
-
     override fun onConnectRequested(memberType: MemberType, id: Int, name: String) {
 
         member = Member(id, name)
@@ -91,6 +90,7 @@ object LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginC
             val members: List<Member> = listOf(Member(2,"Member"))
             val message = PayloadWrapper(sessionId, WSOperations.ADD_MEMBER, MembersAdditionNotification(members).toJson())
             webSocketHelper.webSocket.send(message.toJson())
+            view?.startTaskMonitoringActivity(member)
         }
     }
 
@@ -104,7 +104,7 @@ object LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginC
 
     override fun onLeaderCreationResponse(response: GenericResponse){
         if(response.message == "ok"){
-            //TODO startActivity teamMonitoring
+            view?.startTeamMonitoringActivity(member)
         }
     }
 }

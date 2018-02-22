@@ -2,6 +2,7 @@ package com.crioprecipitati.androidpervasive1718.viewPresenter.login
 
 import com.crioprecipitati.androidpervasive1718.base.BasePresenter
 import com.crioprecipitati.androidpervasive1718.base.BaseView
+import com.crioprecipitati.androidpervasive1718.model.Member
 import model.GenericResponse
 
 enum class MemberType {
@@ -15,6 +16,10 @@ interface LoginContract {
         fun showAndUpdateSessionList()
 
         fun toggleViewForMemberType(memberType: MemberType)
+
+        fun startTeamMonitoringActivity(member: Member)
+
+        fun startTaskMonitoringActivity(member: Member)
 
     }
 

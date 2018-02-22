@@ -17,9 +17,14 @@ interface TeamMonitoringContract {
 
         fun showAndUpdateHealthParameters(lifeParameter: LifeParameters, value: Double)
 
+        fun showActivitySelectionActivity(member: Member)
+
     }
 
     interface TeamMonitoringPresenter : BasePresenter<TeamMonitoringView> {
+
+        override var view: TeamMonitoringContract.TeamMonitoringView?
+        var member: Member?
 
         fun onTaskDeleted()
 
