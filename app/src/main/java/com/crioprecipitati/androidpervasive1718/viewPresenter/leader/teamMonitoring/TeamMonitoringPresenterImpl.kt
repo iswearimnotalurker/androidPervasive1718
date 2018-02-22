@@ -10,7 +10,10 @@ import model.MembersAdditionNotification
 import model.PayloadWrapper
 import model.WSOperations
 
-class TeamMonitoringPresenterImpl : TeamMonitoringContract.TeamMonitoringPresenter, WSCallbacks {
+object TeamMonitoringPresenterImpl : TeamMonitoringContract.TeamMonitoringPresenter, WSCallbacks {
+
+    private val webSocketHelper: TaskWSAdapter = TaskWSAdapter()
+    override lateinit var view:TeamMonitoringContract.TeamMonitoringView
 
     override fun onSessionClosed(sessionId: Int) {
         SessionApiHandler().closeSessionBySessionId(sessionId)
@@ -28,11 +31,10 @@ class TeamMonitoringPresenterImpl : TeamMonitoringContract.TeamMonitoringPresent
                 )
     }
 
-    private val webSocketHelper: TaskWSAdapter = TaskWSAdapter(this)
 
 
     override fun attachView(view: TeamMonitoringContract.TeamMonitoringView) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        this.view = view
     }
 
     override fun detachView() {

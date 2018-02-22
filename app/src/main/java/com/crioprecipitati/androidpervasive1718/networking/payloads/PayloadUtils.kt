@@ -54,7 +54,8 @@ enum class WSOperations(val objectifier: (String) -> Any) {
     ERROR_CHANGING_STATUS({ GsonInitializer.fromJson(it, StatusError::class.java) }),
 
     // ACTIVITIES
-    GET_ALL_ACTIVITIES({ GsonInitializer.fromJson(it, model.MembersAdditionNotification::class.java) });
+    GET_ALL_ACTIVITIES({ GsonInitializer.fromJson(it, model.MembersAdditionNotification::class.java) }),
+    SET_ALL_ACTIVITIES({ GsonInitializer.fromJson(it, ActivityAdditionNotification::class.java) });
 }
 
 data class Notification(val lifeParameter: LifeParameters, val boundaries: List<Boundary>)
@@ -66,6 +67,8 @@ data class Subscription(val subject: Member, val topics: List<LifeParameters>)
 data class TaskAssignment(val member: Member, val task: Task)
 
 data class MembersAdditionNotification(val members: List<Member>)
+
+data class ActivityAdditionNotification(val activities: List<Activity>)
 
 data class TaskError(val task: Task, val error: String)
 
