@@ -47,6 +47,7 @@ enum class WSOperations(val objectifier: (String) -> Any) {
     // TASKS
     ADD_LEADER({ GsonInitializer.fromJson(it, MembersAdditionNotification::class.java) }),
     LIST_MEMBERS({ GsonInitializer.fromJson(it, MembersAdditionNotification::class.java) }),
+    LEADER_RESPONSE({ GsonInitializer.fromJson(it,GenericResponse::class.java) }),
     ADD_MEMBER({ GsonInitializer.fromJson(it, MembersAdditionNotification::class.java) }),
     ADD_TASK({ GsonInitializer.fromJson(it, TaskAssignment::class.java) }),
     REMOVE_TASK({ GsonInitializer.fromJson(it, TaskAssignment::class.java) }),
@@ -58,6 +59,7 @@ enum class WSOperations(val objectifier: (String) -> Any) {
     GET_ALL_ACTIVITIES({ GsonInitializer.fromJson(it, model.MembersAdditionNotification::class.java) }),
     SET_ALL_ACTIVITIES({ GsonInitializer.fromJson(it, ActivityAdditionNotification::class.java) });
 }
+data class GenericResponse(val response: String)
 
 data class Notification(val lifeParameter: LifeParameters, val boundaries: List<Boundary>)
 
