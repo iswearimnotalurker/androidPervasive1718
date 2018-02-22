@@ -16,7 +16,11 @@ class LoginActivity : BaseActivity<LoginContract.LoginView, LoginContract.LoginP
     }
 
     override fun toggleViewForMemberType(memberType: MemberType) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        if(memberType == MemberType.LEADER){
+            //TODO FAI COSE
+        }else{
+            //TODO FAI ALTRE COSE
+        }
     }
 
     override fun startTaskMonitoringActivity(member: Member) {

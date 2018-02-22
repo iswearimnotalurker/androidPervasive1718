@@ -19,8 +19,28 @@ object TeamMonitoringPresenterImpl : TeamMonitoringContract.TeamMonitoringPresen
     private val taskWebSocketHelper: TaskWSAdapter = TaskWSAdapter
     private val notifierWebSocketHelper: NotifierWSAdapter = NotifierWSAdapter
     private val loginPresenter: LoginContract.LoginPresenter = LoginPresenterImpl
-    override lateinit var view:TeamMonitoringContract.TeamMonitoringView
+    override var view:TeamMonitoringContract.TeamMonitoringView? = null
 
+
+
+    override fun attachView(view: TeamMonitoringContract.TeamMonitoringView) {
+        this.view = view
+    }
+
+    override fun detachView() {
+        this.view = null
+    }
+
+    override fun onTaskDeleted() {
+        taskWebSocketHelper.webSocket.send(PayloadWrapper(loginPresenter.sessionId,WSOperations.REMOVE_TASK,TaskAssignment(Member.defaultMember(), Task.defaultTask()).toJson()).toJson())
+    }
+
+    override fun onMemberSelected() {
+        //TODO APERTURA DIALOG
+        TODO("Start ActivitySelectionActivity") //To change body of created functions use File | Settings | File Templates.
+    }
+
+    //per fine intervento
     override fun onSessionClosed(sessionId: Int) {
 
         RestApiManager
@@ -39,24 +59,6 @@ object TeamMonitoringPresenterImpl : TeamMonitoringContract.TeamMonitoringPresen
                             println(e.message)
                         }
                 )
-    }
-
-
-
-    override fun attachView(view: TeamMonitoringContract.TeamMonitoringView) {
-        this.view = view
-    }
-
-    override fun detachView() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun onTaskDeleted() {
-        taskWebSocketHelper.webSocket.send(PayloadWrapper(loginPresenter.sessionId,WSOperations.REMOVE_TASK,TaskAssignment(Member.defaultMember(), Task.defaultTask()).toJson()).toJson())
-    }
-
-    override fun onMemberSelected() {
-        TODO("Start ActivitySelectionActivity") //To change body of created functions use File | Settings | File Templates.
     }
 
 }

@@ -15,7 +15,7 @@ import model.WSOperations
 
 object LoginPresenterImpl : LoginContract.LoginPresenter {
 
-    private lateinit var loginView: LoginContract.LoginView
+    private var loginView: LoginContract.LoginView? = null
     private val webSocketHelper: TaskWSAdapter = TaskWSAdapter
     override var sessionId: Int = -1
     private lateinit var member: Member
@@ -25,7 +25,7 @@ object LoginPresenterImpl : LoginContract.LoginPresenter {
     }
 
     override fun detachView() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        loginView = null
     }
 
     override fun onConnectRequested(memberType: MemberType, id: Int, name: String) {
@@ -33,9 +33,9 @@ object LoginPresenterImpl : LoginContract.LoginPresenter {
         member = Member(id, name)
 
         val service = RestApiManager.createService(SessionApi::class.java)
-        var observable: Observable<List<SessionDNS>>
+        val observable: Observable<List<SessionDNS>>
 
-        if (memberType.equals(MemberType.MEMBER))
+        if (memberType == MemberType.MEMBER)
             observable = service.getAllSessions()
         else
             observable = service.getAllSessionsByLeaderId(member.id)
@@ -45,6 +45,7 @@ object LoginPresenterImpl : LoginContract.LoginPresenter {
             .doAfterTerminate { /*loginView?.stopLoadingState()*/ }
             .subscribe(
                     { sessionList ->
+                        loginView?.toggleViewForMemberType(memberType)
                         // View logic here
                         sessionList.forEach {
                             it -> println(it)
@@ -59,7 +60,7 @@ object LoginPresenterImpl : LoginContract.LoginPresenter {
 
     override fun onNewSessionRequested(cf: String, memberType: MemberType) {
 
-        if (memberType.equals(MemberType.LEADER)) {
+        if (memberType == MemberType.LEADER) {
             RestApiManager
                 .createService(SessionApi::class.java)
                 .createNewSession(cf)
@@ -69,7 +70,6 @@ object LoginPresenterImpl : LoginContract.LoginPresenter {
                 .subscribe(
                         { sessionInfo ->
                             println(sessionInfo as SessionDNS)
-                            // View logic here
                             onSessionCreated(memberType, sessionInfo.sessionId)
                             sessionId = sessionInfo.sessionId
                         },
@@ -83,23 +83,23 @@ object LoginPresenterImpl : LoginContract.LoginPresenter {
 
     override fun onSessionSelected(memberType: MemberType, sessionId: Int) {
         // Recovery: session selected already exists and belongs to leader
-        if (memberType.equals(MemberType.LEADER)) {
-            var members: List<Member> = listOf(Member(1,"Leader")) // Set actual current leader
+        if (memberType == MemberType.LEADER) {
+            val members: List<Member> = listOf(Member(1,"Leader")) // Set actual current leader
             val message = PayloadWrapper(sessionId, WSOperations.ADD_LEADER, MembersAdditionNotification(members).toJson())
             webSocketHelper.webSocket.send(message.toJson())
             // This action will trigger the response from MT with the list of members
         }
         else {
-            var members: List<Member> = listOf(Member(2,"Member"))
+            val members: List<Member> = listOf(Member(2,"Member"))
             val message = PayloadWrapper(sessionId, WSOperations.ADD_MEMBER, MembersAdditionNotification(members).toJson())
             webSocketHelper.webSocket.send(message.toJson())
-            loginView.startTaskMonitoringActivity(member)
+            loginView?.startTaskMonitoringActivity(member)
         }
     }
 
     override fun onSessionCreated(memberType: MemberType, sessionId: Int) {
-        if (memberType.equals(MemberType.LEADER)) {
-            var members: List<Member> = listOf(Member(1,"Leader")) // Set actual current leader
+        if (memberType == MemberType.LEADER) {
+            val members: List<Member> = listOf(Member(1,"Leader")) // Set actual current leader
             val message = PayloadWrapper(sessionId, WSOperations.ADD_LEADER, MembersAdditionNotification(members).toJson())
             webSocketHelper.webSocket.send(message.toJson())
         }
@@ -107,7 +107,7 @@ object LoginPresenterImpl : LoginContract.LoginPresenter {
 
     override fun onLeaderCreationResponse(response: GenericResponse){
         if(response.message == "ok"){
-            loginView.startTeamMonitoringActivity(member)
+            loginView?.startTeamMonitoringActivity(member)
         }
     }
 }
