@@ -12,13 +12,13 @@ class LoginPresenterTest {
 
     @Before
     fun create() {
-        presenter = LoginPresenterImpl()
+        presenter = LoginPresenterImpl
     }
 
 
     @Test
     fun openSessionApi() {
-        presenter.onConnectRequested()
+        presenter.onConnectRequested(MemberType.LEADER,1,"Leader")
         Thread.sleep(10000)
     }
 
