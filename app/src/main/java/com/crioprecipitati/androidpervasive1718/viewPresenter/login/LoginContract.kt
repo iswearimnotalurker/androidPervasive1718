@@ -23,7 +23,9 @@ interface LoginContract {
 
         fun onNewSessionRequested(cf: String, memberType: MemberType)
 
-        fun onSessionSelected(memberType: MemberType) // TODO dovrà prendere un parametro sessione o qualcosa del genere
+        fun onSessionSelected(memberType: MemberType, sessionId: Int) // TODO dovrà prendere un parametro sessione o qualcosa del genere
+
+        fun onSessionCreated(memberType: MemberType, sessionId: Int)
 
     }
 

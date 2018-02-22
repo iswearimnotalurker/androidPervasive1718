@@ -68,8 +68,9 @@ object LoginPresenterImpl : LoginContract.LoginPresenter, WSCallbacks {
                 .doAfterTerminate { /*loginView?.stopLoadingState()*/ }
                 .subscribe(
                         { sessionInfo ->
-                            // View logic here
                             println(sessionInfo as SessionDNS)
+                            // View logic here
+                            onSessionCreated(memberType, sessionInfo.sessionId)
                         },
                         { e ->
                             //Snackbar.make(session_list, e.message ?: "", Snackbar.LENGTH_LONG).show()
@@ -79,16 +80,26 @@ object LoginPresenterImpl : LoginContract.LoginPresenter, WSCallbacks {
         }
     }
 
-    override fun onSessionSelected(memberType: MemberType) {
+    override fun onSessionSelected(memberType: MemberType, sessionId: Int) {
+        // Recovery: session selected already exists and belongs to leader
         if (memberType.equals(MemberType.LEADER)) {
-            var members: List<Member> = listOf(Member(1,"Leader"))
-            val message = PayloadWrapper(0, WSOperations.ADD_LEADER, MembersAdditionNotification(members).toJson())
+            var members: List<Member> = listOf(Member(1,"Leader")) // Set actual current leader
+            val message = PayloadWrapper(sessionId.toLong(), WSOperations.ADD_LEADER, MembersAdditionNotification(members).toJson())
             webSocketHelper.webSocket.send(message.toJson())
+            // This action will trigger the response from MT with the list of members
         }
         else {
             var members: List<Member> = listOf(Member(2,"Member"))
             val message = PayloadWrapper(0, WSOperations.ADD_MEMBER, MembersAdditionNotification(members).toJson())
             webSocketHelper.webSocket.send(message.toJson())
-        } //To change body of created functions use File | Settings | File Templates.
+        }
+    }
+
+    override fun onSessionCreated(memberType: MemberType, sessionId: Int) {
+        if (memberType.equals(MemberType.LEADER)) {
+            var members: List<Member> = listOf(Member(1,"Leader")) // Set actual current leader
+            val message = PayloadWrapper(sessionId.toLong(), WSOperations.ADD_LEADER, MembersAdditionNotification(members).toJson())
+            webSocketHelper.webSocket.send(message.toJson())
+        }
     }
 }
