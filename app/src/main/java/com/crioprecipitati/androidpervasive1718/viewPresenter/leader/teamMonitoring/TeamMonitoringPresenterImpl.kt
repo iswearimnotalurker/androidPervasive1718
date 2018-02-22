@@ -6,12 +6,10 @@ import com.crioprecipitati.androidpervasive1718.networking.RestApiManager
 import com.crioprecipitati.androidpervasive1718.networking.api.SessionApi
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.NotifierWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
-import com.crioprecipitati.androidpervasive1718.networking.webSockets.WSCallbacks
 import com.crioprecipitati.androidpervasive1718.utils.toJson
 import com.crioprecipitati.androidpervasive1718.viewPresenter.login.LoginContract
 import com.crioprecipitati.androidpervasive1718.viewPresenter.login.LoginPresenterImpl
 import io.reactivex.android.schedulers.AndroidSchedulers
-import model.MembersAdditionNotification
 import model.PayloadWrapper
 import model.TaskAssignment
 import model.WSOperations
@@ -58,7 +56,7 @@ object TeamMonitoringPresenterImpl : TeamMonitoringContract.TeamMonitoringPresen
     }
 
     override fun onMemberSelected() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        TODO("Start ActivitySelectionActivity") //To change body of created functions use File | Settings | File Templates.
     }
 
 }

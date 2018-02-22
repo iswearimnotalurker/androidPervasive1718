@@ -1,13 +1,10 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.login
 
-import com.crioprecipitati.androidpervasive1718.model.Activity
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.SessionDNS
 import com.crioprecipitati.androidpervasive1718.networking.RestApiManager
 import com.crioprecipitati.androidpervasive1718.networking.api.SessionApi
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
-import com.crioprecipitati.androidpervasive1718.networking.webSockets.WSCallbacks
-import com.crioprecipitati.androidpervasive1718.utils.GsonInitializer.gson
 import com.crioprecipitati.androidpervasive1718.utils.toJson
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -22,14 +19,6 @@ object LoginPresenterImpl : LoginContract.LoginPresenter {
     private val webSocketHelper: TaskWSAdapter = TaskWSAdapter
     override var sessionId: Int = -1
     private lateinit var member: Member
-    // This will be removed from here
-    lateinit var activities: List<Activity>
-
-    // Should be used only from onSessionSelected
-    override fun onMessageReceived(messageString: String?) {
-        activities = gson.fromJson((gson.fromJson(messageString, PayloadWrapper::class.java).body), Array<Activity>::class.java).toList()
-        if (activities.isNotEmpty()) println("We got activities!")
-    }
 
     override fun attachView(view: LoginContract.LoginView) {
         loginView = view
@@ -104,6 +93,7 @@ object LoginPresenterImpl : LoginContract.LoginPresenter {
             var members: List<Member> = listOf(Member(2,"Member"))
             val message = PayloadWrapper(sessionId, WSOperations.ADD_MEMBER, MembersAdditionNotification(members).toJson())
             webSocketHelper.webSocket.send(message.toJson())
+            loginView.startTaskMonitoringActivity(member)
         }
     }
 
@@ -117,7 +107,7 @@ object LoginPresenterImpl : LoginContract.LoginPresenter {
 
     override fun onLeaderCreationResponse(response: GenericResponse){
         if(response.message == "ok"){
-            //TODO startActivity
+            loginView.startTeamMonitoringActivity(member)
         }
     }
 }
