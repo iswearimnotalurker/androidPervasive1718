@@ -3,12 +3,13 @@ package com.crioprecipitati.androidpervasive1718.viewPresenter.login
 import com.crioprecipitati.androidpervasive1718.model.Activity
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.SessionDNS
-import com.crioprecipitati.androidpervasive1718.networking.handlers.SessionApiHandler
+import com.crioprecipitati.androidpervasive1718.networking.RestApiManager
+import com.crioprecipitati.androidpervasive1718.networking.api.SessionApi
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.WSCallbacks
 import com.crioprecipitati.androidpervasive1718.utils.GsonInitializer.gson
 import com.crioprecipitati.androidpervasive1718.utils.toJson
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.android.schedulers.AndroidSchedulers
 import model.MembersAdditionNotification
 import model.PayloadWrapper
 import model.WSOperations
@@ -35,38 +36,46 @@ class LoginPresenterImpl : LoginContract.LoginPresenter, WSCallbacks {
     }
 
     override fun onConnectRequested() {
-        SessionApiHandler().getAllSessions()
-                .subscribeOn(Schedulers.io())
-                .subscribe (
-                        { retrievedSessions ->
-                            //(session_list.adapter as SessionAdapter).addSession(retrievedSessions)
-                            (retrievedSessions as List<SessionDNS>).forEach{
-                                it -> println(it)
-                            }
+
+        RestApiManager
+            .createService(SessionApi::class.java)
+            .getAllSessions()
+            .observeOn(AndroidSchedulers.mainThread())
+            .doOnSubscribe { /*loginView?.startLoadingState()*/ }
+            .doAfterTerminate { /*loginView?.stopLoadingState()*/ }
+            .subscribe(
+                    { sessionList ->
+                        // View logic here
+                        sessionList.forEach {
+                            it -> println(it)
+                        }
+                    },
+                    { e ->
+                        //Snackbar.make(session_list, e.message ?: "", Snackbar.LENGTH_LONG).show()
+                        println(e.message)
+                    }
+            )
+    }
+
+    override fun onNewSessionRequested(cf: String, memberType: MemberType) {
+
+        if (memberType.equals(MemberType.LEADER)) {
+            RestApiManager
+                .createService(SessionApi::class.java)
+                .createNewSession(cf)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { /*loginView?.startLoadingState()*/ }
+                .doAfterTerminate { /*loginView?.stopLoadingState()*/ }
+                .subscribe(
+                        { sessionInfo ->
+                            // View logic here
+                            println(sessionInfo as SessionDNS)
                         },
                         { e ->
                             //Snackbar.make(session_list, e.message ?: "", Snackbar.LENGTH_LONG).show()
                             println(e.message)
                         }
                 )
-    }
-
-    override fun onNewSessionRequested(cf: String, memberType: MemberType) {
-        if (memberType.equals(MemberType.LEADER)) {
-            println("Creating new session with CF "+cf)
-            SessionApiHandler().createNewSession(cf)
-                    .subscribeOn(Schedulers.io())
-                    .subscribe(
-                            { sessionInfo ->
-                                //(session_list.adapter as SessionAdapter).addSession(retrievedSessions)
-                                println(sessionInfo as SessionDNS)
-                                // MT.addLeader(myself)
-                            },
-                            { e ->
-                                //Snackbar.make(session_list, e.message ?: "", Snackbar.LENGTH_LONG).show()
-                                println(e.message)
-                            }
-                    )
         }
     }
 

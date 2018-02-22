@@ -1,8 +1,6 @@
 package com.crioprecipitati.androidpervasive1718.networking.webSockets
 
-import com.crioprecipitati.androidpervasive1718.networking.utils.WS_DEFAULT_NOTIFIER_URI
-import com.crioprecipitati.androidpervasive1718.networking.utils.WS_DEFAULT_TASK_URI
-import trikita.log.Log
+import com.crioprecipitati.androidpervasive1718.utils.WS_DEFAULT_TASK_URI
 
 /**
  * Created by Edoardo Antonini on 21/02/2018.

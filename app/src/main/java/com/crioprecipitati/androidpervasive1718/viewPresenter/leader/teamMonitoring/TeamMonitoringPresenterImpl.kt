@@ -1,11 +1,12 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.leader.teamMonitoring
 
 import com.crioprecipitati.androidpervasive1718.model.Member
+import com.crioprecipitati.androidpervasive1718.networking.RestApiManager
+import com.crioprecipitati.androidpervasive1718.networking.api.SessionApi
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
-import com.crioprecipitati.androidpervasive1718.networking.handlers.SessionApiHandler
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.WSCallbacks
 import com.crioprecipitati.androidpervasive1718.utils.toJson
-import io.reactivex.schedulers.Schedulers
+import io.reactivex.android.schedulers.AndroidSchedulers
 import model.MembersAdditionNotification
 import model.PayloadWrapper
 import model.WSOperations
@@ -13,13 +14,17 @@ import model.WSOperations
 class TeamMonitoringPresenterImpl : TeamMonitoringContract.TeamMonitoringPresenter, WSCallbacks {
 
     override fun onSessionClosed(sessionId: Int) {
-        SessionApiHandler().closeSessionBySessionId(sessionId)
-                .subscribeOn(Schedulers.io())
+
+        RestApiManager
+                .createService(SessionApi::class.java)
+                .closeSessionBySessionId(sessionId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .doOnSubscribe { /*loginView?.startLoadingState()*/ }
+                .doAfterTerminate { /*loginView?.stopLoadingState()*/ }
                 .subscribe(
                         { message ->
-                            //(session_list.adapter as SessionAdapter).addSession(retrievedSessions)
+                            // View logic here
                             println(message)
-                            // MT.addLeader(myself)
                         },
                         { e ->
                             //Snackbar.make(session_list, e.message ?: "", Snackbar.LENGTH_LONG).show()
@@ -56,6 +61,4 @@ class TeamMonitoringPresenterImpl : TeamMonitoringContract.TeamMonitoringPresent
         val message = PayloadWrapper(0, WSOperations.ADD_LEADER, MembersAdditionNotification(members).toJson())
         webSocketHelper.webSocket.send(message.toJson())
     }
-
-
 }
