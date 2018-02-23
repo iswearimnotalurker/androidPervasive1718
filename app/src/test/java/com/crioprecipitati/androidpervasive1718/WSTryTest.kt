@@ -4,10 +4,6 @@ import com.crioprecipitati.androidpervasive1718.viewPresenter.login.LoginPresent
 import com.crioprecipitati.androidpervasive1718.viewPresenter.login.MemberType
 import org.junit.Test
 
-/**
- * Created by Edoardo Antonini on 21/02/2018.
- */
-
 class WSTryTest{
 
     @Test

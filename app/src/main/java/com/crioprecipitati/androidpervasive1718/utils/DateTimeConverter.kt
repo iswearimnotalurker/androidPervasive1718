@@ -7,9 +7,6 @@ import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
 
-/**
- * Created by Edoardo Antonini on 21/02/2018.
- */
 @Target(AnnotationTarget.FIELD)
 annotation class KlaxonDate
 

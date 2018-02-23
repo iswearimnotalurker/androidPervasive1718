@@ -3,9 +3,6 @@ package com.crioprecipitati.androidpervasive1718.model
 import java.sql.Timestamp
 import java.util.*
 
-/**
- * Created by Edoardo Antonini on 21/02/2018.
- */
 object EmptyTask{
     const val emptyTaskId: Int = -1
     const val emptyTaskOperatorId: Int = -1

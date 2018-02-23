@@ -1,12 +1,10 @@
 package model
+
+import com.crioprecipitati.androidpervasive1718.model.*
 import com.crioprecipitati.androidpervasive1718.utils.GsonInitializer
-import com.crioprecipitati.androidpervasive1718.model.Member
-import com.crioprecipitati.androidpervasive1718.model.Task
-import com.crioprecipitati.androidpervasive1718.model.Boundary
 import java.lang.ClassCastException
 import java.sql.Timestamp
 import java.util.*
-import com.crioprecipitati.androidpervasive1718.model.Activity
 
 
 interface Payload<T, D> {
@@ -32,11 +30,14 @@ data class PayloadWrapper(override val sid: Int,
                           override val subject: WSOperations,
                           override val body: String,
                           override val time: String = Payload.getTime()) :
-        Payload<WSOperations, String>
+    Payload<WSOperations, String>
 
 //data class model.WSOperations(val commandName: String, val path: String, val objectifier: (String) -> Any)
 
 enum class WSOperations(val objectifier: (String) -> Any) {
+
+    // SESSION
+    NEW_SESSION({ GsonInitializer.fromJson(it, SessionAssignment::class.java) }),
 
     // NOTIFIER
     CLOSE({ GsonInitializer.fromJson(it, Member::class.java) }),
@@ -47,7 +48,9 @@ enum class WSOperations(val objectifier: (String) -> Any) {
     // TASKS
     ADD_LEADER({ GsonInitializer.fromJson(it, MembersAdditionNotification::class.java) }),
     LIST_MEMBERS({ GsonInitializer.fromJson(it, MembersAdditionNotification::class.java) }),
-    LEADER_RESPONSE({ GsonInitializer.fromJson(it,GenericResponse::class.java) }),
+    LEADER_RESPONSE({ GsonInitializer.fromJson(it, GenericResponse::class.java) }),
+    SESSION_HANDLER_ERROR_RESPONSE({ GsonInitializer.fromJson(it, GenericResponse::class.java) }),
+    SESSION_HANDLER_RESPONSE({ GsonInitializer.fromJson(it, SessionDNS::class.java) }),
     ADD_MEMBER({ GsonInitializer.fromJson(it, MembersAdditionNotification::class.java) }),
     ADD_TASK({ GsonInitializer.fromJson(it, TaskAssignment::class.java) }),
     REMOVE_TASK({ GsonInitializer.fromJson(it, TaskAssignment::class.java) }),
@@ -59,6 +62,7 @@ enum class WSOperations(val objectifier: (String) -> Any) {
     GET_ALL_ACTIVITIES({ GsonInitializer.fromJson(it, MembersAdditionNotification::class.java) }),
     SET_ALL_ACTIVITIES({ GsonInitializer.fromJson(it, ActivityAdditionNotification::class.java) });
 }
+
 data class GenericResponse(val message: String)
 
 data class Notification(val lifeParameter: LifeParameters, val boundaries: List<Boundary>)

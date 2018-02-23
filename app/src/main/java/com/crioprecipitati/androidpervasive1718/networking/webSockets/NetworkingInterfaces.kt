@@ -3,9 +3,6 @@ package com.crioprecipitati.androidpervasive1718.networking.webSockets
 import okhttp3.WebSocketListener
 
 /**
- * Created by Edoardo Antonini on 21/02/2018.
- */
-/**
  * We have only one function for message handling this one will find unpack the payload and do the right operation
  */
 interface WSCallbacks{

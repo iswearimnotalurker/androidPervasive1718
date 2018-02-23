@@ -5,8 +5,8 @@ import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.Task
 import com.crioprecipitati.androidpervasive1718.networking.RestApiManager
 import com.crioprecipitati.androidpervasive1718.networking.api.SessionApi
-import com.crioprecipitati.androidpervasive1718.networking.webSockets.NotifierWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
+import com.crioprecipitati.androidpervasive1718.utils.CallbackHandler
 import com.crioprecipitati.androidpervasive1718.utils.Prefs
 import com.crioprecipitati.androidpervasive1718.utils.WSObserver
 import com.crioprecipitati.androidpervasive1718.utils.toJson
@@ -15,12 +15,30 @@ import model.*
 
 class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.TeamMonitoringView>(), TeamMonitoringContract.TeamMonitoringPresenter, WSObserver {
 
-    private val taskWebSocketHelper: TaskWSAdapter = TaskWSAdapter
-    private val notifierWebSocketHelper: NotifierWSAdapter = NotifierWSAdapter
     override var member: Member? = null
 
+    private val channels = listOf(
+        WSOperations.LIST_MEMBERS,
+        WSOperations.ADD_MEMBER,
+        WSOperations.ADD_TASK,
+        WSOperations.CHANGE_TASK_STATUS,
+        WSOperations.REMOVE_TASK,
+        WSOperations.ERROR_CHANGING_STATUS,
+        WSOperations.ERROR_REMOVING_TASK,
+        WSOperations.UPDATE)
+
+    override fun attachView(view: TeamMonitoringContract.TeamMonitoringView) {
+        super.attachView(view)
+        CallbackHandler.attach(channels, this)
+    }
+
+    override fun detachView() {
+        super.detachView()
+        CallbackHandler.detach(channels, this)
+    }
+
     override fun onTaskDeleted() {
-        taskWebSocketHelper.webSocket.send(PayloadWrapper(Prefs.sessionId, WSOperations.REMOVE_TASK, TaskAssignment(Member.defaultMember(), Task.defaultTask()).toJson()).toJson())
+        TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.REMOVE_TASK, TaskAssignment(Member.defaultMember(), Task.defaultTask()).toJson()).toJson())
     }
 
     override fun onMemberSelected() {
@@ -34,8 +52,6 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
             .createService(SessionApi::class.java)
             .closeSessionBySessionId(sessionId)
             .observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { /*loginView?.startLoadingState()*/ }
-            .doAfterTerminate { /*loginView?.stopLoadingState()*/ }
             .subscribe(
                 { message -> println(message) },
                 { e -> println(e.message) }

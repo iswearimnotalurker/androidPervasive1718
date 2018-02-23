@@ -8,6 +8,8 @@ data class Activity(val id: Int = 0, val name: String, val activityTypeId: Int, 
 
 data class SessionDNS(val sessionId: Int, val patId: String, val microTaskAddress: String)
 
+data class SessionAssignment(val patId: String, val leaderId: Int)
+
 data class Boundary(val id: Int = 0, val healthParameterId: Int, val activityId: Int, val upperBound: Double, val lowerBound: Double, val lightWarningOffset: Double, val status: String, val itsGood: Boolean, val minAge: Double, val maxAge: Double)
 
 data class Member(val id: Int, val name: String) {

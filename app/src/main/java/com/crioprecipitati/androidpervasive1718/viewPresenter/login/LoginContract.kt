@@ -31,7 +31,7 @@ interface LoginContract {
 
         fun onSessionSelected(memberType: MemberType, sessionId: Int) // TODO dovrà prendere un parametro sessione o qualcosa del genere
 
-        fun onSessionCreated(memberType: MemberType, sessionId: Int)
+        fun onSessionCreated(sessionId: Int)
 
         fun onLeaderCreationResponse(response: GenericResponse)
 

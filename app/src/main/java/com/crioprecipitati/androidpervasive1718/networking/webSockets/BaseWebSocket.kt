@@ -6,10 +6,6 @@ import okhttp3.Response
 import okhttp3.WebSocket
 import java.util.concurrent.TimeUnit
 
-/**
- * Created by Edoardo Antonini on 21/02/2018.
- */
-
 class BaseWebSocket(address: String, private val onMessageListener: (text: String?) -> Unit) : CustomWebSocket() {
 
     private var webSocket: WebSocket
