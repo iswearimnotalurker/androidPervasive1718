@@ -1,6 +1,5 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.leader.activitySelection
 
-import com.crioprecipitati.androidpervasive1718.base.BasePresenter
 import com.crioprecipitati.androidpervasive1718.base.BasePresenterImpl
 import com.crioprecipitati.androidpervasive1718.model.Activity
 import com.crioprecipitati.androidpervasive1718.model.Member
@@ -21,7 +20,6 @@ object ActivitySelectionPresenterImpl : BasePresenterImpl<ActivitySelectionContr
     private val taskWebSocketHelper: TaskWSAdapter = TaskWSAdapter
     private val notifierWebSocket: NotifierWSAdapter = NotifierWSAdapter
     private val loginPresenter: LoginContract.LoginPresenter = LoginPresenterImpl
-    override var view: ActivitySelectionContract.ActivitySelectionView? = null
 
     override fun onActivityTypeSelected(activityTypeId: Int) {
         val selectedActivities: List<Activity> = activityList.filter { it.activityTypeId == activityTypeId }

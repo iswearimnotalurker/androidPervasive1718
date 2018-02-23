@@ -20,7 +20,6 @@ object TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Te
     private val taskWebSocketHelper: TaskWSAdapter = TaskWSAdapter
     private val notifierWebSocketHelper: NotifierWSAdapter = NotifierWSAdapter
     private val loginPresenter: LoginContract.LoginPresenter = LoginPresenterImpl
-    override var view:TeamMonitoringContract.TeamMonitoringView? = null
     override var member: Member? = null
 
     override fun onTaskDeleted() {

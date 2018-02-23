@@ -3,7 +3,6 @@ package com.crioprecipitati.androidpervasive1718.viewPresenter.login
 import com.crioprecipitati.androidpervasive1718.base.BasePresenterImpl
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.SessionDNS
-import com.crioprecipitati.androidpervasive1718.model.Task
 import com.crioprecipitati.androidpervasive1718.networking.RestApiManager
 import com.crioprecipitati.androidpervasive1718.networking.api.SessionApi
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
@@ -20,7 +19,6 @@ object LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginC
     private lateinit var webSocketHelper: TaskWSAdapter
     override var sessionId: Int = -1
     private lateinit var member: Member
-    override var view: LoginContract.LoginView? = null
 
     override fun onConnectRequested(memberType: MemberType, id: Int, name: String) {
 

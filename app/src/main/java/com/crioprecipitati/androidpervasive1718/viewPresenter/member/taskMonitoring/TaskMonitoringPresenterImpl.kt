@@ -21,7 +21,6 @@ object TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.Ta
     private val taskWebSocketHelper: TaskWSAdapter = TaskWSAdapter
     private val notifierWebSocketHelper: NotifierWSAdapter = NotifierWSAdapter
     private val loginPresenter: LoginContract.LoginPresenter = LoginPresenterImpl
-    override var view: TaskMonitoringContract.TaskMonitoringView? = null
 
     override fun onTaskCompletionRequested() {
         //mock
