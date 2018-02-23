@@ -15,7 +15,7 @@ import model.WSOperations
 import java.sql.Timestamp
 import java.util.*
 
-object TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.TaskMonitoringView>(), TaskMonitoringContract.TaskMonitoringPresenter {
+class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.TaskMonitoringView>(), TaskMonitoringContract.TaskMonitoringPresenter {
 
     private val taskWebSocketHelper: TaskWSAdapter = TaskWSAdapter
     private val notifierWebSocketHelper: NotifierWSAdapter = NotifierWSAdapter

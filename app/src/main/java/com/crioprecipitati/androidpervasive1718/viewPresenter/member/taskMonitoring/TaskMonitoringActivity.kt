@@ -4,7 +4,7 @@ import com.crioprecipitati.androidpervasive1718.base.BaseActivity
 
 class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMonitoringView, TaskMonitoringContract.TaskMonitoringPresenter>(), TaskMonitoringContract.TaskMonitoringView {
 
-    override var presenter: TaskMonitoringContract.TaskMonitoringPresenter = TaskMonitoringPresenterImpl
+    override var presenter: TaskMonitoringContract.TaskMonitoringPresenter = TaskMonitoringPresenterImpl()
 
     override fun showNewTask() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.

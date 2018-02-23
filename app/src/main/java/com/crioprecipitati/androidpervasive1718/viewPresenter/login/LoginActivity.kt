@@ -9,7 +9,7 @@ import com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonitor
 
 class LoginActivity : BaseActivity<LoginContract.LoginView, LoginContract.LoginPresenter>(), LoginContract.LoginView {
 
-    override var presenter: LoginContract.LoginPresenter = LoginPresenterImpl
+    override var presenter: LoginContract.LoginPresenter = LoginPresenterImpl()
 
     override fun showAndUpdateSessionList() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
