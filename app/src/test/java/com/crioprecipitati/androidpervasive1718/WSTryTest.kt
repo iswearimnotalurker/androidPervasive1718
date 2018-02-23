@@ -15,7 +15,7 @@ class WSTryTest{
         val presenter = LoginPresenterImpl
         Thread(Runnable {
             presenter.onNewSessionRequested("erdf",MemberType.LEADER)
-            presenter.onSessionSelected(MemberType.LEADER, presenter.sessionId)
+            //presenter.onSessionSelected(MemberType.LEADER, presenter.sessionId)
         }).start()
         Thread.sleep(10000)
     }
