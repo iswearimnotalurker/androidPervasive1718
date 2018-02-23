@@ -3,6 +3,7 @@ package com.crioprecipitati.androidpervasive1718.viewPresenter.login
 import com.crioprecipitati.androidpervasive1718.base.BasePresenterImpl
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.SessionDNS
+import com.crioprecipitati.androidpervasive1718.model.Task
 import com.crioprecipitati.androidpervasive1718.networking.RestApiManager
 import com.crioprecipitati.androidpervasive1718.networking.api.SessionApi
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
@@ -16,7 +17,7 @@ import model.WSOperations
 
 object LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginContract.LoginPresenter {
 
-    private val webSocketHelper: TaskWSAdapter = TaskWSAdapter
+    private lateinit var webSocketHelper: TaskWSAdapter
     override var sessionId: Int = -1
     private lateinit var member: Member
     override var view: LoginContract.LoginView? = null
@@ -58,7 +59,7 @@ object LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginC
         if (memberType == MemberType.LEADER) {
             RestApiManager
                 .createService(SessionApi::class.java)
-                .createNewSession(cf)
+                .createNewSession(cf, member.id)
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnSubscribe { /*view
                ?.startLoadingState()*/ }
@@ -95,6 +96,7 @@ object LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginC
     }
 
     override fun onSessionCreated(memberType: MemberType, sessionId: Int) {
+        webSocketHelper = TaskWSAdapter
         if (memberType == MemberType.LEADER) {
             val members: List<Member> = listOf(Member(1,"Leader")) // Set actual current leader
             val message = PayloadWrapper(sessionId, WSOperations.ADD_LEADER, MembersAdditionNotification(members).toJson())
