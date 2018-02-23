@@ -15,12 +15,11 @@ import model.PayloadWrapper
 import model.TaskAssignment
 import model.WSOperations
 
-object ActivitySelectionPresenterImpl : BasePresenterImpl<ActivitySelectionContract.ActivitySelectionView>(), ActivitySelectionContract.ActivitySelectionPresenter {
+class ActivitySelectionPresenterImpl : BasePresenterImpl<ActivitySelectionContract.ActivitySelectionView>(), ActivitySelectionContract.ActivitySelectionPresenter {
 
     override var activityList: List<Activity> = listOf()
     private val taskWebSocketHelper: TaskWSAdapter = TaskWSAdapter
     private val notifierWebSocket: NotifierWSAdapter = NotifierWSAdapter
-    private val loginPresenter: LoginContract.LoginPresenter = LoginPresenterImpl
     override var view: ActivitySelectionContract.ActivitySelectionView? = null
 
     override fun onActivityTypeSelected(activityTypeId: Int) {

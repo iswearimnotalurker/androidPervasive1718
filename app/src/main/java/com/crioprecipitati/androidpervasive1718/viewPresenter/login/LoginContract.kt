@@ -25,8 +25,6 @@ interface LoginContract {
 
     interface LoginPresenter : BasePresenter<LoginView> {
 
-        var sessionId :Int
-
         fun onConnectRequested(memberType: MemberType, id: Int, name: String)
 
         fun onNewSessionRequested(cf: String, memberType: MemberType)

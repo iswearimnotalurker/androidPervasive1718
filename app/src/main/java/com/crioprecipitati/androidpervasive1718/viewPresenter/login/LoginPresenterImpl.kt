@@ -1,5 +1,6 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.login
 
+import com.chibatching.kotpref.Kotpref
 import com.crioprecipitati.androidpervasive1718.base.BasePresenterImpl
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.SessionDNS
@@ -15,12 +16,15 @@ import model.MembersAdditionNotification
 import model.PayloadWrapper
 import model.WSOperations
 
-object LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginContract.LoginPresenter {
+class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginContract.LoginPresenter {
 
     private lateinit var webSocketHelper: TaskWSAdapter
-    override var sessionId: Int = -1
     private lateinit var member: Member
     override var view: LoginContract.LoginView? = null
+
+    init {
+        Kotpref.init()
+    }
 
     override fun onConnectRequested(memberType: MemberType, id: Int, name: String) {
 
@@ -69,7 +73,7 @@ object LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginC
                         { sessionInfo ->
                             println(sessionInfo as SessionDNS)
                             onSessionCreated(memberType, sessionInfo.sessionId)
-                            sessionId = sessionInfo.sessionId
+                            saveSessionInPrefs(sessionInfo.sessionId)
                         },
                         { e ->
                             //Snackbar.make(session_list, e.message ?: "", Snackbar.LENGTH_LONG).show()
@@ -108,5 +112,9 @@ object LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginC
         if(response.message == "ok"){
             view?.startTeamMonitoringActivity(member)
         }
+    }
+
+    private fun saveSessionInPrefs(sessionId: Int){
+
     }
 }
