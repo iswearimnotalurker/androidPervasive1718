@@ -10,13 +10,13 @@ import retrofit2.http.*
 interface SessionApi {
 
     @GET("session/all")
-    fun getAllSessions(): Observable<List<SessionDNS>>;
+    fun getAllSessions(): Observable<List<SessionDNS>>
 
     @GET("session/all/{memberId}")
     fun getAllSessionsByLeaderId(@Path("memberId") memberId: Int): Observable<List<SessionDNS>>
 
     @POST("session/new/{patId}")
-    fun createNewSession(@Path("patId") patId: String): Observable<SessionDNS>;
+    fun createNewSession(@Path("patId") patId: String): Observable<SessionDNS>
 
     @DELETE("session/close/{sessionId}")
     fun closeSessionBySessionId(@Path("sessionId") sessionId: Int): Observable<ResponseBody>
