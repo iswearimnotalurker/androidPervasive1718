@@ -7,6 +7,7 @@ import com.crioprecipitati.androidpervasive1718.networking.RestApiManager
 import com.crioprecipitati.androidpervasive1718.networking.api.SessionApi
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.NotifierWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
+import com.crioprecipitati.androidpervasive1718.utils.Prefs
 import com.crioprecipitati.androidpervasive1718.utils.toJson
 import com.crioprecipitati.androidpervasive1718.viewPresenter.login.LoginContract
 import com.crioprecipitati.androidpervasive1718.viewPresenter.login.LoginPresenterImpl
@@ -19,11 +20,10 @@ object TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Te
 
     private val taskWebSocketHelper: TaskWSAdapter = TaskWSAdapter
     private val notifierWebSocketHelper: NotifierWSAdapter = NotifierWSAdapter
-    private val loginPresenter: LoginContract.LoginPresenter = LoginPresenterImpl
     override var member: Member? = null
 
     override fun onTaskDeleted() {
-        taskWebSocketHelper.webSocket.send(PayloadWrapper(loginPresenter.sessionId,WSOperations.REMOVE_TASK,TaskAssignment(Member.defaultMember(), Task.defaultTask()).toJson()).toJson())
+        taskWebSocketHelper.webSocket.send(PayloadWrapper(Prefs.sessionId,WSOperations.REMOVE_TASK,TaskAssignment(Member.defaultMember(), Task.defaultTask()).toJson()).toJson())
     }
 
     override fun onMemberSelected() {

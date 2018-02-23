@@ -7,6 +7,7 @@ import com.crioprecipitati.androidpervasive1718.model.SessionDNS
 import com.crioprecipitati.androidpervasive1718.networking.RestApiManager
 import com.crioprecipitati.androidpervasive1718.networking.api.SessionApi
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
+import com.crioprecipitati.androidpervasive1718.utils.Prefs
 import com.crioprecipitati.androidpervasive1718.utils.toJson
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -21,7 +22,7 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
     private lateinit var member: Member
 
     init {
-        Kotpref.init()
+        Kotpref.init(view?.getContext()!!)
     }
 
     override fun onConnectRequested(memberType: MemberType, id: Int, name: String) {
@@ -71,7 +72,7 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
                         { sessionInfo ->
                             println(sessionInfo as SessionDNS)
                             onSessionCreated(memberType, sessionInfo.sessionId)
-                            saveSessionInPrefs(sessionInfo.sessionId)
+                            Prefs.sessionId=(sessionInfo.sessionId)
                         },
                         { e ->
                             //Snackbar.make(session_list, e.message ?: "", Snackbar.LENGTH_LONG).show()
@@ -112,7 +113,4 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
         }
     }
 
-    private fun saveSessionInPrefs(sessionId: Int){
-
-    }
 }
