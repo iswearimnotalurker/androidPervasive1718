@@ -16,11 +16,11 @@ import model.WSOperations
 import java.sql.Timestamp
 import java.util.*
 
-class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.TaskMonitoringView>(), TaskMonitoringContract.TaskMonitoringPresenter {
+object TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.TaskMonitoringView>(), TaskMonitoringContract.TaskMonitoringPresenter {
 
     private val taskWebSocketHelper: TaskWSAdapter = TaskWSAdapter
     private val notifierWebSocketHelper: NotifierWSAdapter = NotifierWSAdapter
-    override var view: TaskMonitoringContract.TaskMonitoringView? = null
+    private val loginPresenter: LoginContract.LoginPresenter = LoginPresenterImpl
 
     override fun onTaskCompletionRequested() {
         //mock

@@ -1,7 +1,6 @@
 package com.crioprecipitati.androidpervasive1718.base
 
 interface BasePresenter<V : BaseView> {
-    var view: V?
 
     fun attachView(view: V)
 
@@ -9,6 +8,8 @@ interface BasePresenter<V : BaseView> {
 }
 
 abstract class BasePresenterImpl<V : BaseView> : BasePresenter<V> {
+
+    protected var view: V? = null
 
     override fun attachView(view: V) {
         this.view = view

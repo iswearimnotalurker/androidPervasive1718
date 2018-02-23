@@ -4,7 +4,6 @@ import com.chibatching.kotpref.Kotpref
 import com.crioprecipitati.androidpervasive1718.base.BasePresenterImpl
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.SessionDNS
-import com.crioprecipitati.androidpervasive1718.model.Task
 import com.crioprecipitati.androidpervasive1718.networking.RestApiManager
 import com.crioprecipitati.androidpervasive1718.networking.api.SessionApi
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
@@ -20,7 +19,6 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
 
     private lateinit var webSocketHelper: TaskWSAdapter
     private lateinit var member: Member
-    override var view: LoginContract.LoginView? = null
 
     init {
         Kotpref.init()

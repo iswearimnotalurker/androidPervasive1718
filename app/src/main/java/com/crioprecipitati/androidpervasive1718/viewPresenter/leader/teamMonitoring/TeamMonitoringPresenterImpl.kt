@@ -15,11 +15,11 @@ import model.PayloadWrapper
 import model.TaskAssignment
 import model.WSOperations
 
-class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.TeamMonitoringView>(),TeamMonitoringContract.TeamMonitoringPresenter {
+object TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.TeamMonitoringView>(),TeamMonitoringContract.TeamMonitoringPresenter {
 
     private val taskWebSocketHelper: TaskWSAdapter = TaskWSAdapter
     private val notifierWebSocketHelper: NotifierWSAdapter = NotifierWSAdapter
-    override var view:TeamMonitoringContract.TeamMonitoringView? = null
+    private val loginPresenter: LoginContract.LoginPresenter = LoginPresenterImpl
     override var member: Member? = null
 
     override fun onTaskDeleted() {

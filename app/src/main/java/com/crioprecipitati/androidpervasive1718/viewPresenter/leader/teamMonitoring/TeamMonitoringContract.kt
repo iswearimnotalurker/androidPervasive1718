@@ -23,7 +23,6 @@ interface TeamMonitoringContract {
 
     interface TeamMonitoringPresenter : BasePresenter<TeamMonitoringView> {
 
-        override var view: TeamMonitoringContract.TeamMonitoringView?
         var member: Member?
 
         fun onTaskDeleted()
