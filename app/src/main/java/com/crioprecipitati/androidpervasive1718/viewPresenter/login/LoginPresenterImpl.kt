@@ -42,14 +42,15 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
         val service = RestApiManager.createService(SessionApi::class.java)
 
         when (memberType) {
-            MemberType.LEADER -> service.getAllSessions()
-            MemberType.MEMBER -> service.getAllSessionsByLeaderId(member.id)
+            MemberType.LEADER -> service.getAllSessionsByLeaderId(member.id)
+            MemberType.MEMBER -> service.getAllSessions()
         }.observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { sessionList ->
                     view?.toggleViewForMemberType(memberType)
                     sessionList.forEach { it ->
                         println(it)
+
                     }
                 },
                 { e -> println(e.message) }
@@ -58,6 +59,7 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
 
     override fun onNewSessionRequested(cf: String, memberType: MemberType) {
 //        SessionWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.NEW_SESSION, SessionAssignment(cf, member.id).toJson()).toJson())
+        SessionWSAdapter.initWS()
         SessionWSAdapter.send(PayloadWrapper(0, WSOperations.NEW_SESSION, SessionAssignment(cf, member.id).toJson()).toJson())
     }
 
@@ -118,5 +120,4 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
             }
         }
     }
-
 }
