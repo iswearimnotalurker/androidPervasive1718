@@ -7,15 +7,11 @@ import com.crioprecipitati.androidpervasive1718.model.Task
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.NotifierWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
 import com.crioprecipitati.androidpervasive1718.utils.Prefs
+import com.crioprecipitati.androidpervasive1718.utils.WSObserver
 import com.crioprecipitati.androidpervasive1718.utils.toJson
-import com.crioprecipitati.androidpervasive1718.viewPresenter.login.LoginContract
-import com.crioprecipitati.androidpervasive1718.viewPresenter.login.LoginPresenterImpl
-import model.MembersAdditionNotification
-import model.PayloadWrapper
-import model.TaskAssignment
-import model.WSOperations
+import model.*
 
-class ActivitySelectionPresenterImpl : BasePresenterImpl<ActivitySelectionContract.ActivitySelectionView>(), ActivitySelectionContract.ActivitySelectionPresenter {
+class ActivitySelectionPresenterImpl : BasePresenterImpl<ActivitySelectionContract.ActivitySelectionView>(), ActivitySelectionContract.ActivitySelectionPresenter, WSObserver {
 
     override var activityList: List<Activity> = listOf()
     private val taskWebSocketHelper: TaskWSAdapter = TaskWSAdapter
@@ -27,14 +23,29 @@ class ActivitySelectionPresenterImpl : BasePresenterImpl<ActivitySelectionContra
 
     }
 
-    override fun onActivitySelected(member: Member) {
-        taskWebSocketHelper.webSocket.send(PayloadWrapper(Prefs.sessionId,WSOperations.ADD_TASK,TaskAssignment(member, Task.emptyTask()).toJson()).toJson())
-        notifierWebSocket.webSocket.send(PayloadWrapper(Prefs.sessionId,WSOperations.SUBSCRIBE,member.toJson()).toJson())
+    override fun onActivitySelected(currentMember: Member) {
+        taskWebSocketHelper.webSocket.send(PayloadWrapper(Prefs.sessionId, WSOperations.ADD_TASK, TaskAssignment(currentMember, Task.emptyTask()).toJson()).toJson())
+        notifierWebSocket.webSocket.send(PayloadWrapper(Prefs.sessionId, WSOperations.SUBSCRIBE, currentMember.toJson()).toJson())
 
     }
 
     override fun getActivityByActivityType() {
-        var members: List<Member> = listOf(Member(1,"Leader"))
-        taskWebSocketHelper.webSocket.send(PayloadWrapper(Prefs.sessionId,WSOperations.GET_ALL_ACTIVITIES,MembersAdditionNotification(members).toJson()).toJson())
+        val members: List<Member> = listOf(Member(1, "Leader"))
+        taskWebSocketHelper.webSocket.send(PayloadWrapper(Prefs.sessionId, WSOperations.GET_ALL_ACTIVITIES, MembersAdditionNotification(members).toJson()).toJson())
+    }
+
+    override fun update(payloadWrapper: PayloadWrapper) {
+        with(payloadWrapper) {
+
+            fun activityAdditionHandling() {
+                val activityAddition: ActivityAdditionNotification = this.objectify(body)
+                activityList = activityAddition.activities
+            }
+
+            when (payloadWrapper.subject) {
+                WSOperations.SET_ALL_ACTIVITIES -> activityAdditionHandling()
+                else -> null
+            }
+        }
     }
 }

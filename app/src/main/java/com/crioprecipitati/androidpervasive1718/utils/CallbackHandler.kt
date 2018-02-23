@@ -1,76 +1,45 @@
 package com.crioprecipitati.androidpervasive1718.utils
 
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.WSCallbacks
-import com.crioprecipitati.androidpervasive1718.viewPresenter.leader.activitySelection.ActivitySelectionContract
-import com.crioprecipitati.androidpervasive1718.viewPresenter.leader.activitySelection.ActivitySelectionPresenterImpl
-import com.crioprecipitati.androidpervasive1718.viewPresenter.leader.teamMonitoring.TeamMonitoringContract
-import com.crioprecipitati.androidpervasive1718.viewPresenter.leader.teamMonitoring.TeamMonitoringPresenterImpl
-import com.crioprecipitati.androidpervasive1718.viewPresenter.login.LoginContract
-import com.crioprecipitati.androidpervasive1718.viewPresenter.login.LoginPresenterImpl
-import model.*
+import model.PayloadWrapper
 
-/**
- * Created by Famiglia Antonini on 22/02/2018.
- */
-class CallbackHandler:WSCallbacks {
+interface WSObserver {
 
-    private val teamMonitoringPresenter : TeamMonitoringContract.TeamMonitoringPresenter = TeamMonitoringPresenterImpl
-    private val activitySelectionPresenter: ActivitySelectionContract.ActivitySelectionPresenter = ActivitySelectionPresenterImpl
-    private val loginPresenter: LoginContract.LoginPresenter = LoginPresenterImpl
-    override fun onMessageReceived(messageString: String?) {
+    fun update(payloadWrapper: PayloadWrapper)
 
-        val messageWrapper: PayloadWrapper = GsonInitializer.fromJson(messageString!!,PayloadWrapper::class.java)
-        messageWrapper?.let {
-            with(messageWrapper) {
+}
 
-                fun taskAssignmentHandling(){
-                    val taskAssignment: TaskAssignment = it.objectify(body)
-                    teamMonitoringPresenter.view?.showAndUpdateTaskList(taskAssignment.member,taskAssignment.task)
-                }
+interface WSSubject {
 
-                fun taskErrorHandling(){
-                    val taskError: TaskError = it.objectify(body)
-                    teamMonitoringPresenter.view?.showError(taskError.error)
-                }
+    val observers: MutableMap<String, MutableList<WSObserver>>
 
-                fun updateHandling(){
-                    val update: Update = it.objectify(body)
-                    teamMonitoringPresenter.view?.showAndUpdateHealthParameters(update.lifeParameter,update.value)
-                }
+    fun attach(wsOperation: String, observer: WSObserver)
 
-                fun memberAdditionHandling(){
+    fun detach(wsOperation: String, observer: WSObserver)
 
-                    val membersAddition: MembersAdditionNotification = it.objectify(body)
-                    teamMonitoringPresenter.view?.showAndUpdateMemberList(membersAddition.members)
-                }
+    fun notifyAllObservers(wsOperation: String, payloadWrapper: PayloadWrapper)
 
-                fun activityAdditionHandling(){
-                    val activityAddition: ActivityAdditionNotification = it.objectify(body)
-                    activitySelectionPresenter.activityList = activityAddition.activities
-                }
+}
 
-                fun leaderResponseHandling(){
-                    val leaderResponse: GenericResponse = it.objectify(body)
-                    loginPresenter.onLeaderCreationResponse(leaderResponse)
+object CallbackHandler : WSCallbacks, WSSubject {
 
-                }
+    override val observers: MutableMap<String, MutableList<WSObserver>> = mutableMapOf()
 
-                when (subject) {
-                    WSOperations.LIST_MEMBERS -> memberAdditionHandling()
-                    WSOperations.ADD_MEMBER -> memberAdditionHandling()
-                    WSOperations.ADD_TASK -> taskAssignmentHandling()
-                    WSOperations.CHANGE_TASK_STATUS -> taskAssignmentHandling()
-                    WSOperations.REMOVE_TASK -> taskAssignmentHandling()
-                    WSOperations.ERROR_CHANGING_STATUS -> taskErrorHandling()
-                    WSOperations.ERROR_REMOVING_TASK -> taskErrorHandling()
-                    WSOperations.SET_ALL_ACTIVITIES -> activityAdditionHandling()
-                    WSOperations.UPDATE -> updateHandling()
-                    WSOperations.LEADER_RESPONSE -> leaderResponseHandling()
-                    //TODO NOTIFY
-                    }
-                }
-                }
+    override fun attach(wsOperation: String, observer: WSObserver) {
+        observers[wsOperation]?.add(observer)
     }
 
+    override fun detach(wsOperation: String, observer: WSObserver) {
+        observers[wsOperation]?.remove(observer)
+    }
 
+    override fun notifyAllObservers(wsOperation: String, payloadWrapper: PayloadWrapper) {
+        observers[wsOperation]?.forEach { it.update(payloadWrapper) }
+    }
+
+    override fun onMessageReceived(messageString: String?) {
+        with(GsonInitializer.fromJson(messageString!!, PayloadWrapper::class.java)) {
+            notifyAllObservers(this.subject.name, this)
+        }
+    }
 }

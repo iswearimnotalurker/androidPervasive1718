@@ -8,15 +8,13 @@ import com.crioprecipitati.androidpervasive1718.networking.RestApiManager
 import com.crioprecipitati.androidpervasive1718.networking.api.SessionApi
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
 import com.crioprecipitati.androidpervasive1718.utils.Prefs
+import com.crioprecipitati.androidpervasive1718.utils.WSObserver
 import com.crioprecipitati.androidpervasive1718.utils.toJson
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
-import model.GenericResponse
-import model.MembersAdditionNotification
-import model.PayloadWrapper
-import model.WSOperations
+import model.*
 
-class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginContract.LoginPresenter {
+class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginContract.LoginPresenter, WSObserver {
 
     private lateinit var webSocketHelper: TaskWSAdapter
     private lateinit var member: Member
@@ -32,28 +30,20 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
         val service = RestApiManager.createService(SessionApi::class.java)
         val observable: Observable<List<SessionDNS>>
 
-        if (memberType == MemberType.MEMBER)
-            observable = service.getAllSessions()
+        observable = if (memberType == MemberType.MEMBER)
+            service.getAllSessions()
         else
-            observable = service.getAllSessionsByLeaderId(member.id)
+            service.getAllSessionsByLeaderId(member.id)
 
         observable.observeOn(AndroidSchedulers.mainThread())
-            .doOnSubscribe { /*view
-           ?.startLoadingState()*/ }
-            .doAfterTerminate { /*view
-           ?.stopLoadingState()*/ }
             .subscribe(
-                    { sessionList ->
-                        view?.toggleViewForMemberType(memberType)
-                        // View logic here
-                        sessionList.forEach {
-                            it -> println(it)
-                        }
-                    },
-                    { e ->
-                        //Snackbar.make(session_list, e.message ?: "", Snackbar.LENGTH_LONG).show()
-                        println(e.message)
+                { sessionList ->
+                    view?.toggleViewForMemberType(memberType)
+                    sessionList.forEach { it ->
+                        println(it)
                     }
+                },
+                { e -> println(e.message) }
             )
     }
 
@@ -64,20 +54,13 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
                 .createService(SessionApi::class.java)
                 .createNewSession(cf, member.id)
                 .observeOn(AndroidSchedulers.mainThread())
-                .doOnSubscribe { /*view
-               ?.startLoadingState()*/ }
-                .doAfterTerminate { /*view
-               ?.stopLoadingState()*/ }
                 .subscribe(
-                        { sessionInfo ->
-                            println(sessionInfo as SessionDNS)
-                            onSessionCreated(memberType, sessionInfo.sessionId)
-                            Prefs.sessionId=(sessionInfo.sessionId)
-                        },
-                        { e ->
-                            //Snackbar.make(session_list, e.message ?: "", Snackbar.LENGTH_LONG).show()
-                            println(e.message)
-                        }
+                    { sessionInfo ->
+                        println(sessionInfo as SessionDNS)
+                        onSessionCreated(memberType, sessionInfo.sessionId)
+                        Prefs.sessionId = (sessionInfo.sessionId)
+                    },
+                    { e -> println(e.message) }
                 )
         }
     }
@@ -85,13 +68,12 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
     override fun onSessionSelected(memberType: MemberType, sessionId: Int) {
         // Recovery: session selected already exists and belongs to leader
         if (memberType == MemberType.LEADER) {
-            val members: List<Member> = listOf(Member(1,"Leader")) // Set actual current leader
+            val members: List<Member> = listOf(Member(1, "Leader")) // Set actual current leader
             val message = PayloadWrapper(sessionId, WSOperations.ADD_LEADER, MembersAdditionNotification(members).toJson())
             webSocketHelper.webSocket.send(message.toJson())
             // This action will trigger the response from MT with the list of members
-        }
-        else {
-            val members: List<Member> = listOf(Member(2,"Member"))
+        } else {
+            val members: List<Member> = listOf(Member(2, "Member"))
             val message = PayloadWrapper(sessionId, WSOperations.ADD_MEMBER, MembersAdditionNotification(members).toJson())
             webSocketHelper.webSocket.send(message.toJson())
             view?.startTaskMonitoringActivity(member)
@@ -101,15 +83,30 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
     override fun onSessionCreated(memberType: MemberType, sessionId: Int) {
         webSocketHelper = TaskWSAdapter
         if (memberType == MemberType.LEADER) {
-            val members: List<Member> = listOf(Member(1,"Leader")) // Set actual current leader
+            val members: List<Member> = listOf(Member(1, "Leader")) // Set actual current leader
             val message = PayloadWrapper(sessionId, WSOperations.ADD_LEADER, MembersAdditionNotification(members).toJson())
             webSocketHelper.webSocket.send(message.toJson())
         }
     }
 
-    override fun onLeaderCreationResponse(response: GenericResponse){
-        if(response.message == "ok"){
+    override fun onLeaderCreationResponse(response: GenericResponse) {
+        if (response.message == "ok") {
             view?.startTeamMonitoringActivity(member)
+        }
+    }
+
+    override fun update(payloadWrapper: PayloadWrapper) {
+        with(payloadWrapper) {
+
+            fun leaderResponseHandling() {
+                val leaderResponse: GenericResponse = this.objectify(body)
+                onLeaderCreationResponse(leaderResponse)
+            }
+
+            when (subject) {
+                WSOperations.LEADER_RESPONSE -> leaderResponseHandling()
+                else -> null
+            }
         }
     }
 
