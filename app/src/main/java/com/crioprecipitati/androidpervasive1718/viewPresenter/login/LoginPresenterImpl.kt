@@ -13,7 +13,6 @@ import com.crioprecipitati.androidpervasive1718.utils.CallbackHandler
 import com.crioprecipitati.androidpervasive1718.utils.Prefs
 import com.crioprecipitati.androidpervasive1718.utils.WSObserver
 import com.crioprecipitati.androidpervasive1718.utils.toJson
-import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import model.*
 
@@ -41,14 +40,11 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
         member = Member(id, name)
 
         val service = RestApiManager.createService(SessionApi::class.java)
-        val observable: Observable<List<SessionDNS>>
 
-        observable = if (memberType == MemberType.MEMBER)
-            service.getAllSessions()
-        else
-            service.getAllSessionsByLeaderId(member.id)
-
-        observable.observeOn(AndroidSchedulers.mainThread())
+        when (memberType) {
+            MemberType.LEADER -> service.getAllSessions()
+            MemberType.MEMBER -> service.getAllSessionsByLeaderId(member.id)
+        }.observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 { sessionList ->
                     view?.toggleViewForMemberType(memberType)
@@ -61,7 +57,8 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
     }
 
     override fun onNewSessionRequested(cf: String, memberType: MemberType) {
-        SessionWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.NEW_SESSION, SessionAssignment(cf, member.id).toJson()).toJson())
+//        SessionWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.NEW_SESSION, SessionAssignment(cf, member.id).toJson()).toJson())
+        SessionWSAdapter.send(PayloadWrapper(0, WSOperations.NEW_SESSION, SessionAssignment(cf, member.id).toJson()).toJson())
     }
 
     override fun onSessionSelected(memberType: MemberType, sessionId: Int) {

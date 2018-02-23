@@ -12,7 +12,7 @@ class LoginPresenterTest {
 
     @Before
     fun create() {
-        presenter = LoginPresenterImpl
+        presenter = LoginPresenterImpl()
     }
 
 

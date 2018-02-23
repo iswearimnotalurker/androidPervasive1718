@@ -8,7 +8,8 @@ class WSTryTest{
 
     @Test
     fun WSGetAllSessions(){
-        val presenter = LoginPresenterImpl
+        val presenter = LoginPresenterImpl()
+        presenter.onConnectRequested(MemberType.LEADER, 0, "non andrà mai")
         Thread(Runnable {
             presenter.onNewSessionRequested("erdf",MemberType.LEADER)
             //presenter.onSessionSelected(MemberType.LEADER, presenter.sessionId)

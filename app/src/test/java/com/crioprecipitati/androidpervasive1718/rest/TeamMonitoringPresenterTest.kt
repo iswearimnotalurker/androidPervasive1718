@@ -14,8 +14,8 @@ class TeamMonitoringPresenterTest {
 
     @Before
     fun create() {
-        teamMonitoringPresenter = TeamMonitoringPresenterImpl
-        loginPresenter = LoginPresenterImpl
+        teamMonitoringPresenter = TeamMonitoringPresenterImpl()
+        loginPresenter = LoginPresenterImpl()
     }
 
     /* Should print on console Not Found */
