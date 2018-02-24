@@ -98,10 +98,11 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
             }
 
             fun sessionResponseHandling() {
+                val sessionDNSResponse: SessionDNS = this.objectify(body)
+                // TODO metti nelle preferenze l'instance id altrimenti quando crei una nuova sessione lui parla sempre con 00
+                SessionWSAdapter.closeWS()
                 TaskWSAdapter.initWS()
                 NotifierWSAdapter.initWS()
-                SessionWSAdapter.closeWS()
-                val sessionDNSResponse: SessionDNS = this.objectify(body)
                 onSessionCreated(sessionDNSResponse.sessionId)
             }
 

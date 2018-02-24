@@ -19,7 +19,10 @@ abstract class WSAdapter(private val baseAddress: String) {
         webSocket.send(message)
     }
 
-    fun closeWS() = webSocket.close()
+    fun closeWS() {
+        Log.d("[CLOSE WS] $baseAddress")
+        webSocket.close()
+    }
 }
 
 object SessionWSAdapter : WSAdapter(WS_DEFAULT_SESSION_URI)
