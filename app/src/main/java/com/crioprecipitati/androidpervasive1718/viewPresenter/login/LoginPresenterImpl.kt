@@ -15,6 +15,7 @@ import com.crioprecipitati.androidpervasive1718.utils.WSObserver
 import com.crioprecipitati.androidpervasive1718.utils.toJson
 import io.reactivex.android.schedulers.AndroidSchedulers
 import model.*
+import trikita.log.Log
 
 class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginContract.LoginPresenter, WSObserver {
 
@@ -39,27 +40,23 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
 
         member = Member(id, name)
 
-        val service = RestApiManager.createService(SessionApi::class.java)
-
-        when (memberType) {
-            MemberType.LEADER -> service.getAllSessionsByLeaderId(member.id)
-            MemberType.MEMBER -> service.getAllSessions()
-        }.observeOn(AndroidSchedulers.mainThread())
-            .subscribe(
-                { sessionList ->
-                    view?.toggleViewForMemberType(memberType)
-                    sessionList.forEach { it ->
-                        println(it)
-
-                    }
-                },
-                { e -> println(e.message) }
-            )
+        with(RestApiManager.createService(SessionApi::class.java)) {
+            when (memberType) {
+                MemberType.LEADER -> this.getAllSessionsByLeaderId(member.id)
+                MemberType.MEMBER -> this.getAllSessions()
+            }.observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                    { sessionList ->
+                        view?.toggleViewForMemberType(memberType)
+                        sessionList.forEach { it -> Log.d(it) }
+                    }, { e -> Log.d(e.message) })
+        }
     }
 
     override fun onNewSessionRequested(cf: String, memberType: MemberType) {
 //        SessionWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.NEW_SESSION, SessionAssignment(cf, member.id).toJson()).toJson())
-        SessionWSAdapter.initWS()
+//        SessionWSAdapter.initWS()
+        member = Member(0, "leader supremo")
         SessionWSAdapter.send(PayloadWrapper(0, WSOperations.NEW_SESSION, SessionAssignment(cf, member.id).toJson()).toJson())
     }
 
@@ -82,6 +79,7 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
     }
 
     override fun onSessionCreated(sessionId: Int) {
+        Log.d("created session $sessionId")
         Prefs.sessionId = sessionId
         val members: List<Member> = listOf(Member(1, "Leader")) // Set actual current leader
         val message = PayloadWrapper(sessionId, WSOperations.ADD_LEADER, MembersAdditionNotification(members).toJson())
@@ -109,14 +107,16 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
 
             fun sessionErrorResponseHandling() {
                 val sessionDNSErrorResponse: GenericResponse = this.objectify(body)
+                Log.d("RECEIVED ERROR $sessionDNSErrorResponse")
                 // TODO fai le cose
             }
+
 
             when (subject) {
                 WSOperations.LEADER_RESPONSE -> leaderResponseHandling()
                 WSOperations.SESSION_HANDLER_RESPONSE -> sessionResponseHandling()
                 WSOperations.SESSION_HANDLER_ERROR_RESPONSE -> sessionErrorResponseHandling()
-                else -> null
+                else -> Log.d("MESSAGE NOT HANDLED: $subject")
             }
         }
     }

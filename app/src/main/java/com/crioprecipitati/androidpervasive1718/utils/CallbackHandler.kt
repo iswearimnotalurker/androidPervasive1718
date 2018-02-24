@@ -3,6 +3,7 @@ package com.crioprecipitati.androidpervasive1718.utils
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.WSCallbacks
 import model.PayloadWrapper
 import model.WSOperations
+import trikita.log.Log
 
 interface WSObserver {
 
@@ -30,6 +31,10 @@ object CallbackHandler : WSCallbacks, WSSubject {
 
     override val observers: MutableMap<String, MutableList<WSObserver>> = mutableMapOf()
 
+    init {
+        WSOperations.values().forEach { observers[it.name] = mutableListOf() }
+    }
+
     override fun attach(wsOperation: WSOperations, observer: WSObserver) {
         observers[wsOperation.name]?.add(observer)
     }
@@ -52,6 +57,7 @@ object CallbackHandler : WSCallbacks, WSSubject {
 
     override fun onMessageReceived(messageString: String?) {
         with(GsonInitializer.fromJson(messageString!!, PayloadWrapper::class.java)) {
+            Log.d("[ <-- ${subject.name} ]: ${this.body}")
             notifyAllObservers(this.subject, this)
         }
     }

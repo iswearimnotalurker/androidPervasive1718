@@ -12,6 +12,7 @@ import com.crioprecipitati.androidpervasive1718.utils.WSObserver
 import com.crioprecipitati.androidpervasive1718.utils.toJson
 import io.reactivex.android.schedulers.AndroidSchedulers
 import model.*
+import trikita.log.Log
 
 class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.TeamMonitoringView>(), TeamMonitoringContract.TeamMonitoringPresenter, WSObserver {
 
@@ -53,8 +54,8 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
             .closeSessionBySessionId(sessionId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                { message -> println(message) },
-                { e -> println(e.message) }
+                { message -> Log.d(message) },
+                { e -> Log.d(e.message) }
             )
     }
 

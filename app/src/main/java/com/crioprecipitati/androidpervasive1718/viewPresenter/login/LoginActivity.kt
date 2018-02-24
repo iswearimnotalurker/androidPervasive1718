@@ -1,15 +1,28 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.login
 
 import android.content.Intent
+import android.os.Bundle
+import com.crioprecipitati.androidpervasive1718.R
 import com.crioprecipitati.androidpervasive1718.base.BaseActivity
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.generateBundle
 import com.crioprecipitati.androidpervasive1718.viewPresenter.leader.teamMonitoring.TeamMonitoringActivity
 import com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonitoring.TaskMonitoringActivity
+import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : BaseActivity<LoginContract.LoginView, LoginContract.LoginPresenter>(), LoginContract.LoginView {
 
     override var presenter: LoginContract.LoginPresenter = LoginPresenterImpl()
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_login)
+
+        btnCreateNewSession.setOnClickListener { presenter.onNewSessionRequested("gntlrt94b21g479u", MemberType.LEADER) }
+
+        btnRequestOpenSessions.setOnClickListener { presenter.onConnectRequested(MemberType.LEADER, 0, "leader supremo") }
+
+    }
 
     override fun showAndUpdateSessionList() {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
