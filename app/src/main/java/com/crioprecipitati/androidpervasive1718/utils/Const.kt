@@ -11,3 +11,4 @@ const val CURRENT_LOCAL_IP = IP_ALBERTO
 val WS_DEFAULT_TASK_URI = "ws://$CURRENT_LOCAL_IP:820${Prefs.instanceId}/task"
 val WS_DEFAULT_NOTIFIER_URI = "ws://$CURRENT_LOCAL_IP:830${Prefs.instanceId}/notifier"
 const val WS_DEFAULT_SESSION_URI = "ws://$CURRENT_LOCAL_IP:8501/session"
+val HTTP_SESSION_BASE_URL = "http://$CURRENT_LOCAL_IP:8500/"

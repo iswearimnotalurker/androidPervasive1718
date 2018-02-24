@@ -19,6 +19,7 @@ import trikita.log.Log
 class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginContract.LoginPresenter, WSObserver {
 
     private lateinit var member: Member
+    private val sessionList = mutableListOf<SessionDNS>()
 
     private val channels = listOf(
         WSOperations.LEADER_RESPONSE,
@@ -46,20 +47,24 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
             }.observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     { sessionList ->
-                        view?.toggleViewForMemberType(memberType)
+                        //                        view?.toggleViewForMemberType(memberType)
+                        this@LoginPresenterImpl.sessionList.clear()
+                        this@LoginPresenterImpl.sessionList.addAll(sessionList)
                         sessionList.forEach { it -> Log.d(it) }
                     }, { e -> Log.d(e.message) })
         }
     }
 
     override fun onNewSessionRequested(cf: String, memberType: MemberType) {
-//        SessionWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.NEW_SESSION, SessionAssignment(cf, member.id).toJson()).toJson())
-//        SessionWSAdapter.initWS()
         member = Member(0, "leader supremo")
         SessionWSAdapter.send(PayloadWrapper(0, WSOperations.NEW_SESSION, SessionAssignment(cf, member.id).toJson()).toJson())
     }
 
     override fun onSessionSelected(memberType: MemberType, sessionId: Int) {
+
+        Prefs.instanceId = this.sessionList.first { it.sessionId == sessionId }.instanceId
+        TaskWSAdapter.initWS()
+
         // Recovery: session selected already exists and belongs to leader
         when (memberType) {
             MemberType.LEADER -> {
