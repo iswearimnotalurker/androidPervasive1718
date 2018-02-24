@@ -6,7 +6,6 @@ import com.crioprecipitati.androidpervasive1718.model.SessionAssignment
 import com.crioprecipitati.androidpervasive1718.model.SessionDNS
 import com.crioprecipitati.androidpervasive1718.networking.RestApiManager
 import com.crioprecipitati.androidpervasive1718.networking.api.SessionApi
-import com.crioprecipitati.androidpervasive1718.networking.webSockets.NotifierWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.SessionWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
 import com.crioprecipitati.androidpervasive1718.utils.CallbackHandler
@@ -93,16 +92,16 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
     override fun update(payloadWrapper: PayloadWrapper) {
         with(payloadWrapper) {
             fun leaderResponseHandling() {
-                val leaderResponse: GenericResponse = this.objectify(body)
+                val leaderResponse = GenericResponse(body)
                 onLeaderCreationResponse(leaderResponse)
             }
 
             fun sessionResponseHandling() {
                 val sessionDNSResponse: SessionDNS = this.objectify(body)
-                // TODO metti nelle preferenze l'instance id altrimenti quando crei una nuova sessione lui parla sempre con 00
+                Prefs.instanceId = sessionDNSResponse.instanceId
                 SessionWSAdapter.closeWS()
                 TaskWSAdapter.initWS()
-                NotifierWSAdapter.initWS()
+//                NotifierWSAdapter.initWS()
                 onSessionCreated(sessionDNSResponse.sessionId)
             }
 
