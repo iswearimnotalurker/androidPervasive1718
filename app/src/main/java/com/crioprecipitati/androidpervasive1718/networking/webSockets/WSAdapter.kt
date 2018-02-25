@@ -1,9 +1,11 @@
 package com.crioprecipitati.androidpervasive1718.networking.webSockets
 
-import com.crioprecipitati.androidpervasive1718.utils.CallbackHandler
-import com.crioprecipitati.androidpervasive1718.utils.WS_DEFAULT_NOTIFIER_URI
-import com.crioprecipitati.androidpervasive1718.utils.WS_DEFAULT_SESSION_URI
-import com.crioprecipitati.androidpervasive1718.utils.WS_DEFAULT_TASK_URI
+import com.crioprecipitati.androidpervasive1718.model.Member
+import com.crioprecipitati.androidpervasive1718.model.SessionAssignment
+import com.crioprecipitati.androidpervasive1718.utils.*
+import model.MembersAdditionNotification
+import model.PayloadWrapper
+import model.WSOperations
 import trikita.log.Log
 
 abstract class WSAdapter(private val baseAddress: String) {
@@ -25,8 +27,27 @@ abstract class WSAdapter(private val baseAddress: String) {
     }
 }
 
-object SessionWSAdapter : WSAdapter(WS_DEFAULT_SESSION_URI)
+object SessionWSAdapter : WSAdapter(WS_DEFAULT_SESSION_URI) {
 
-object TaskWSAdapter : WSAdapter(WS_DEFAULT_TASK_URI)
+    fun sendNewSessionMessage() =
+        SessionWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.NEW_SESSION, SessionAssignment(Prefs.patientCF, Prefs.userCF).toJson()).toJson())
+
+}
+
+object TaskWSAdapter : WSAdapter(WS_DEFAULT_TASK_URI) {
+
+    private fun sendCustomMessage(operation: WSOperations) {
+        TaskWSAdapter.send(
+            PayloadWrapper(
+                Prefs.sessionId,
+                operation,
+                MembersAdditionNotification(listOf(Member(Prefs.userCF))).toJson()).toJson())
+    }
+
+    fun sendAddMemberMessage() = sendCustomMessage(WSOperations.ADD_MEMBER)
+
+    fun sendAddLeaderMessage() = sendCustomMessage(WSOperations.ADD_LEADER)
+
+}
 
 object NotifierWSAdapter : WSAdapter(WS_DEFAULT_NOTIFIER_URI)

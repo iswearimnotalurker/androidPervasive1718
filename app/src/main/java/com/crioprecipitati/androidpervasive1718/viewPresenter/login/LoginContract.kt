@@ -1,12 +1,14 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.login
 
-import com.crioprecipitati.androidpervasive1718.base.BasePresenter
-import com.crioprecipitati.androidpervasive1718.base.BaseView
-import com.crioprecipitati.androidpervasive1718.model.Member
+import com.crioprecipitati.androidpervasive1718.model.SessionDNS
+import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BasePresenter
+import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseView
 import model.GenericResponse
 
 enum class MemberType {
-    LEADER, MEMBER
+    LEADER, MEMBER;
+
+    fun isLeader(): Boolean = this == LEADER
 }
 
 interface LoginContract {
@@ -17,23 +19,27 @@ interface LoginContract {
 
         fun toggleViewForMemberType(memberType: MemberType)
 
-        fun startTeamMonitoringActivity(member: Member)
+        fun startTeamMonitoringActivity()
 
-        fun startTaskMonitoringActivity(member: Member)
+        fun startTaskMonitoringActivity()
 
+        fun setupUserParams(memberType: MemberType, userCF: String, patientCF: String = "")
+        fun toggleLeaderMode(isEnabled: Boolean)
     }
 
     interface LoginPresenter : BasePresenter<LoginView> {
 
-        fun onConnectRequested(memberType: MemberType, id: Int, name: String)
+        fun onMemberTypeChanged(memberType: MemberType)
 
-        fun onNewSessionRequested(cf: String, memberType: MemberType)
+        fun onNewSessionRequested()
 
-        fun onSessionSelected(memberType: MemberType, sessionId: Int) // TODO dovrà prendere un parametro sessione o qualcosa del genere
-
-        fun onSessionCreated(sessionId: Int)
+        fun onSessionCreated(sessionDNS: SessionDNS)
 
         fun onLeaderCreationResponse(response: GenericResponse)
+
+        fun onSessionJoinRequested()
+
+        fun onSessionSelected(memberType: MemberType, sessionId: Int) // TODO dovrà prendere un parametro sessione o qualcosa del genere
 
     }
 

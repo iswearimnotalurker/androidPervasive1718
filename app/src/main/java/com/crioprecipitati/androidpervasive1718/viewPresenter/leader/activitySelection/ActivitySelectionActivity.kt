@@ -1,7 +1,7 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.leader.activitySelection
 
-import com.crioprecipitati.androidpervasive1718.base.BaseActivity
 import com.crioprecipitati.androidpervasive1718.model.Activity
+import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseActivity
 
 class ActivitySelectionActivity : BaseActivity<ActivitySelectionContract.ActivitySelectionView, ActivitySelectionContract.ActivitySelectionPresenter>(), ActivitySelectionContract.ActivitySelectionView {
 

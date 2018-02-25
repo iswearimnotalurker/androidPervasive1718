@@ -1,6 +1,5 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonitoring
 
-import com.crioprecipitati.androidpervasive1718.base.BasePresenterImpl
 import com.crioprecipitati.androidpervasive1718.model.Activity
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.Status
@@ -11,6 +10,7 @@ import com.crioprecipitati.androidpervasive1718.utils.CallbackHandler
 import com.crioprecipitati.androidpervasive1718.utils.Prefs
 import com.crioprecipitati.androidpervasive1718.utils.WSObserver
 import com.crioprecipitati.androidpervasive1718.utils.toJson
+import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BasePresenterImpl
 import model.*
 import java.sql.Timestamp
 import java.util.*
@@ -32,8 +32,8 @@ class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.Tas
     override fun onTaskCompletionRequested() {
         //mock
         val member: Member = Member.emptyMember()
-        val activity = Activity(1,"Ciao",1,"FGT",2)
-        val task = Task(0,Prefs.sessionId,member.id, Timestamp(Date().time - 1000),Timestamp(Date().time),activity.id,Status.FINISHED.id)
+        val activity = Activity(1, "Ciao", 1, "FGT", 2)
+        val task = Task(0, Prefs.sessionId, member.userCF, Timestamp(Date().time - 1000), Timestamp(Date().time), activity.id, Status.FINISHED.id)
 
         TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CHANGE_TASK_STATUS, TaskAssignment(member, task).toJson()).toJson())
         NotifierWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CLOSE, Member.defaultMember().toJson()).toJson())

@@ -1,8 +1,6 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.login
 
-import com.crioprecipitati.androidpervasive1718.base.BasePresenterImpl
-import com.crioprecipitati.androidpervasive1718.model.Member
-import com.crioprecipitati.androidpervasive1718.model.SessionAssignment
+import com.chibatching.kotpref.blockingBulk
 import com.crioprecipitati.androidpervasive1718.model.SessionDNS
 import com.crioprecipitati.androidpervasive1718.networking.RestApiManager
 import com.crioprecipitati.androidpervasive1718.networking.api.SessionApi
@@ -11,14 +9,16 @@ import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdap
 import com.crioprecipitati.androidpervasive1718.utils.CallbackHandler
 import com.crioprecipitati.androidpervasive1718.utils.Prefs
 import com.crioprecipitati.androidpervasive1718.utils.WSObserver
-import com.crioprecipitati.androidpervasive1718.utils.toJson
+import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BasePresenterImpl
 import io.reactivex.android.schedulers.AndroidSchedulers
-import model.*
+import model.GenericResponse
+import model.PayloadWrapper
+import model.WSOperations
+import model.objectify
 import trikita.log.Log
 
 class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginContract.LoginPresenter, WSObserver {
 
-    private lateinit var member: Member
     private val sessionList = mutableListOf<SessionDNS>()
 
     private val channels = listOf(
@@ -36,86 +36,73 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
         CallbackHandler.detach(channels, this)
     }
 
-    override fun onConnectRequested(memberType: MemberType, id: Int, name: String) {
+    override fun onMemberTypeChanged(memberType: MemberType) {
+        Prefs.memberType = memberType
+        view?.toggleLeaderMode(memberType.isLeader())
+    }
 
-        member = Member(id, name)
+    override fun onNewSessionRequested() = SessionWSAdapter.sendNewSessionMessage()
 
+    override fun onSessionCreated(sessionDNS: SessionDNS) {
+        Prefs.blockingBulk {
+            instanceId = sessionDNS.instanceId
+            sessionId = sessionDNS.sessionId
+        }
+        setupWSAfterSessionHandshake()
+        TaskWSAdapter.sendAddLeaderMessage()
+    }
+
+    override fun onLeaderCreationResponse(response: GenericResponse) {
+        when {
+            response.message == "ok" -> view?.startTeamMonitoringActivity()
+        }
+    }
+
+    override fun onSessionJoinRequested() {
         with(RestApiManager.createService(SessionApi::class.java)) {
-            when (memberType) {
-                MemberType.LEADER -> this.getAllSessionsByLeaderId(member.id)
+            when (Prefs.memberType) {
+                MemberType.LEADER -> this.getAllSessionsByLeaderId(Prefs.userCF)
                 MemberType.MEMBER -> this.getAllSessions()
             }.observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     { sessionList ->
-                        //                        view?.toggleViewForMemberType(memberType)
-                        this@LoginPresenterImpl.sessionList.clear()
-                        this@LoginPresenterImpl.sessionList.addAll(sessionList)
-                        sessionList.forEach { it -> Log.d(it) }
-                    }, { e -> Log.d(e.message) })
+                        with(this@LoginPresenterImpl.sessionList) {
+                            clear()
+                            addAll(sessionList)
+                            forEach { Log.d(it) }
+                        }
+                        // TODO show current selected view based on member type
+                    }, { Log.d(it.message) })
         }
-    }
-
-    override fun onNewSessionRequested(cf: String, memberType: MemberType) {
-        member = Member(0, "leader supremo")
-        SessionWSAdapter.send(PayloadWrapper(0, WSOperations.NEW_SESSION, SessionAssignment(cf, member.id).toJson()).toJson())
     }
 
     override fun onSessionSelected(memberType: MemberType, sessionId: Int) {
 
+        // TODO questa dovrebbe essere relativa alla lista e all'adapter che riceve il click
         Prefs.instanceId = this.sessionList.first { it.sessionId == sessionId }.instanceId
-        TaskWSAdapter.initWS()
 
-        // Recovery: session selected already exists and belongs to leader
+        setupWSAfterSessionHandshake()
+
         when (memberType) {
-            MemberType.LEADER -> {
-                val members: List<Member> = listOf(Member(1, "Leader")) // Set actual current leader
-                val message = PayloadWrapper(sessionId, WSOperations.ADD_LEADER, MembersAdditionNotification(members).toJson())
-                TaskWSAdapter.send(message.toJson())
-                // This action will trigger the response from MT with the list of members
-            }
+            MemberType.LEADER -> TaskWSAdapter.sendAddLeaderMessage() // This action will trigger the response from MT with the list of members
             MemberType.MEMBER -> {
-                val members: List<Member> = listOf(Member(2, "Member"))
-                val message = PayloadWrapper(sessionId, WSOperations.ADD_MEMBER, MembersAdditionNotification(members).toJson())
-                TaskWSAdapter.send(message.toJson())
-                view?.startTaskMonitoringActivity(member)
+                TaskWSAdapter.sendAddMemberMessage()
+                view?.startTaskMonitoringActivity()
             }
         }
     }
 
-    override fun onSessionCreated(sessionId: Int) {
-        Log.d("created session $sessionId")
-        Prefs.sessionId = sessionId
-        val members: List<Member> = listOf(Member(1, "Leader")) // Set actual current leader
-        val message = PayloadWrapper(sessionId, WSOperations.ADD_LEADER, MembersAdditionNotification(members).toJson())
-        TaskWSAdapter.send(message.toJson())
-    }
-
-    override fun onLeaderCreationResponse(response: GenericResponse) {
-        if (response.message == "ok") view?.startTeamMonitoringActivity(member)
-    }
-
     override fun update(payloadWrapper: PayloadWrapper) {
         with(payloadWrapper) {
-            fun leaderResponseHandling() {
-                val leaderResponse = GenericResponse(body)
-                onLeaderCreationResponse(leaderResponse)
-            }
+            fun leaderResponseHandling() = onLeaderCreationResponse(GenericResponse(body))
 
-            fun sessionResponseHandling() {
-                val sessionDNSResponse: SessionDNS = this.objectify(body)
-                Prefs.instanceId = sessionDNSResponse.instanceId
-                SessionWSAdapter.closeWS()
-                TaskWSAdapter.initWS()
-//                NotifierWSAdapter.initWS()
-                onSessionCreated(sessionDNSResponse.sessionId)
-            }
+            fun sessionResponseHandling() = onSessionCreated(this.objectify(body))
 
             fun sessionErrorResponseHandling() {
                 val sessionDNSErrorResponse: GenericResponse = this.objectify(body)
                 Log.d("RECEIVED ERROR $sessionDNSErrorResponse")
                 // TODO fai le cose
             }
-
 
             when (subject) {
                 WSOperations.LEADER_RESPONSE -> leaderResponseHandling()
@@ -124,5 +111,10 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
                 else -> Log.d("MESSAGE NOT HANDLED: $subject")
             }
         }
+    }
+
+    private fun setupWSAfterSessionHandshake() {
+        SessionWSAdapter.closeWS()
+        TaskWSAdapter.initWS()
     }
 }

@@ -12,8 +12,8 @@ interface SessionApi {
     @GET("session/all")
     fun getAllSessions(): Observable<List<SessionDNS>>
 
-    @GET("session/all/{leaderId}")
-    fun getAllSessionsByLeaderId(@Path("leaderId") memberId: Int): Observable<List<SessionDNS>>
+    @GET("session/all/{leaderCF}")
+    fun getAllSessionsByLeaderId(@Path("leaderCF") userCF: String): Observable<List<SessionDNS>>
 
     @DELETE("session/close/{sessionId}")
     fun closeSessionBySessionId(@Path("sessionId") sessionId: Int): Observable<ResponseBody>

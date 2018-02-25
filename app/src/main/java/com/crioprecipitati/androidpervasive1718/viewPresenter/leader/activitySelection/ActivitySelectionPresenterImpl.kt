@@ -1,6 +1,5 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.leader.activitySelection
 
-import com.crioprecipitati.androidpervasive1718.base.BasePresenterImpl
 import com.crioprecipitati.androidpervasive1718.model.Activity
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.Task
@@ -10,6 +9,7 @@ import com.crioprecipitati.androidpervasive1718.utils.CallbackHandler
 import com.crioprecipitati.androidpervasive1718.utils.Prefs
 import com.crioprecipitati.androidpervasive1718.utils.WSObserver
 import com.crioprecipitati.androidpervasive1718.utils.toJson
+import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BasePresenterImpl
 import model.*
 
 class ActivitySelectionPresenterImpl : BasePresenterImpl<ActivitySelectionContract.ActivitySelectionView>(), ActivitySelectionContract.ActivitySelectionPresenter, WSObserver {
@@ -40,7 +40,7 @@ class ActivitySelectionPresenterImpl : BasePresenterImpl<ActivitySelectionContra
     }
 
     override fun getActivityByActivityType() {
-        val members: List<Member> = listOf(Member(1, "Leader"))
+        val members: List<Member> = listOf(Member("Leader"))
         TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.GET_ALL_ACTIVITIES, MembersAdditionNotification(members).toJson()).toJson())
     }
 

@@ -2,8 +2,10 @@ package com.crioprecipitati.androidpervasive1718.viewPresenter.login
 
 import android.os.Bundle
 import com.crioprecipitati.androidpervasive1718.R
-import com.crioprecipitati.androidpervasive1718.base.BaseActivity
-import com.crioprecipitati.androidpervasive1718.model.Member
+import com.crioprecipitati.androidpervasive1718.utils.Prefs
+import com.crioprecipitati.androidpervasive1718.utils.consumeSessionButton
+import com.crioprecipitati.androidpervasive1718.utils.setTextWithBlankStringCheck
+import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : BaseActivity<LoginContract.LoginView, LoginContract.LoginPresenter>(), LoginContract.LoginView {
@@ -14,10 +16,39 @@ class LoginActivity : BaseActivity<LoginContract.LoginView, LoginContract.LoginP
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        btnCreateNewSession.setOnClickListener { presenter.onNewSessionRequested("gntlrt94b21g479u", MemberType.LEADER) }
+        setupUserParams(Prefs.memberType, Prefs.userCF, Prefs.userCF)
 
-        btnRequestOpenSessions.setOnClickListener { presenter.onConnectRequested(MemberType.LEADER, 0, "leader supremo") }
+        rgMemberType.setOnCheckedChangeListener { _, checkedId ->
+            when (checkedId) {
+                R.id.rbLeader -> presenter.onMemberTypeChanged(MemberType.LEADER)
+                R.id.rbMember -> presenter.onMemberTypeChanged(MemberType.MEMBER)
+            }
+        }
 
+        btnCreateNewSession.setOnClickListener { consumeSessionButton(etUsername.text.toString(), etPatient.text.toString()) { presenter.onNewSessionRequested() } }
+        btnRequestOpenSessions.setOnClickListener { consumeSessionButton(etUsername.text.toString()) { presenter.onSessionJoinRequested() } }
+    }
+
+    override fun toggleLeaderMode(isEnabled: Boolean) {
+        btnCreateNewSession.isEnabled = isEnabled
+        etPatient.isEnabled = isEnabled
+    }
+
+    override fun setupUserParams(memberType: MemberType, userCF: String, patientCF: String) {
+
+        fun setupUIElements(leaderMode: Boolean) {
+            rbLeader.isChecked = leaderMode
+            rbMember.isChecked = !leaderMode
+            toggleLeaderMode(leaderMode)
+        }
+
+        when (memberType) {
+            MemberType.LEADER -> setupUIElements(leaderMode = true)
+            MemberType.MEMBER -> setupUIElements(leaderMode = false)
+        }
+
+        etPatient.setTextWithBlankStringCheck(patientCF)
+        etUsername.setTextWithBlankStringCheck(userCF)
     }
 
     override fun showAndUpdateSessionList() {
@@ -25,20 +56,20 @@ class LoginActivity : BaseActivity<LoginContract.LoginView, LoginContract.LoginP
     }
 
     override fun toggleViewForMemberType(memberType: MemberType) {
-        if(memberType == MemberType.LEADER){
+        if (memberType.isLeader()) {
             //TODO FAI COSE
-        }else{
+        } else {
             //TODO FAI ALTRE COSE
         }
     }
 
-    override fun startTaskMonitoringActivity(member: Member) {
+    override fun startTaskMonitoringActivity() {
 //        val intent = Intent(this, TaskMonitoringActivity::class.java)
 //        intent.putExtras(member.generateBundle())
 //        startActivity(intent)
     }
 
-    override fun startTeamMonitoringActivity(member: Member) {
+    override fun startTeamMonitoringActivity() {
 //        val intent = Intent(this, TeamMonitoringActivity::class.java)
 //        intent.putExtras(member.generateBundle())
 //        startActivity(intent)

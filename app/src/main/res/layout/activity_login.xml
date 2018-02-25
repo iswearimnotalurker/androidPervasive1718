@@ -11,10 +11,31 @@
         >
 
 
+    <android.support.design.widget.TextInputLayout
+            android:layout_width="189dp"
+            android:layout_height="wrap_content"
+            android:id="@+id/tilPatient"
+            app:layout_constraintEnd_toStartOf="@+id/glVertical"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/tilUsername"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="8dp"
+            >
+
+        <android.support.design.widget.TextInputEditText
+                android:layout_width="236dp"
+                android:layout_height="wrap_content"
+                android:hint="Codice Fiscale Paziente"
+                android:id="@+id/etPatient"
+                android:fontFamily="monospace"
+                android:textSize="12sp"
+                />
+    </android.support.design.widget.TextInputLayout>
     <Button
             android:text="Crea nuova sessione"
             android:layout_width="209dp"
-            android:layout_height="163dp"
+            android:layout_height="108dp"
             android:id="@+id/btnCreateNewSession"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -22,6 +43,8 @@
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toTopOf="@+id/glHorizontal"
             android:fontFamily="monospace"
+            android:layout_marginTop="8dp"
+            app:layout_constraintVertical_bias="1.0"
             />
     <Button
             android:text="Richiedi sessioni aperte"
@@ -31,9 +54,9 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/glVertical"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/btnCreateNewSession"
             android:fontFamily="monospace"
+            app:layout_constraintTop_toTopOf="@+id/glHorizontal"
+            android:layout_marginTop="8dp"
             />
     <android.support.constraint.Guideline
             android:layout_width="wrap_content"
@@ -60,34 +83,43 @@
             android:visibility="gone"
             tools:listitem="@layout/item_session"
             android:id="@+id/rvSessionList"
-            />
+            >
+    </android.support.v7.widget.RecyclerView>
+
     <android.support.design.widget.TextInputLayout
             android:layout_width="350dp"
             android:layout_height="wrap_content"
             android:autofillHints="username"
-            app:layout_constraintStart_toStartOf="@+id/radioGroup"
+            app:layout_constraintStart_toStartOf="@+id/rgMemberType"
+            android:id="@+id/tilUsername"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="8dp"
-            android:id="@+id/textInputLayout"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
             >
 
         <android.support.design.widget.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="username"
+                android:hint="Codice Fiscale Utente"
                 android:fontFamily="monospace"
+                android:id="@+id/etUsername"
+                android:textSize="12sp"
                 />
     </android.support.design.widget.TextInputLayout>
     <RadioGroup
             android:layout_width="350dp"
             android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginEnd="8dp"
-            android:id="@+id/radioGroup"
+            android:id="@+id/rgMemberType"
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toTopOf="@+id/glHorizontal"
             android:layout_marginTop="8dp"
-            app:layout_constraintTop_toBottomOf="@+id/textInputLayout"
+            app:layout_constraintTop_toBottomOf="@+id/tilUsername"
+            app:layout_constraintVertical_bias="0.0"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/glVertical"
+            android:layout_marginStart="8dp"
             >
         <RadioButton
                 android:text="Leader"

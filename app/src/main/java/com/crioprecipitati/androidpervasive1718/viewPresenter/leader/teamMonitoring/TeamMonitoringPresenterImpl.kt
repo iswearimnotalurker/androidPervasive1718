@@ -1,6 +1,5 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.leader.teamMonitoring
 
-import com.crioprecipitati.androidpervasive1718.base.BasePresenterImpl
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.Task
 import com.crioprecipitati.androidpervasive1718.networking.RestApiManager
@@ -10,6 +9,7 @@ import com.crioprecipitati.androidpervasive1718.utils.CallbackHandler
 import com.crioprecipitati.androidpervasive1718.utils.Prefs
 import com.crioprecipitati.androidpervasive1718.utils.WSObserver
 import com.crioprecipitati.androidpervasive1718.utils.toJson
+import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BasePresenterImpl
 import io.reactivex.android.schedulers.AndroidSchedulers
 import model.*
 import trikita.log.Log
