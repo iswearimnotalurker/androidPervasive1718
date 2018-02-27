@@ -1,6 +1,7 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.login
 
 import android.os.Bundle
+import android.view.View
 import com.crioprecipitati.androidpervasive1718.R
 import com.crioprecipitati.androidpervasive1718.utils.Prefs
 import com.crioprecipitati.androidpervasive1718.utils.consumeSessionButton
@@ -11,12 +12,15 @@ import kotlinx.android.synthetic.main.activity_login.*
 class LoginActivity : BaseActivity<LoginContract.LoginView, LoginContract.LoginPresenter>(), LoginContract.LoginView {
 
     override var presenter: LoginContract.LoginPresenter = LoginPresenterImpl()
+    private lateinit var itemOnClick: (View, Int, Int) -> Unit
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
         setupUserParams(Prefs.memberType, Prefs.userCF, Prefs.userCF)
+
+        itemOnClick = { _, position, _ -> presenter.onSessionSelected(position) }
 
         rgMemberType.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
@@ -28,6 +32,11 @@ class LoginActivity : BaseActivity<LoginContract.LoginView, LoginContract.LoginP
         btnCreateNewSession.setOnClickListener { consumeSessionButton(etUsername.text.toString(), etPatient.text.toString()) { presenter.onNewSessionRequested() } }
         btnRequestOpenSessions.setOnClickListener { consumeSessionButton(etUsername.text.toString()) { presenter.onSessionJoinRequested() } }
     }
+
+    //////////////////// LOADING
+//    override fun startLoadingState() = urlFetchingWaitDialog.show()
+
+//    override fun stopLoadingState() = urlFetchingWaitDialog.cancel()
 
     override fun toggleLeaderMode(isEnabled: Boolean) {
         btnCreateNewSession.isEnabled = isEnabled
@@ -52,14 +61,14 @@ class LoginActivity : BaseActivity<LoginContract.LoginView, LoginContract.LoginP
     }
 
     override fun showAndUpdateSessionList() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun toggleViewForMemberType(memberType: MemberType) {
-        if (memberType.isLeader()) {
-            //TODO FAI COSE
-        } else {
-            //TODO FAI ALTRE COSE
+        runOnUiThread {
+            with(rvSessionList) {
+                adapter = null
+                layoutManager = null
+                layoutManager = android.support.v7.widget.LinearLayoutManager(this@LoginActivity, android.widget.LinearLayout.VERTICAL, false)
+                adapter = SessionListAdapter(presenter.sessionList, itemOnClick)
+                adapter.notifyDataSetChanged()
+            }
         }
     }
 

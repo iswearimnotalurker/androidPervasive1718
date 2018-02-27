@@ -19,7 +19,7 @@ import trikita.log.Log
 
 class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginContract.LoginPresenter, WSObserver {
 
-    private val sessionList = mutableListOf<SessionDNS>()
+    override val sessionList: MutableList<SessionDNS> = mutableListOf()
 
     private val channels = listOf(
         WSOperations.LEADER_RESPONSE,
@@ -69,21 +69,20 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
                         with(this@LoginPresenterImpl.sessionList) {
                             clear()
                             addAll(sessionList)
+                            view?.showAndUpdateSessionList()
                             forEach { Log.d(it) }
                         }
-                        // TODO show current selected view based on member type
                     }, { Log.d(it.message) })
         }
     }
 
-    override fun onSessionSelected(memberType: MemberType, sessionId: Int) {
+    override fun onSessionSelected(sessionIndex: Int) {
 
-        // TODO questa dovrebbe essere relativa alla lista e all'adapter che riceve il click
-        Prefs.instanceId = this.sessionList.first { it.sessionId == sessionId }.instanceId
+        Prefs.instanceId = this.sessionList[sessionIndex].instanceId
 
         setupWSAfterSessionHandshake()
 
-        when (memberType) {
+        when (Prefs.memberType) {
             MemberType.LEADER -> TaskWSAdapter.sendAddLeaderMessage() // This action will trigger the response from MT with the list of members
             MemberType.MEMBER -> {
                 TaskWSAdapter.sendAddMemberMessage()

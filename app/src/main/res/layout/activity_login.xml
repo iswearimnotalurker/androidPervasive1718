@@ -72,19 +72,6 @@
             android:orientation="horizontal"
             app:layout_constraintGuide_end="180dp"
             />
-    <android.support.v7.widget.RecyclerView
-            android:layout_width="350dp"
-            android:layout_height="343dp"
-            tools:layout_editor_absoluteX="234dp"
-            android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="8dp"
-            android:visibility="gone"
-            tools:listitem="@layout/item_session"
-            android:id="@+id/rvSessionList"
-            >
-    </android.support.v7.widget.RecyclerView>
 
     <android.support.design.widget.TextInputLayout
             android:layout_width="350dp"
@@ -140,4 +127,21 @@
                 android:fontFamily="monospace"
                 />
     </RadioGroup>
+    <android.support.v7.widget.RecyclerView
+            android:layout_width="350dp"
+            android:layout_height="147dp"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:visibility="visible"
+            tools:listitem="@layout/item_session"
+            android:id="@+id/rvSessionList"
+            app:layout_constraintTop_toTopOf="@+id/glHorizontal"
+            android:layout_marginTop="8dp"
+            app:layout_constraintVertical_bias="0.529"
+            app:layout_constraintStart_toStartOf="@+id/glVertical"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            >
+    </android.support.v7.widget.RecyclerView>
 </android.support.constraint.ConstraintLayout>

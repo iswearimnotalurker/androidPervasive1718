@@ -17,17 +17,18 @@ interface LoginContract {
 
         fun showAndUpdateSessionList()
 
-        fun toggleViewForMemberType(memberType: MemberType)
-
         fun startTeamMonitoringActivity()
 
         fun startTaskMonitoringActivity()
 
         fun setupUserParams(memberType: MemberType, userCF: String, patientCF: String = "")
+
         fun toggleLeaderMode(isEnabled: Boolean)
     }
 
     interface LoginPresenter : BasePresenter<LoginView> {
+
+        val sessionList: MutableList<SessionDNS>
 
         fun onMemberTypeChanged(memberType: MemberType)
 
@@ -39,7 +40,7 @@ interface LoginContract {
 
         fun onSessionJoinRequested()
 
-        fun onSessionSelected(memberType: MemberType, sessionId: Int) // TODO dovrà prendere un parametro sessione o qualcosa del genere
+        fun onSessionSelected(sessionIndex: Int)
 
     }
 
