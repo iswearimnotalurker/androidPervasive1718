@@ -4,8 +4,8 @@ import android.content.Intent
 import android.os.Bundle
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.Task
-import com.crioprecipitati.androidpervasive1718.model.Unbudler
-import com.crioprecipitati.androidpervasive1718.model.generateBundle
+import com.crioprecipitati.androidpervasive1718.utils.Unbudler
+import com.crioprecipitati.androidpervasive1718.utils.generateBundle
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseActivity
 import com.crioprecipitati.androidpervasive1718.viewPresenter.leader.activitySelection.ActivitySelectionActivity
 import model.LifeParameters
