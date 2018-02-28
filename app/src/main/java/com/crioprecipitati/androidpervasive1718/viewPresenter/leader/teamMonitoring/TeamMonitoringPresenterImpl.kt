@@ -4,6 +4,7 @@ import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.Task
 import com.crioprecipitati.androidpervasive1718.networking.RestApiManager
 import com.crioprecipitati.androidpervasive1718.networking.api.SessionApi
+import com.crioprecipitati.androidpervasive1718.networking.webSockets.NotifierWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
 import com.crioprecipitati.androidpervasive1718.utils.CallbackHandler
 import com.crioprecipitati.androidpervasive1718.utils.Prefs
@@ -31,6 +32,7 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
     override fun attachView(view: TeamMonitoringContract.TeamMonitoringView) {
         super.attachView(view)
         CallbackHandler.attach(channels, this)
+        NotifierWSAdapter.sendSubscribeToAllParametersMessage()
     }
 
     override fun detachView() {
@@ -52,8 +54,8 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
             .closeSessionBySessionId(sessionId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                { message -> Log.d(message) },
-                { e -> Log.d(e.message) }
+                { Log.d(it) },
+                { Log.d(it.message) }
             )
     }
 
@@ -62,7 +64,6 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
 
             fun healthParameterUpdateHandling() {
                 val update: Update = this.objectify(body)
-                Log.d("healthParameterUpdateHandling: RECEIVED UPDATE $update")
                 view?.showAndUpdateHealthParameters(update.lifeParameter, update.value)
             }
 

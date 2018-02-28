@@ -8,6 +8,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import com.crioprecipitati.androidpervasive1718.model.Member
+import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.uiThread
 
 inline fun consumeSessionButton(userCF: String, patientCF: String? = null, callbackForOkParams: () -> Unit) {
     Prefs.userCF = userCF
@@ -41,5 +43,9 @@ fun <T : RecyclerView.ViewHolder> T.onClick(event: (view: View, position: Int, t
 }
 
 fun TextView.setHealthParameterValue(value: Double) {
-    this.text = value.toString()
+    doAsync {
+        uiThread {
+            this@setHealthParameterValue.text = value.toString()
+        }
+    }
 }

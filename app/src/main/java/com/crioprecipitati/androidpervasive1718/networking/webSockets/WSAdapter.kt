@@ -54,7 +54,7 @@ object TaskWSAdapter : WSAdapter(WS_DEFAULT_TASK_URI) {
 
 object NotifierWSAdapter : WSAdapter(WS_DEFAULT_NOTIFIER_URI) {
 
-    private fun sendSubscribeToAllParametersMessage() {
+    fun sendSubscribeToAllParametersMessage() {
         NotifierWSAdapter.send(
             PayloadWrapper(
                 Prefs.sessionId,

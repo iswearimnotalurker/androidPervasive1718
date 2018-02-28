@@ -32,7 +32,7 @@
             android:textStyle="bold"
             />
     <TextView
-            android:layout_width="41dp"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:id="@+id/tvSYS"
             tools:text="100"
@@ -60,7 +60,7 @@
             android:textStyle="bold"
             />
     <TextView
-            android:layout_width="40dp"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:id="@+id/tvDIA"
             tools:text="100"
@@ -88,7 +88,7 @@
             android:textStyle="bold"
             />
     <TextView
-            android:layout_width="41dp"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:id="@+id/tvHR"
             tools:text="100"
@@ -116,7 +116,7 @@
             android:textStyle="bold"
             />
     <TextView
-            android:layout_width="41dp"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:id="@+id/tvT"
             tools:text="100"
@@ -144,7 +144,7 @@
             android:textStyle="bold"
             />
     <TextView
-            android:layout_width="40dp"
+            android:layout_width="60dp"
             android:layout_height="17dp"
             android:id="@+id/tvSp02"
             tools:text="100"
@@ -172,7 +172,7 @@
             android:textStyle="bold"
             />
     <TextView
-            android:layout_width="41dp"
+            android:layout_width="60dp"
             android:layout_height="wrap_content"
             android:id="@+id/tvEtCO2"
             tools:text="100"
