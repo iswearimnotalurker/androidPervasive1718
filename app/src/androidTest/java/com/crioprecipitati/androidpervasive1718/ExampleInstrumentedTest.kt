@@ -2,14 +2,12 @@ package com.crioprecipitati.androidpervasive1718
 
 import android.support.test.espresso.Espresso.onView
 import android.support.test.espresso.action.ViewActions.*
-import android.support.test.espresso.contrib.RecyclerViewActions
-import android.support.test.espresso.matcher.ViewMatchers.withId
-import android.support.test.espresso.matcher.ViewMatchers.withText
-import android.support.test.espresso.matcher.ViewMatchers.hasDescendant
 import android.support.test.espresso.assertion.ViewAssertions.matches
-import android.support.test.runner.AndroidJUnit4
+import android.support.test.espresso.matcher.ViewMatchers.*
 import android.support.test.rule.ActivityTestRule
+import android.support.test.runner.AndroidJUnit4
 import com.crioprecipitati.androidpervasive1718.viewPresenter.login.LoginActivity
+import org.hamcrest.core.StringContains.containsString
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -31,7 +29,7 @@ class ApplicationTest {
         onView(withId(R.id.btnRequestOpenSessions)).perform(click())
         Thread.sleep(4000)
         onView(withId(R.id.rvSessionList))
-                .check(matches(hasDescendant(withText(stringToBeTyped))))
+            .check(matches(hasDescendant(withText(containsString(stringToBeTyped)))))
     }
 
 }
