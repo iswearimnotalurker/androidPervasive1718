@@ -18,7 +18,7 @@ class LoginActivity : BaseActivity<LoginContract.LoginView, LoginContract.LoginP
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
-        setupUserParams(Prefs.memberType, Prefs.userCF, Prefs.userCF)
+        setupUserParams(Prefs.memberType, Prefs.userCF, Prefs.patientCF)
 
         itemOnClick = { _, position, _ -> presenter.onSessionSelected(position) }
 
