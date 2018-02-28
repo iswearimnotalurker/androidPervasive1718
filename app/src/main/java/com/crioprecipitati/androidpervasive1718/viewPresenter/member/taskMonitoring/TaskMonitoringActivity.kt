@@ -2,40 +2,38 @@ package com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonito
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
-import android.widget.*
+import android.widget.TableLayout
+import android.widget.TableRow
+import android.widget.TextView
 import com.crioprecipitati.androidpervasive1718.R
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseActivity
+import kotlinx.android.synthetic.main.activity_task_monitoring.*
+import model.LifeParameters
 
 class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMonitoringView, TaskMonitoringContract.TaskMonitoringPresenter>(), TaskMonitoringContract.TaskMonitoringView {
 
     override var presenter: TaskMonitoringContract.TaskMonitoringPresenter = TaskMonitoringPresenterImpl()
 
-    private var rows = arrayOf("ROW1", "ROW2", "Row3", "Row4", "Row 5", "Row 6", "Row 7")
-    private var columns = arrayOf("COLUMN1", "COLUMN2", "COLUMN3", "COLUMN4", "COLUMN5", "COLUMN6")
+    private val parametersViewer: HashMap<LifeParameters, TextView> = HashMap()
     private var rowSize: Int = 0
     private var colSize: Int = 0
 
-    private lateinit var sv: ScrollView
-    private lateinit var tableLayout: TableLayout
-    private lateinit var hsv: HorizontalScrollView
+    //private lateinit var sv: ScrollView
+    //private lateinit var hsv: HorizontalScrollView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        //Log.d("--", "R-Lenght--$rl   C-Lenght--$cl")
 
-        sv = ScrollView(this)
-        tableLayout = findViewById<TableLayout>(R.id.lifeParametersTable)
-        hsv = HorizontalScrollView(this)
+        //sv = ScrollView(this)
 
-        hsv.addView(tableLayout)
-        sv.addView(hsv)
-        setContentView(sv)
+        setContentView(R.layout.activity_task_monitoring)
+        createNewTable()
+        //sv.addView(hsv)
 
         //clearContent()
-        createNewTable()
+        //createNewTable()
 
 
     }
@@ -56,9 +54,7 @@ class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMonitorin
     }
 
     fun clearContent() {
-        rows = arrayOf()
         columns = arrayOf()
-        rowSize = rows.size
         colSize = columns.size
     }
 
@@ -73,59 +69,46 @@ class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMonitorin
         textView.setText("Hello")
     }*/
 
-    private fun createNewTable(): TableLayout {
+    private fun createNewTable() {
         // 1) Create a tableLayout and its params
         val tableLayoutParams = TableLayout.LayoutParams()
-        val tableLayout = TableLayout(this)
-        tableLayout.setBackgroundColor(Color.BLACK)
+        lifeParametersTable.setBackgroundColor(Color.BLACK)
 
         // 2) create tableRow params
         val tableRowParams = TableRow.LayoutParams()
         tableRowParams.setMargins(1, 1, 1, 1)
         tableRowParams.weight = 1.0F
 
-        for (i in 0 until rowSize) {
-            // 3) create tableRow
-            val tableRow = TableRow(this)
-            tableRow.setBackgroundColor(Color.BLACK)
 
-            for (j in 0 until colSize) {
-                // 4) create textView
-                val textView = TextView(this)
-                //  textView.setText(String.valueOf(j));
-                textView.setBackgroundColor(Color.WHITE)
-                textView.setGravity(Gravity.CENTER)
+        // 3) create tableRow
+        val tableRow = TableRow(this)
+        tableRow.setBackgroundColor(Color.BLACK)
+        //var params = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        //params.setMargins(0,0, 0, 0)
+        lifeParametersTable.layoutParams
 
-                val s1 = Integer.toString(i)
-                val s2 = Integer.toString(j)
-                val s3 = s1 + s2
-                val id = Integer.parseInt(s3)
-                Log.d("TAG", "-___>" + id)
-                if (i == 0 && j == 0) {
-                    textView.setText("0==0")
-                } else if (i == 0) {
-                    Log.d("TAAG", "set Column Headers")
-                    textView.setText(columns[j - 1])
-                } else if (j == 0) {
-                    Log.d("TAAG", "Set Row Headers")
-                    textView.setText(rows[i - 1])
-                } else {
-                    textView.setText("" + id)
-                    // check id=23
-                    if (id == 23) {
-                        textView.setText("ID=23")
+        // 4) create textView
 
-                    }
-                }
 
-                // 5) add textView to tableRow
-                tableRow.addView(textView, tableRowParams)
-            }
+        // 5) add textView to tableRow
+        tableRow.addView(createParameterView(LifeParameters.DIASTOLIC_BLOOD_PRESSURE), tableRowParams)
+        tableRow.addView(createParameterView(LifeParameters.SYSTOLIC_BLOOD_PRESSURE), tableRowParams)
+        tableRow.addView(createParameterView(LifeParameters.HEART_RATE), tableRowParams)
 
-            // 6) add tableRow to tableLayout
-            tableLayout.addView(tableRow, tableLayoutParams)
-        }
 
-        return tableLayout
+        // 6) add tableRow to tableLayout
+        lifeParametersTable.addView(tableRow, tableLayoutParams)
+
+    }
+
+    private fun createParameterView(parameter: LifeParameters): TextView {
+        val parameterView = TextView(this)
+        //  textView.setText(String.valueOf(j));
+        parameterView.setBackgroundColor(Color.WHITE)
+        parameterView.gravity = Gravity.CENTER
+
+        parameterView.text = parameter.acronym
+        parameterView.setTextColor(Color.CYAN)
+        return parameterView
     }
 }
