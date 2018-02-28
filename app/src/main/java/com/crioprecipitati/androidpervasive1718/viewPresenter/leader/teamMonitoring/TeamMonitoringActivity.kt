@@ -6,7 +6,6 @@ import com.crioprecipitati.androidpervasive1718.R
 import com.crioprecipitati.androidpervasive1718.model.LifeParameters
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.Task
-import com.crioprecipitati.androidpervasive1718.utils.Unbudler
 import com.crioprecipitati.androidpervasive1718.utils.generateBundle
 import com.crioprecipitati.androidpervasive1718.utils.setHealthParameterValue
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseActivity
@@ -21,7 +20,15 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        savedInstanceState?.let { presenter.member = Unbudler.extractMember(it) }
+//        savedInstanceState?.let { presenter.member = Unbudler.extractMember(it) }
+
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        toolbar.setNavigationOnClickListener { onBackPressed() }
+
+        btnCloseSession.setOnClickListener { presenter.onSessionCloseRequested() }
+
     }
 
     override fun showAndUpdateMemberList(members: List<Member>) {
@@ -33,13 +40,15 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
     }
 
     override fun showAndUpdateHealthParameters(lifeParameter: LifeParameters, value: Double) {
-        when (lifeParameter) {
-            LifeParameters.SYSTOLIC_BLOOD_PRESSURE -> tvSYS.setHealthParameterValue(value)
-            LifeParameters.DIASTOLIC_BLOOD_PRESSURE -> tvDIA.setHealthParameterValue(value)
-            LifeParameters.HEART_RATE -> tvHR.setHealthParameterValue(value)
-            LifeParameters.TEMPERATURE -> tvT.setHealthParameterValue(value)
-            LifeParameters.OXYGEN_SATURATION -> tvSp02.setHealthParameterValue(value)
-            LifeParameters.END_TIDAL_CARBON_DIOXIDE -> tvEtCO2.setHealthParameterValue(value)
+        with(value.toString()) {
+            when (lifeParameter) {
+                LifeParameters.SYSTOLIC_BLOOD_PRESSURE -> tvSYS.setHealthParameterValue(this)
+                LifeParameters.DIASTOLIC_BLOOD_PRESSURE -> tvDIA.setHealthParameterValue(this)
+                LifeParameters.HEART_RATE -> tvHR.setHealthParameterValue(this)
+                LifeParameters.TEMPERATURE -> tvT.setHealthParameterValue(this)
+                LifeParameters.OXYGEN_SATURATION -> tvSp02.setHealthParameterValue(this)
+                LifeParameters.END_TIDAL_CARBON_DIOXIDE -> tvEtCO2.setHealthParameterValue(this)
+            }
         }
     }
 
@@ -49,5 +58,7 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
         startActivity(intent)
     }
 
-
+    override fun onSessionClosed() {
+        onBackPressed()
+    }
 }

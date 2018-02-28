@@ -42,10 +42,10 @@ fun <T : RecyclerView.ViewHolder> T.onClick(event: (view: View, position: Int, t
     return this
 }
 
-fun TextView.setHealthParameterValue(value: Double) {
+fun TextView.setHealthParameterValue(value: String) {
     doAsync {
         uiThread {
-            this@setHealthParameterValue.text = value.toString()
+            this@setHealthParameterValue.text = value
         }
     }
 }
