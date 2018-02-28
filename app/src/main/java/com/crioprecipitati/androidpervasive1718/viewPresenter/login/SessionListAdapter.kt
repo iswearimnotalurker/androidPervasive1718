@@ -28,7 +28,7 @@ class SessionListAdapter(private val sessionList: List<SessionDNS>,
 
         @SuppressLint("SetTextI18n")
         fun bind(itemSession: SessionDNS) {
-            itemView.tvSessionName.text = "Sessione n. ${itemSession.sessionId}"
+            itemView.tvSessionName.text = "Sessione n. ${itemSession.sessionId} del leader ${itemSession.leaderCF}"
         }
 
     }

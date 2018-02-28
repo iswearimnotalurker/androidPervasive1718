@@ -6,7 +6,7 @@ import java.util.*
 
 data class Activity(val id: Int = 0, val name: String, val activityTypeId: Int, val acronym: String, val boundaryId: Int)
 
-data class SessionDNS(val sessionId: Int, val patientCF: String, val instanceId: Int)
+data class SessionDNS(val sessionId: Int, val patientCF: String, val instanceId: Int, val leaderCF: String)
 
 data class SessionAssignment(val patientCF: String, val leaderCF: String)
 
