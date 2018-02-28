@@ -1,4 +1,4 @@
-package model
+package com.crioprecipitati.androidpervasive1718.model
 
 enum class LifeParameters(val longName: String, val acronym: String, val id: Int) {
     SYSTOLIC_BLOOD_PRESSURE("Pressione Arteriosa Sistolica", "SYS", 1),

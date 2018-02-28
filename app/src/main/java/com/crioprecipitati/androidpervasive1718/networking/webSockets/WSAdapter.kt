@@ -1,10 +1,12 @@
 package com.crioprecipitati.androidpervasive1718.networking.webSockets
 
+import com.crioprecipitati.androidpervasive1718.model.LifeParameters
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.SessionAssignment
 import com.crioprecipitati.androidpervasive1718.utils.*
 import model.MembersAdditionNotification
 import model.PayloadWrapper
+import model.Subscription
 import model.WSOperations
 import trikita.log.Log
 
@@ -50,4 +52,14 @@ object TaskWSAdapter : WSAdapter(WS_DEFAULT_TASK_URI) {
 
 }
 
-object NotifierWSAdapter : WSAdapter(WS_DEFAULT_NOTIFIER_URI)
+object NotifierWSAdapter : WSAdapter(WS_DEFAULT_NOTIFIER_URI) {
+
+    fun sendSubscribeToAllParametersMessage() {
+        NotifierWSAdapter.send(
+            PayloadWrapper(
+                Prefs.sessionId,
+                WSOperations.SUBSCRIBE,
+                Subscription(Member(Prefs.userCF), LifeParameters.values().toList()).toJson()).toJson())
+    }
+
+}

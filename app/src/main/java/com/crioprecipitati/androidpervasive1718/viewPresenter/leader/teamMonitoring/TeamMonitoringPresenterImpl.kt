@@ -4,6 +4,7 @@ import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.Task
 import com.crioprecipitati.androidpervasive1718.networking.RestApiManager
 import com.crioprecipitati.androidpervasive1718.networking.api.SessionApi
+import com.crioprecipitati.androidpervasive1718.networking.webSockets.NotifierWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
 import com.crioprecipitati.androidpervasive1718.utils.CallbackHandler
 import com.crioprecipitati.androidpervasive1718.utils.Prefs
@@ -31,6 +32,7 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
     override fun attachView(view: TeamMonitoringContract.TeamMonitoringView) {
         super.attachView(view)
         CallbackHandler.attach(channels, this)
+        NotifierWSAdapter.sendSubscribeToAllParametersMessage()
     }
 
     override fun detachView() {
@@ -38,29 +40,37 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
         CallbackHandler.detach(channels, this)
     }
 
+    override fun onMemberSelected() {
+//        member?.let { view?.showActivitySelectionActivity(it) }
+    }
+
     override fun onTaskDeleted() {
         TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.REMOVE_TASK, TaskAssignment(Member.defaultMember(), Task.defaultTask()).toJson()).toJson())
     }
 
-    override fun onMemberSelected() {
-        member?.also { view?.showActivitySelectionActivity(it) }
-    }
-
-    //per fine intervento
     override fun onSessionClosed(sessionId: Int) {
-
         RestApiManager
             .createService(SessionApi::class.java)
             .closeSessionBySessionId(sessionId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                { message -> Log.d(message) },
-                { e -> Log.d(e.message) }
+                { Log.d(it) },
+                { Log.d(it.message) }
             )
     }
 
     override fun update(payloadWrapper: PayloadWrapper) {
         with(payloadWrapper) {
+
+            fun healthParameterUpdateHandling() {
+                val update: Update = this.objectify(body)
+                view?.showAndUpdateHealthParameters(update.lifeParameter, update.value)
+            }
+
+            fun memberAdditionHandling() {
+                val membersAddition: MembersAdditionNotification = this.objectify(body)
+                view?.showAndUpdateMemberList(membersAddition.members)
+            }
 
             fun taskAssignmentHandling() {
                 val taskAssignment: TaskAssignment = this.objectify(body)
@@ -72,25 +82,15 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
                 view?.showError(taskError.error)
             }
 
-            fun updateHandling() {
-                val update: Update = this.objectify(body)
-                view?.showAndUpdateHealthParameters(update.lifeParameter, update.value)
-            }
-
-            fun memberAdditionHandling() {
-                val membersAddition: MembersAdditionNotification = this.objectify(body)
-                view?.showAndUpdateMemberList(membersAddition.members)
-            }
-
             when (subject) {
-                WSOperations.LIST_MEMBERS -> memberAdditionHandling() // teamMonitoring
-                WSOperations.ADD_MEMBER -> memberAdditionHandling() // teamMonitoring
-                WSOperations.ADD_TASK -> taskAssignmentHandling() // teamMonitoring
+                WSOperations.UPDATE -> healthParameterUpdateHandling()
+                WSOperations.LIST_MEMBERS -> memberAdditionHandling()
+                WSOperations.ADD_MEMBER -> memberAdditionHandling()
+                WSOperations.ADD_TASK -> taskAssignmentHandling()
                 WSOperations.CHANGE_TASK_STATUS -> taskAssignmentHandling()
                 WSOperations.REMOVE_TASK -> taskAssignmentHandling()
                 WSOperations.ERROR_CHANGING_STATUS -> taskErrorHandling()
                 WSOperations.ERROR_REMOVING_TASK -> taskErrorHandling()
-                WSOperations.UPDATE -> updateHandling()
                 else -> null
             }
         }
