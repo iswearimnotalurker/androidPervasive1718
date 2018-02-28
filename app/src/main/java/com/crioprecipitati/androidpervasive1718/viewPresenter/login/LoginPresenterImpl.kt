@@ -4,6 +4,7 @@ import com.chibatching.kotpref.blockingBulk
 import com.crioprecipitati.androidpervasive1718.model.SessionDNS
 import com.crioprecipitati.androidpervasive1718.networking.RestApiManager
 import com.crioprecipitati.androidpervasive1718.networking.api.SessionApi
+import com.crioprecipitati.androidpervasive1718.networking.webSockets.NotifierWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.SessionWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
 import com.crioprecipitati.androidpervasive1718.utils.CallbackHandler
@@ -29,7 +30,11 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
     override fun attachView(view: LoginContract.LoginView) {
         super.attachView(view)
         CallbackHandler.attach(channels, this)
-        view.setupUserParams(Prefs.memberType, Prefs.userCF, Prefs.patientCF)
+    }
+
+    override fun resumeView(){
+        SessionWSAdapter.initWS()
+        view?.setupUserParams(Prefs.memberType, Prefs.userCF, Prefs.patientCF)
     }
 
     override fun detachView() {
@@ -119,5 +124,6 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
     private fun setupWSAfterSessionHandshake() {
         SessionWSAdapter.closeWS()
         TaskWSAdapter.initWS()
+        NotifierWSAdapter.initWS()
     }
 }

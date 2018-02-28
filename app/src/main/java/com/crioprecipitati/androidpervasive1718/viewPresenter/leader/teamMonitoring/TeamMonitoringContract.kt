@@ -19,6 +19,8 @@ interface TeamMonitoringContract {
 
         fun showActivitySelectionActivity(member: Member)
 
+        fun onSessionClosed()
+
     }
 
     interface TeamMonitoringPresenter : BasePresenter<TeamMonitoringView> {
@@ -29,7 +31,7 @@ interface TeamMonitoringContract {
 
         fun onMemberSelected()
 
-        fun onSessionClosed(sessionId: Int)
+        fun onSessionCloseRequested()
 
     }
 }

@@ -30,6 +30,8 @@ interface LoginContract {
 
         val sessionList: MutableList<SessionDNS>
 
+        fun resumeView()
+
         fun onMemberTypeChanged(memberType: MemberType)
 
         fun onNewSessionRequested()

@@ -21,7 +21,7 @@ class TeamMonitoringPresenterTest {
     /* Should print on console Not Found */
     @Test
     fun deleteNotExistingSession() {
-        teamMonitoringPresenter.onSessionClosed(-1)
+        teamMonitoringPresenter.onSessionCloseRequested()
         Thread.sleep(10000)
     }
 }

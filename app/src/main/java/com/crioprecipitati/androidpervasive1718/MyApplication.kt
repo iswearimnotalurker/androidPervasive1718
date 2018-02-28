@@ -9,7 +9,7 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         Kotpref.init(applicationContext)
-        SessionWSAdapter.initWS()
+        //SessionWSAdapter.initWS()
     }
 
 }
