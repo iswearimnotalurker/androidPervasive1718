@@ -33,6 +33,11 @@ class LoginActivity : BaseActivity<LoginContract.LoginView, LoginContract.LoginP
         btnRequestOpenSessions.setOnClickListener { consumeSessionButton(etUsername.text.toString()) { presenter.onSessionJoinRequested() } }
     }
 
+    override fun onResume() {
+        super.onResume()
+        presenter.resumeView()
+    }
+
     //////////////////// LOADING
 //    override fun startLoadingState() = urlFetchingWaitDialog.show()
 

@@ -36,13 +36,21 @@ class LoginActivityTest {
         onView(withId(R.id.etUsername)).perform(clearText()).perform(typeText(leaderCF1)).perform(closeSoftKeyboard())
         onView(withId(R.id.etPatient)).perform(clearText()).perform(typeText(patientCF1)).perform(closeSoftKeyboard())
         onView(withId(R.id.btnCreateNewSession)).perform(click())
+        Thread.sleep(1000)
+        pressBack()
         onView(withId(R.id.etPatient)).perform(clearText()).perform(typeText(patientCF2)).perform(closeSoftKeyboard())
         onView(withId(R.id.btnCreateNewSession)).perform(click())
+        Thread.sleep(1000)
+        pressBack()
         onView(withId(R.id.etUsername)).perform(clearText()).perform(typeText(leaderCF2)).perform(closeSoftKeyboard())
         onView(withId(R.id.etPatient)).perform(clearText()).perform(typeText(patientCF1)).perform(closeSoftKeyboard())
         onView(withId(R.id.btnCreateNewSession)).perform(click())
+        Thread.sleep(1000)
+        pressBack()
         onView(withId(R.id.etPatient)).perform(clearText()).perform(typeText(patientCF2)).perform(closeSoftKeyboard())
         onView(withId(R.id.btnCreateNewSession)).perform(click())
+        Thread.sleep(1000)
+        pressBack()
     }
 
     @Test

@@ -30,7 +30,11 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
     override fun attachView(view: LoginContract.LoginView) {
         super.attachView(view)
         CallbackHandler.attach(channels, this)
-        view.setupUserParams(Prefs.memberType, Prefs.userCF, Prefs.patientCF)
+    }
+
+    override fun resumeView(){
+        SessionWSAdapter.initWS()
+        view?.setupUserParams(Prefs.memberType, Prefs.userCF, Prefs.patientCF)
     }
 
     override fun detachView() {
