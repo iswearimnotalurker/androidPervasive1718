@@ -4,6 +4,7 @@ import com.chibatching.kotpref.blockingBulk
 import com.crioprecipitati.androidpervasive1718.model.SessionDNS
 import com.crioprecipitati.androidpervasive1718.networking.RestApiManager
 import com.crioprecipitati.androidpervasive1718.networking.api.SessionApi
+import com.crioprecipitati.androidpervasive1718.networking.webSockets.NotifierWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.SessionWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
 import com.crioprecipitati.androidpervasive1718.utils.CallbackHandler
@@ -119,5 +120,6 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
     private fun setupWSAfterSessionHandshake() {
         SessionWSAdapter.closeWS()
         TaskWSAdapter.initWS()
+        NotifierWSAdapter.initWS()
     }
 }
