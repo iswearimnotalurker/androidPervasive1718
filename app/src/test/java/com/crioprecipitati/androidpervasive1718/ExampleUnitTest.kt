@@ -1,17 +1,36 @@
 package com.crioprecipitati.androidpervasive1718
 
+import org.junit.runner.RunWith
+import android.support.test.espresso.Espresso.onView
+import android.support.test.espresso.contrib.RecyclerViewActions
+import android.support.test.espresso.action.ViewActions.click
+import android.support.test.espresso.action.ViewActions.typeText
+import android.support.test.espresso.matcher.ViewMatchers.withId
+import android.support.test.espresso.matcher.ViewMatchers.withText
+import android.support.test.espresso.matcher.ViewMatchers.hasDescendant
+import android.support.test.espresso.assertion.ViewAssertions.matches
+import android.support.test.runner.AndroidJUnit4
+import android.support.test.rule.ActivityTestRule
+import com.crioprecipitati.androidpervasive1718.viewPresenter.login.LoginActivity
+import org.junit.Rule
 import org.junit.Test
 
-import org.junit.Assert.*
+@RunWith(AndroidJUnit4::class)
+class ApplicationTest {
+    @Rule
+    @JvmField
+    val activity = ActivityTestRule<LoginActivity>(LoginActivity::class.java)
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
-class ExampleUnitTest {
+
     @Test
-    fun addition_isCorrect() {
-        assertEquals(4, 2 + 2)
+    fun startNewSession(){
+        val stringToBeTyped = "CFLeader"
+        onView(withId(R.id.etUsername)).perform(typeText(stringToBeTyped))
+        onView(withId(R.id.btnCreateNewSession)).perform(click())
+        onView(withId(R.id.rbMember)).perform(click())
+        onView(withId(R.id.btnRequestOpenSessions)).perform(click())
+        onView(withId(R.id.rvSessionList))
+                .check(matches(hasDescendant(withText(stringToBeTyped))))
     }
+
 }

@@ -2,7 +2,7 @@ package com.crioprecipitati.androidpervasive1718.utils
 
 const val IP_ALBERTO = "192.168.1.102"
 const val IP_MICHELE = "192.168.1."
-const val IP_EDOARDO = "192.168.1."
+const val IP_EDOARDO = "192.168.1.102"
 const val IP_MATTEO = "192.168.1."
 const val IP_ALESSANDRO = "192.168.1."
 
