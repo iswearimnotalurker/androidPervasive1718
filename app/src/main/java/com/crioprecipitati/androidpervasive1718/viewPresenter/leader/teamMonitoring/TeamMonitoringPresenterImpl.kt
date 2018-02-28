@@ -48,13 +48,16 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
         TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.REMOVE_TASK, TaskAssignment(Member.defaultMember(), Task.defaultTask()).toJson()).toJson())
     }
 
-    override fun onSessionClosed(sessionId: Int) {
+    override fun onSessionCloseRequested() {
         RestApiManager
             .createService(SessionApi::class.java)
-            .closeSessionBySessionId(sessionId)
+            .closeSessionBySessionId(Prefs.sessionId)
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
-                { Log.d(it) },
+                {
+                    Log.d(it)
+                    view?.onSessionClosed()
+                },
                 { Log.d(it.message) }
             )
     }
