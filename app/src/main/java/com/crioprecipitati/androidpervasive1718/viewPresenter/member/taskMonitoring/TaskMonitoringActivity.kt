@@ -14,6 +14,7 @@ import model.LifeParameters
 class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMonitoringView, TaskMonitoringContract.TaskMonitoringPresenter>(), TaskMonitoringContract.TaskMonitoringView {
 
     override var presenter: TaskMonitoringContract.TaskMonitoringPresenter = TaskMonitoringPresenterImpl()
+    override val layout: Int = R.layout.activity_task_monitoring
 
     private val parametersViewer: HashMap<LifeParameters, TextView> = HashMap()
     private var rowSize: Int = 0
