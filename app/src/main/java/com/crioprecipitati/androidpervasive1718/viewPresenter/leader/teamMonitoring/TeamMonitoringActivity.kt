@@ -3,9 +3,9 @@ package com.crioprecipitati.androidpervasive1718.viewPresenter.leader.teamMonito
 import android.content.Intent
 import android.os.Bundle
 import com.crioprecipitati.androidpervasive1718.R
+import com.crioprecipitati.androidpervasive1718.model.AugmentedTask
 import com.crioprecipitati.androidpervasive1718.model.LifeParameters
 import com.crioprecipitati.androidpervasive1718.model.Member
-import com.crioprecipitati.androidpervasive1718.model.Task
 import com.crioprecipitati.androidpervasive1718.utils.generateBundle
 import com.crioprecipitati.androidpervasive1718.utils.setHealthParameterValue
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseActivity
@@ -35,7 +35,7 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 
-    override fun showAndUpdateTaskList(member: Member, task: Task) {
+    override fun showAndUpdateTaskList(member: Member, task: AugmentedTask) {
         TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
     }
 

@@ -1,8 +1,8 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.leader.activitySelection
 
 import com.crioprecipitati.androidpervasive1718.model.Activity
+import com.crioprecipitati.androidpervasive1718.model.AugmentedTask
 import com.crioprecipitati.androidpervasive1718.model.Member
-import com.crioprecipitati.androidpervasive1718.model.Task
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.NotifierWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
 import com.crioprecipitati.androidpervasive1718.utils.CallbackHandler
@@ -34,7 +34,7 @@ class ActivitySelectionPresenterImpl : BasePresenterImpl<ActivitySelectionContra
     }
 
     override fun onActivitySelected(currentMember: Member) {
-        TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.ADD_TASK, TaskAssignment(currentMember, Task.emptyTask()).toJson()).toJson())
+        TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.ADD_TASK, TaskAssignment(currentMember, AugmentedTask.emptyAugmentedTask()).toJson()).toJson())
         NotifierWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.SUBSCRIBE, currentMember.toJson()).toJson())
 
     }

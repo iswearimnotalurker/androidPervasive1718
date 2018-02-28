@@ -1,9 +1,6 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonitoring
 
-import com.crioprecipitati.androidpervasive1718.model.Activity
 import com.crioprecipitati.androidpervasive1718.model.Member
-import com.crioprecipitati.androidpervasive1718.model.Status
-import com.crioprecipitati.androidpervasive1718.model.Task
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.NotifierWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
 import com.crioprecipitati.androidpervasive1718.utils.CallbackHandler
@@ -12,12 +9,11 @@ import com.crioprecipitati.androidpervasive1718.utils.WSObserver
 import com.crioprecipitati.androidpervasive1718.utils.toJson
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BasePresenterImpl
 import model.*
-import java.sql.Timestamp
-import java.util.*
 
 class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.TaskMonitoringView>(), TaskMonitoringContract.TaskMonitoringPresenter, WSObserver {
 
     private val channels = listOf(WSOperations.NOTIFY)
+    private var currentAssignedTask: TaskAssignment? = null
 
     override fun attachView(view: TaskMonitoringContract.TaskMonitoringView) {
         super.attachView(view)
@@ -31,23 +27,40 @@ class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.Tas
 
     override fun onTaskCompletionRequested() {
         //mock
-        val member: Member = Member.emptyMember()
-        val activity = Activity(1, "Ciao", 1, "FGT", 2)
-        val task = Task(0, Prefs.sessionId, member.userCF, Timestamp(Date().time - 1000), Timestamp(Date().time), activity.id, Status.FINISHED.id)
-
-        TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CHANGE_TASK_STATUS, TaskAssignment(member, task).toJson()).toJson())
-        NotifierWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CLOSE, Member.defaultMember().toJson()).toJson())
+//        val member: Member = Member.emptyMember()
+//        val activity = Activity(1, "Ciao", 1, "FGT", 2)
+//        val task = Task(0, Prefs.sessionId, member.userCF, Timestamp(Date().time - 1000), Timestamp(Date().time), activity.id, Status.FINISHED.id)
+//
+//        TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CHANGE_TASK_STATUS, TaskAssignment(member, task).toJson()).toJson())
+//        NotifierWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CLOSE, Member.defaultMember().toJson()).toJson())TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CHANGE_TASK_STATUS, TaskAssignment(member, task).toJson()).toJson())
+//
+        currentAssignedTask?.also {
+            TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CHANGE_TASK_STATUS, it.toJson()).toJson())
+            NotifierWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CLOSE, Member.defaultMember().toJson()).toJson())
+        }
     }
 
     override fun update(payloadWrapper: PayloadWrapper) {
         with(payloadWrapper) {
             fun notifyHandling() {
                 val activityAddition: Notification = this.objectify(body)
-                // TODO capisci le cose di cevo
+                activityAddition.lifeParameter
+            }
+
+            fun manageUpdate() {
+                val update: Update = this.objectify(body)
+                view?.updateHealthParameterValues(update.lifeParameter, update.value)
+            }
+
+            fun newTaskAssigned() {
+                currentAssignedTask = this.objectify(body)
+                view?.showNewTask(currentAssignedTask!!.augmentedTask)
             }
 
             when (payloadWrapper.subject) {
                 WSOperations.NOTIFY -> notifyHandling()
+                WSOperations.UPDATE -> manageUpdate()
+                WSOperations.ADD_TASK -> newTaskAssigned()
                 else -> null
             }
         }

@@ -71,7 +71,7 @@ data class Update(val lifeParameter: LifeParameters, val value: Double)
 
 data class Subscription(val subject: Member, val topics: List<LifeParameters>)
 
-data class TaskAssignment(val member: Member, val task: Task)
+data class TaskAssignment(val member: Member, val augmentedTask: AugmentedTask)
 
 data class MembersAdditionNotification(val members: List<Member>)
 

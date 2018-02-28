@@ -1,7 +1,7 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.leader.teamMonitoring
 
+import com.crioprecipitati.androidpervasive1718.model.AugmentedTask
 import com.crioprecipitati.androidpervasive1718.model.Member
-import com.crioprecipitati.androidpervasive1718.model.Task
 import com.crioprecipitati.androidpervasive1718.networking.RestApiManager
 import com.crioprecipitati.androidpervasive1718.networking.api.SessionApi
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.NotifierWSAdapter
@@ -45,7 +45,7 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
     }
 
     override fun onTaskDeleted() {
-        TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.REMOVE_TASK, TaskAssignment(Member.defaultMember(), Task.defaultTask()).toJson()).toJson())
+        TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.REMOVE_TASK, TaskAssignment(Member.defaultMember(), AugmentedTask.defaultAugmentedTask()).toJson()).toJson())
     }
 
     override fun onSessionCloseRequested() {
@@ -77,7 +77,7 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
 
             fun taskAssignmentHandling() {
                 val taskAssignment: TaskAssignment = this.objectify(body)
-                view?.showAndUpdateTaskList(taskAssignment.member, taskAssignment.task)
+                view?.showAndUpdateTaskList(taskAssignment.member, taskAssignment.augmentedTask)
             }
 
             fun taskErrorHandling() {
