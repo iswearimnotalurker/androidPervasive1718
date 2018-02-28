@@ -38,17 +38,15 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
         CallbackHandler.detach(channels, this)
     }
 
+    override fun onMemberSelected() {
+//        member?.let { view?.showActivitySelectionActivity(it) }
+    }
+
     override fun onTaskDeleted() {
         TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.REMOVE_TASK, TaskAssignment(Member.defaultMember(), Task.defaultTask()).toJson()).toJson())
     }
 
-    override fun onMemberSelected() {
-        member?.also { view?.showActivitySelectionActivity(it) }
-    }
-
-    //per fine intervento
     override fun onSessionClosed(sessionId: Int) {
-
         RestApiManager
             .createService(SessionApi::class.java)
             .closeSessionBySessionId(sessionId)
@@ -62,6 +60,17 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
     override fun update(payloadWrapper: PayloadWrapper) {
         with(payloadWrapper) {
 
+            fun healthParameterUpdateHandling() {
+                val update: Update = this.objectify(body)
+                Log.d("healthParameterUpdateHandling: RECEIVED UPDATE $update")
+                view?.showAndUpdateHealthParameters(update.lifeParameter, update.value)
+            }
+
+            fun memberAdditionHandling() {
+                val membersAddition: MembersAdditionNotification = this.objectify(body)
+                view?.showAndUpdateMemberList(membersAddition.members)
+            }
+
             fun taskAssignmentHandling() {
                 val taskAssignment: TaskAssignment = this.objectify(body)
                 view?.showAndUpdateTaskList(taskAssignment.member, taskAssignment.task)
@@ -72,25 +81,15 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
                 view?.showError(taskError.error)
             }
 
-            fun updateHandling() {
-                val update: Update = this.objectify(body)
-                view?.showAndUpdateHealthParameters(update.lifeParameter, update.value)
-            }
-
-            fun memberAdditionHandling() {
-                val membersAddition: MembersAdditionNotification = this.objectify(body)
-                view?.showAndUpdateMemberList(membersAddition.members)
-            }
-
             when (subject) {
-                WSOperations.LIST_MEMBERS -> memberAdditionHandling() // teamMonitoring
-                WSOperations.ADD_MEMBER -> memberAdditionHandling() // teamMonitoring
-                WSOperations.ADD_TASK -> taskAssignmentHandling() // teamMonitoring
+                WSOperations.UPDATE -> healthParameterUpdateHandling()
+                WSOperations.LIST_MEMBERS -> memberAdditionHandling()
+                WSOperations.ADD_MEMBER -> memberAdditionHandling()
+                WSOperations.ADD_TASK -> taskAssignmentHandling()
                 WSOperations.CHANGE_TASK_STATUS -> taskAssignmentHandling()
                 WSOperations.REMOVE_TASK -> taskAssignmentHandling()
                 WSOperations.ERROR_CHANGING_STATUS -> taskErrorHandling()
                 WSOperations.ERROR_REMOVING_TASK -> taskErrorHandling()
-                WSOperations.UPDATE -> updateHandling()
                 else -> null
             }
         }

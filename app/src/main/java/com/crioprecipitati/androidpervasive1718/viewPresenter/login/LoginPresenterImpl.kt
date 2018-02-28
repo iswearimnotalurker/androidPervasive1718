@@ -29,6 +29,7 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
     override fun attachView(view: LoginContract.LoginView) {
         super.attachView(view)
         CallbackHandler.attach(channels, this)
+        view.setupUserParams(Prefs.memberType, Prefs.userCF, Prefs.patientCF)
     }
 
     override fun detachView() {
@@ -83,7 +84,10 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
         setupWSAfterSessionHandshake()
 
         when (Prefs.memberType) {
-            MemberType.LEADER -> TaskWSAdapter.sendAddLeaderMessage() // This action will trigger the response from MT with the list of members
+            MemberType.LEADER -> {
+                TaskWSAdapter.sendAddLeaderMessage()
+                view?.startTeamMonitoringActivity()
+            }
             MemberType.MEMBER -> {
                 TaskWSAdapter.sendAddMemberMessage()
                 view?.startTaskMonitoringActivity()

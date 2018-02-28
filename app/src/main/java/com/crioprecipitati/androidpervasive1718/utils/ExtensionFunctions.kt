@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import com.crioprecipitati.androidpervasive1718.model.Member
 
 inline fun consumeSessionButton(userCF: String, patientCF: String? = null, callbackForOkParams: () -> Unit) {
@@ -37,4 +38,8 @@ fun <T : RecyclerView.ViewHolder> T.onClick(event: (view: View, position: Int, t
         event.invoke(it, adapterPosition, itemViewType)
     }
     return this
+}
+
+fun TextView.setHealthParameterValue(value: Double) {
+    this.text = value.toString()
 }

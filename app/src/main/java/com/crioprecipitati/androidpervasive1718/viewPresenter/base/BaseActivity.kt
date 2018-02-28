@@ -23,9 +23,11 @@ interface BaseView {
 abstract class BaseActivity<V : BaseView, P : BasePresenter<V>> : AppCompatActivity(), BaseView {
 
     protected abstract var presenter: P
+    protected abstract val layout: Int
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        setContentView(layout)
         presenter.attachView(view = this as V)
     }
 

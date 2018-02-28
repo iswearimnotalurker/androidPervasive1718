@@ -1,24 +1,24 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.login
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.crioprecipitati.androidpervasive1718.R
-import com.crioprecipitati.androidpervasive1718.utils.Prefs
 import com.crioprecipitati.androidpervasive1718.utils.consumeSessionButton
 import com.crioprecipitati.androidpervasive1718.utils.setTextWithBlankStringCheck
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseActivity
+import com.crioprecipitati.androidpervasive1718.viewPresenter.leader.teamMonitoring.TeamMonitoringActivity
+import com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonitoring.TaskMonitoringActivity
 import kotlinx.android.synthetic.main.activity_login.*
 
 class LoginActivity : BaseActivity<LoginContract.LoginView, LoginContract.LoginPresenter>(), LoginContract.LoginView {
 
     override var presenter: LoginContract.LoginPresenter = LoginPresenterImpl()
+    override val layout: Int = R.layout.activity_login
     private lateinit var itemOnClick: (View, Int, Int) -> Unit
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
-
-        setupUserParams(Prefs.memberType, Prefs.userCF, Prefs.patientCF)
 
         itemOnClick = { _, position, _ -> presenter.onSessionSelected(position) }
 
@@ -73,14 +73,14 @@ class LoginActivity : BaseActivity<LoginContract.LoginView, LoginContract.LoginP
     }
 
     override fun startTaskMonitoringActivity() {
-//        val intent = Intent(this, TaskMonitoringActivity::class.java)
+        val intent = Intent(this, TaskMonitoringActivity::class.java)
 //        intent.putExtras(member.generateBundle())
-//        startActivity(intent)
+        startActivity(intent)
     }
 
     override fun startTeamMonitoringActivity() {
-//        val intent = Intent(this, TeamMonitoringActivity::class.java)
+        val intent = Intent(this, TeamMonitoringActivity::class.java)
 //        intent.putExtras(member.generateBundle())
-//        startActivity(intent)
+        startActivity(intent)
     }
 }
