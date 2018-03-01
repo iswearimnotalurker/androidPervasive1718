@@ -14,7 +14,7 @@ abstract class WSAdapter(private val baseAddress: String) {
     private var webSocket: BaseWebSocket? = null
 
     fun initWS() {
-        if (webSocket == null) {
+        webSocket ?: run {
             Log.d("[START WS] $baseAddress")
             webSocket = BaseWebSocket(baseAddress, CallbackHandler::onMessageReceived)
         }
@@ -34,10 +34,8 @@ abstract class WSAdapter(private val baseAddress: String) {
 
 object SessionWSAdapter : WSAdapter(WS_DEFAULT_SESSION_URI) {
 
-    fun sendNewSessionMessage() {
-        Log.d("sendNewSessionMessage: AAA MANDATO SESSION")
+    fun sendNewSessionMessage() =
         SessionWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.NEW_SESSION, SessionAssignment(Prefs.patientCF, Prefs.userCF).toJson()).toJson())
-    }
 
 }
 
@@ -51,14 +49,9 @@ object TaskWSAdapter : WSAdapter(WS_DEFAULT_TASK_URI) {
                 MembersAdditionNotification(listOf(Member(Prefs.userCF))).toJson()).toJson())
     }
 
-    fun sendAddMemberMessage() {
-        sendCustomMessage(WSOperations.ADD_MEMBER)
-    }
+    fun sendAddMemberMessage() = sendCustomMessage(WSOperations.ADD_MEMBER)
 
-    fun sendAddLeaderMessage() {
-        Log.d("sendAddLeaderMessage: AAA MANDATO LEADER")
-        sendCustomMessage(WSOperations.ADD_LEADER)
-    }
+    fun sendAddLeaderMessage() = sendCustomMessage(WSOperations.ADD_LEADER)
 
 }
 
@@ -66,10 +59,10 @@ object NotifierWSAdapter : WSAdapter(WS_DEFAULT_NOTIFIER_URI) {
 
     fun sendSubscribeToAllParametersMessage() {
         NotifierWSAdapter.send(
-                PayloadWrapper(
-                        Prefs.sessionId,
-                        WSOperations.SUBSCRIBE,
-                        Subscription(Member(Prefs.userCF), LifeParameters.values().toList()).toJson()).toJson())
+            PayloadWrapper(
+                Prefs.sessionId,
+                WSOperations.SUBSCRIBE,
+                Subscription(Member(Prefs.userCF), LifeParameters.values().toList()).toJson()).toJson())
     }
 
 }
