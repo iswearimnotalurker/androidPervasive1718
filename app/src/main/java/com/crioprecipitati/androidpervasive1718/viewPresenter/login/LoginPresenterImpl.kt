@@ -91,7 +91,6 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
         when (Prefs.memberType) {
             MemberType.LEADER -> {
                 TaskWSAdapter.sendAddLeaderMessage()
-                view?.startTeamMonitoringActivity()
             }
             MemberType.MEMBER -> {
                 TaskWSAdapter.sendAddMemberMessage()
