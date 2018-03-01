@@ -7,18 +7,18 @@
     android:layout_height="match_parent">
 
     <Button
-        android:id="@+id/btnRequestOpenSessions"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_margin="8dp"
-        android:fontFamily="monospace"
-        android:text="Termina task corrente"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/glVertical"
-        app:layout_constraintHorizontal_bias="0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/glHorizontal"
-        app:layout_constraintVertical_bias="0" />
+            android:id="@+id/btnRequestOpenSessions"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_margin="8dp"
+            android:fontFamily="monospace"
+            android:text="Termina task corrente"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/glVertical"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/glHorizontal"
+            app:layout_constraintVertical_bias="0.0"/>
 
     <android.support.constraint.Guideline
         android:id="@+id/glVertical"
@@ -59,22 +59,16 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/glVertical"
         app:layout_constraintTop_toTopOf="@+id/glHorizontal" />
-
     <LinearLayout
-        android:id="@+id/lifeParametersLinearLayout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal"
-        app:layout_constraintBottom_toTopOf="@+id/glHorizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_width="0dp">
+            android:orientation="horizontal"
+            android:id="@+id/lifeParametersLinearLayout"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
 
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/glHorizontal" android:layout_marginEnd="8dp"
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginTop="8dp" android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/glHorizontal">
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
