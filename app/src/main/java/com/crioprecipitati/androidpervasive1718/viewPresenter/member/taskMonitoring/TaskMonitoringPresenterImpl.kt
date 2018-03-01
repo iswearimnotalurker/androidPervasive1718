@@ -9,10 +9,12 @@ import com.crioprecipitati.androidpervasive1718.utils.WSObserver
 import com.crioprecipitati.androidpervasive1718.utils.toJson
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BasePresenterImpl
 import model.*
+import java.util.*
 
 class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.TaskMonitoringView>(), TaskMonitoringContract.TaskMonitoringPresenter, WSObserver {
 
     private val channels = listOf(WSOperations.NOTIFY)
+    private val queueAssignedTask = PriorityQueue<TaskAssignment>()
     private var currentAssignedTask: TaskAssignment? = null
 
     override fun attachView(view: TaskMonitoringContract.TaskMonitoringView) {
@@ -34,9 +36,15 @@ class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.Tas
 //        TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CHANGE_TASK_STATUS, TaskAssignment(member, task).toJson()).toJson())
 //        NotifierWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CLOSE, Member.defaultMember().toJson()).toJson())TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CHANGE_TASK_STATUS, TaskAssignment(member, task).toJson()).toJson())
 //
+        //TODO PERCHé DA UNA PARTE CHANGE TASK STATUS E DALL' ALTRA  CLOSE TAPIOCA
         currentAssignedTask?.also {
             TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CHANGE_TASK_STATUS, it.toJson()).toJson())
             NotifierWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CLOSE, Member.defaultMember().toJson()).toJson())
+        }
+        try {
+            currentAssignedTask = queueAssignedTask.remove()
+        } catch (ex: NoSuchElementException) {
+            currentAssignedTask = null
         }
     }
 
@@ -53,8 +61,11 @@ class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.Tas
             }
 
             fun newTaskAssigned() {
-                currentAssignedTask = this.objectify(body)
-                view?.showNewTask(currentAssignedTask!!.augmentedTask)
+                queueAssignedTask.offer(this.objectify(body))
+                currentAssignedTask ?: also {
+                    currentAssignedTask = queueAssignedTask.remove()
+                    view?.showNewTask(currentAssignedTask!!.augmentedTask)
+                }
             }
 
             when (payloadWrapper.subject) {

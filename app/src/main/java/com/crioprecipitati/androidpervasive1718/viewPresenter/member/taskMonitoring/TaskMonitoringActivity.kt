@@ -17,7 +17,7 @@ class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMonitorin
     override var presenter: TaskMonitoringContract.TaskMonitoringPresenter = TaskMonitoringPresenterImpl()
     override val layout: Int = R.layout.activity_task_monitoring
 
-    private val parametersViews: HashMap<LifeParameters, TextView> = HashMap()
+    private val parametersViews: HashMap<LifeParameters, Pair<TextView, TextView>> = HashMap()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,11 +35,12 @@ class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMonitorin
     }
 
     override fun showNewTask(augmentedTask: AugmentedTask) {
-
+        //activityName.text = augmentedTask.activityName
+        createNewTable(augmentedTask.linkedParameters)
     }
 
     override fun showEmptyTask() {
-        lifeParametersTable.removeAllViews()
+        lifeParametersLinearLayout.removeAllViews()
     }
 
     override fun showAlarmedTask() {
@@ -47,19 +48,20 @@ class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMonitorin
     }
 
     override fun updateHealthParameterValues(parameter: LifeParameters, value: Double) {
-        parametersViews[parameter]!!.setHealthParameterValue(parameter.acronym + " " + value)
+        parametersViews[parameter]!!.second.setHealthParameterValue(value.toString())
     }
 
     private fun createNewTable(parameters: List<LifeParameters>) {
-        lifeParametersTable.setBackgroundColor(Color.BLACK)
+        lifeParametersLinearLayout.setBackgroundColor(Color.BLACK)
 
-        val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
-        layoutParams.setMargins(1, 1, 1, 1)
+        val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT)
+        layoutParams.setMargins(0, 0, 0, 0)
 
-        lifeParametersTable.layoutParams
+        lifeParametersLinearLayout.layoutParams
 
         parameters.forEach {
-            lifeParametersTable.addView(parametersViews[it], layoutParams)
+            lifeParametersLinearLayout.addView(wrapParameterView(it), layoutParams)
         }
     }
 
@@ -67,14 +69,40 @@ class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMonitorin
         LifeParameters.values().forEach { parametersViews[it] = createParameterView(it) }
     }
 
-    private fun createParameterView(parameter: LifeParameters): TextView {
-        val parameterView = TextView(this)
-        //  textView.setText(String.valueOf(j));
-        parameterView.setBackgroundColor(Color.WHITE)
-        parameterView.gravity = Gravity.CENTER
+    private fun createParameterView(parameter: LifeParameters): Pair<TextView, TextView> {
+        val parameterAcronymView = TextView(this)
+        parameterAcronymView.setBackgroundColor(Color.GRAY)
+        parameterAcronymView.gravity = Gravity.CENTER
+        parameterAcronymView.setTextColor(Color.BLACK)
+        parameterAcronymView.text = parameter.acronym
 
-        parameterView.text = parameter.acronym
-        parameterView.setTextColor(Color.BLACK)
-        return parameterView
+        val parameterValueView = TextView(this)
+        //  textView.setText(String.valueOf(j));
+        parameterValueView.setBackgroundColor(Color.WHITE)
+        parameterValueView.gravity = Gravity.CENTER
+
+        parameterValueView.text = ""
+        parameterValueView.setTextColor(Color.BLACK)
+
+
+        return Pair(parameterAcronymView, parameterValueView)
+    }
+
+
+    private fun wrapParameterView(parameter: LifeParameters): LinearLayout {
+        val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
+        layoutParams.setMargins(1, 1, 1, 1)
+
+        val parameterLayout = LinearLayout(this)
+        parameterLayout.orientation = LinearLayout.VERTICAL
+        parameterLayout.layoutParams = layoutParams
+        parameterLayout.addView(parametersViews[parameter]!!.first, layoutParams)
+        parameterLayout.addView(parametersViews[parameter]!!.second, layoutParams)
+        return parameterLayout
+        //val parameterView = ListView(this)
+
+        //parameterView.addView(parametersViews[parameter]!!.first)
+        //parameterView.addView(parametersViews[parameter]!!.first)
+        //return parameterView
     }
 }
