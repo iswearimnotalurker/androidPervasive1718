@@ -34,6 +34,7 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
 
     override fun resumeView(){
         SessionWSAdapter.initWS()
+        onSessionListRequested()
         view?.setupUserParams(Prefs.memberType, Prefs.userCF, Prefs.patientCF)
     }
 
@@ -44,6 +45,7 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
 
     override fun onMemberTypeChanged(memberType: MemberType) {
         Prefs.memberType = memberType
+        onSessionListRequested()
         view?.toggleLeaderMode(memberType.isLeader())
     }
 
@@ -64,7 +66,7 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
         }
     }
 
-    override fun onSessionJoinRequested() {
+    override fun onSessionListRequested() {
         with(RestApiManager.createService(SessionApi::class.java)) {
             when (Prefs.memberType) {
                 MemberType.LEADER -> this.getAllSessionsByLeaderId(Prefs.userCF)
@@ -85,13 +87,13 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
     override fun onSessionSelected(sessionIndex: Int) {
 
         Prefs.instanceId = this.sessionList[sessionIndex].instanceId
+        Prefs.sessionId = this.sessionList[sessionIndex].sessionId
 
         setupWSAfterSessionHandshake()
 
         when (Prefs.memberType) {
             MemberType.LEADER -> {
                 TaskWSAdapter.sendAddLeaderMessage()
-                view?.startTeamMonitoringActivity()
             }
             MemberType.MEMBER -> {
                 TaskWSAdapter.sendAddMemberMessage()

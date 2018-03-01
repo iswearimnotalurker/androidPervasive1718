@@ -59,6 +59,6 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
     }
 
     override fun onSessionClosed() {
-        onBackPressed()
+        finish()
     }
 }
