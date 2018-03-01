@@ -2,11 +2,11 @@ package com.crioprecipitati.androidpervasive1718.viewPresenter.leader.teamMonito
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import com.crioprecipitati.androidpervasive1718.R
 import com.crioprecipitati.androidpervasive1718.model.AugmentedTask
 import com.crioprecipitati.androidpervasive1718.model.LifeParameters
 import com.crioprecipitati.androidpervasive1718.model.Member
-import com.crioprecipitati.androidpervasive1718.utils.generateBundle
 import com.crioprecipitati.androidpervasive1718.utils.setHealthParameterValue
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseActivity
 import com.crioprecipitati.androidpervasive1718.viewPresenter.leader.activitySelection.ActivitySelectionActivity
@@ -17,6 +17,7 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
 
     override var presenter: TeamMonitoringContract.TeamMonitoringPresenter = TeamMonitoringPresenterImpl()
     override val layout: Int = R.layout.activity_team_monitoring
+    private lateinit var itemOnClick: (View, Int, Int) -> Unit
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,10 +30,20 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
 
         btnCloseSession.setOnClickListener { presenter.onSessionCloseRequested() }
 
+        itemOnClick = { _, position, _ -> presenter.onMemberSelected(position) }
+
     }
 
-    override fun showAndUpdateMemberList(members: List<Member>) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+    override fun showAndUpdateMemberList() {
+        runOnUiThread {
+            with(rvMemberList) {
+                adapter = null
+                layoutManager = null
+                layoutManager = android.support.v7.widget.LinearLayoutManager(this@TeamMonitoringActivity, android.widget.LinearLayout.VERTICAL, false)
+                adapter = TeamMonitoringAdapter(presenter.memberList, itemOnClick)
+                adapter.notifyDataSetChanged()
+            }
+        }
     }
 
     override fun showAndUpdateTaskList(member: Member, task: AugmentedTask) {
@@ -52,9 +63,8 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
         }
     }
 
-    override fun showActivitySelectionActivity(member: Member) {
+    override fun showActivitySelectionActivity() {
         val intent = Intent(this, ActivitySelectionActivity::class.java)
-        intent.putExtras(member.generateBundle())
         startActivity(intent)
     }
 

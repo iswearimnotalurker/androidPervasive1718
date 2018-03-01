@@ -11,13 +11,13 @@ interface TeamMonitoringContract {
 
     interface TeamMonitoringView : BaseView {
 
-        fun showAndUpdateMemberList(members:List<Member>)
+        fun showAndUpdateMemberList()
 
         fun showAndUpdateTaskList(member: Member, task: AugmentedTask)
 
         fun showAndUpdateHealthParameters(lifeParameter: LifeParameters, value: Double)
 
-        fun showActivitySelectionActivity(member: Member)
+        fun showActivitySelectionActivity()
 
         fun onSessionClosed()
 
@@ -25,11 +25,13 @@ interface TeamMonitoringContract {
 
     interface TeamMonitoringPresenter : BasePresenter<TeamMonitoringView> {
 
+        val memberList: MutableList<Member>
+
         var member: Member?
 
         fun onTaskDeleted()
 
-        fun onMemberSelected()
+        fun onMemberSelected(userIndex: Int)
 
         fun onSessionCloseRequested()
 

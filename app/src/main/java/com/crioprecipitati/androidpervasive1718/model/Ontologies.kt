@@ -8,3 +8,8 @@ enum class Status(val id: Int) {
     ELIMINATED(4),
     EMPTY(6)
 }
+
+enum class Activites(val id: Int){
+    MANEUVERS(3),
+    DRUGS(1)
+}

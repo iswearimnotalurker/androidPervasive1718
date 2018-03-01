@@ -10,17 +10,17 @@ interface ActivitySelectionContract {
 
     interface ActivitySelectionView : BaseView {
 
-        fun showActivityByActivityType(activityList: List<Activity>)
+        fun showActivityByActivityType()
 
     }
 
     interface ActivitySelectionPresenter : BasePresenter<ActivitySelectionView> {
 
-        var activityList: List<Activity>
+        var activityList: MutableList<Activity>
 
         fun onActivityTypeSelected(activityTypeId: Int)
 
-        fun onActivitySelected(currentMember: Member)
+        fun onActivitySelected(activityIndex: Int)
 
         fun getActivityByActivityType()
     }
