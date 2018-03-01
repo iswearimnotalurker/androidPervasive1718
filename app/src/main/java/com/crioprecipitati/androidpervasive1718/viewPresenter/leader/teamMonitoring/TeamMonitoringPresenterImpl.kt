@@ -38,6 +38,9 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
     override fun detachView() {
         super.detachView()
         CallbackHandler.detach(channels, this)
+        TaskWSAdapter.closeWS()
+        NotifierWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CLOSE, Member(Prefs.userCF).toJson()).toJson())
+        NotifierWSAdapter.closeWS()
     }
 
     override fun onMemberSelected() {
