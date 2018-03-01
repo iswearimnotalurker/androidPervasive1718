@@ -2,77 +2,79 @@
 <android.support.constraint.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-        <Button
-            android:id="@+id/btnRequestOpenSessions"
-            android:layout_width="209dp"
-            android:layout_height="134dp"
-            android:layout_marginTop="8dp"
-            android:fontFamily="monospace"
-            android:text="Termina task corrente"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/glVertical"
-            app:layout_constraintHorizontal_bias="0.625"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/glHorizontal"
-            app:layout_constraintVertical_bias="0.363" />
-        <android.support.constraint.Guideline
-            android:id="@+id/glVertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-            app:layout_constraintGuide_begin="225dp"
+    <Button
+        android:id="@+id/btnRequestOpenSessions"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="8dp"
+        android:fontFamily="monospace"
+        android:text="Termina task corrente"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/glVertical"
+        app:layout_constraintHorizontal_bias="0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/glHorizontal"
+        app:layout_constraintVertical_bias="0" />
+
+    <android.support.constraint.Guideline
+        android:id="@+id/glVertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="225dp"
         />
 
-        <android.support.constraint.Guideline
-            android:id="@+id/glHorizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_end="153dp" />
+    <android.support.constraint.Guideline
+        android:id="@+id/glHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_end="153dp" />
 
-        <android.support.design.widget.TextInputLayout
-            android:id="@+id/tilUsername"
-                android:layout_width="350dp"
-                android:layout_height="wrap_content"
-            android:layout_marginEnd="8dp"
-            android:layout_marginTop="8dp"
-                android:autofillHints="username"
-            app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="@+id/rgMemberType"
-                app:layout_constraintTop_toTopOf="parent"
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/tilUsername"
+        android:layout_width="350dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginTop="8dp"
+        android:autofillHints="username"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/rgMemberType"
+        app:layout_constraintTop_toTopOf="parent"
         />
 
-        <TextView
-            android:id="@+id/activityName"
-            android:layout_width="346dp"
-            android:layout_height="126dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginStart="12dp"
-            android:layout_marginTop="8dp"
-            android:text="Nome manovra corrente"
-            android:textAlignment="center"
-            android:textSize="38dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="@+id/glVertical"
-            app:layout_constraintTop_toTopOf="@+id/glHorizontal"
-            app:layout_constraintVertical_bias="0.272" />
+    <TextView
+        android:id="@+id/activityName"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="8dp"
+        android:text="Nome manovra corrente"
+        android:textAlignment="center"
+        android:textSize="38dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/glVertical"
+        app:layout_constraintTop_toTopOf="@+id/glHorizontal" />
 
-        <LinearLayout
-            android:id="@+id/lifeParametersLinearLayout"
-            android:layout_width="573dp"
-            android:layout_height="181dp"
-            android:layout_marginBottom="8dp"
-            android:layout_marginEnd="5dp"
-            android:layout_marginStart="5dp"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal"
-            app:layout_constraintBottom_toTopOf="@+id/glHorizontal"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+    <LinearLayout
+        android:id="@+id/lifeParametersLinearLayout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toTopOf="@+id/glHorizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_width="0dp">
 
-        </LinearLayout>
+    </LinearLayout>
+
 </android.support.constraint.ConstraintLayout>
