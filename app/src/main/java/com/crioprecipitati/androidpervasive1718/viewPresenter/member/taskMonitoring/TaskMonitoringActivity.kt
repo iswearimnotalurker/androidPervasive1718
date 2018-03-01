@@ -3,9 +3,11 @@ package com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonito
 import android.graphics.Color
 import android.os.Bundle
 import android.view.Gravity
+import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.crioprecipitati.androidpervasive1718.R
+import com.crioprecipitati.androidpervasive1718.R.id.lifeParametersLinearLayout
 import com.crioprecipitati.androidpervasive1718.model.AugmentedTask
 import com.crioprecipitati.androidpervasive1718.model.LifeParameters
 import com.crioprecipitati.androidpervasive1718.utils.setHealthParameterValue
@@ -17,7 +19,7 @@ class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMonitorin
     override var presenter: TaskMonitoringContract.TaskMonitoringPresenter = TaskMonitoringPresenterImpl()
     override val layout: Int = R.layout.activity_task_monitoring
 
-    private val parametersViews: HashMap<LifeParameters, Pair<TextView, TextView>> = HashMap()
+    private val parametersViews: HashMap<LifeParameters, TextView> = HashMap()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,22 +50,23 @@ class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMonitorin
     }
 
     override fun updateHealthParameterValues(parameter: LifeParameters, value: Double) {
-        parametersViews[parameter]!!.second.setHealthParameterValue(value.toString())
+        parametersViews[parameter]!!.setHealthParameterValue(value.toString())
     }
 
     private fun createNewTable(parameters: List<LifeParameters>) {
+        lifeParametersLinearLayout.
         lifeParametersLinearLayout.setBackgroundColor(Color.BLACK)
 
-        val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT / parameters.size,
-                LinearLayout.LayoutParams.WRAP_CONTENT)
-        layoutParams.setMargins(0, 0, 0, 0)
+        //val layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                //LinearLayout.LayoutParams.MATCH_PARENT)
+        //layoutParams.setMargins(0, 0, 0, 0)
 
         //lifeParametersLinearLayout.layoutParams
 
         parameters.forEach {
             //lifeParametersLinearLayout.addView(wrapParameterView(it))
-            lifeParametersLinearLayout.addView(parametersViews[it]!!.first, layoutParams)
-            lifeParametersLinearLayout.addView(parametersViews[it]!!.second, layoutParams)
+            lifeParametersLinearLayout.addView(parametersViews[it]!!)
+            //lifeParametersLinearLayout.addView(parametersViews[it]!!, layoutParams)
         }
     }
 
@@ -71,23 +74,26 @@ class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMonitorin
         LifeParameters.values().forEach { parametersViews[it] = createParameterView(it) }
     }
 
-    private fun createParameterView(parameter: LifeParameters): Pair<TextView, TextView> {
+    private fun createParameterView(parameter: LifeParameters): TextView {
         val parameterAcronymView = TextView(this)
         parameterAcronymView.setBackgroundColor(Color.GRAY)
         parameterAcronymView.gravity = Gravity.CENTER
         parameterAcronymView.setTextColor(Color.BLACK)
         parameterAcronymView.text = parameter.acronym
 
-        val parameterValueView = TextView(this)
+        /*val parameterValueView = TextView(this)
         parameterValueView.setBackgroundColor(Color.WHITE)
         parameterValueView.gravity = Gravity.CENTER
         parameterValueView.text = ""
-        parameterValueView.setTextColor(Color.BLACK)
+        parameterValueView.setTextColor(Color.BLACK)*/
 
 
-        //parameterAcronymView.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
-        //parameterValueView.layoutParams.height = ViewGroup.LayoutParams.MATCH_PARENT
-        return Pair(parameterAcronymView, parameterValueView)
+        parameterAcronymView.height = ViewGroup.LayoutParams.MATCH_PARENT
+        parameterAcronymView.width = ViewGroup.LayoutParams.MATCH_PARENT
+
+        //parameterValueView.height = ViewGroup.LayoutParams.MATCH_PARENT
+        //return Pair(parameterAcronymView, parameterValueView)
+        return parameterAcronymView
     }
 
 
@@ -99,8 +105,8 @@ class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMonitorin
         val parameterLayout = LinearLayout(this)
         parameterLayout.orientation = LinearLayout.VERTICAL
         //parameterLayout.layoutParams = layoutParams
-        parameterLayout.addView(parametersViews[parameter]!!.first)
-        parameterLayout.addView(parametersViews[parameter]!!.second)
+        parameterLayout.addView(parametersViews[parameter]!!)
+        parameterLayout.addView(parametersViews[parameter]!!)
         return parameterLayout
         //val parameterView = ListView(this)
 
