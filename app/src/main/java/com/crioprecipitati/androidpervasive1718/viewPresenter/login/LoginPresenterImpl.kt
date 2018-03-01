@@ -86,7 +86,8 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
     override fun onSessionSelected(sessionIndex: Int) {
 
         Prefs.instanceId = this.sessionList[sessionIndex].instanceId
-
+        Prefs.sessionId = this.sessionList[sessionIndex].sessionId
+        
         setupWSAfterSessionHandshake()
 
         when (Prefs.memberType) {
