@@ -17,7 +17,7 @@ interface TeamMonitoringContract {
 
         fun showAndUpdateHealthParameters(lifeParameter: LifeParameters, value: Double)
 
-        fun showActivitySelectionActivity(member: Member)
+        fun showActivitySelectionActivity()
 
         fun onSessionClosed()
 

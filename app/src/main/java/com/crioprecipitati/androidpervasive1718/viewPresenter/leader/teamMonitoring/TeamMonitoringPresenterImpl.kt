@@ -47,7 +47,7 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
 
     override fun onMemberSelected(userIndex: Int) {
         Log.d("onMemberSelected: ${memberList[userIndex]}")
-//        member?.let { view?.showActivitySelectionActivity(it) }
+        view?.showActivitySelectionActivity()
     }
 
     override fun onTaskDeleted() {

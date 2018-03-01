@@ -7,7 +7,6 @@ import com.crioprecipitati.androidpervasive1718.R
 import com.crioprecipitati.androidpervasive1718.model.AugmentedTask
 import com.crioprecipitati.androidpervasive1718.model.LifeParameters
 import com.crioprecipitati.androidpervasive1718.model.Member
-import com.crioprecipitati.androidpervasive1718.utils.generateBundle
 import com.crioprecipitati.androidpervasive1718.utils.setHealthParameterValue
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseActivity
 import com.crioprecipitati.androidpervasive1718.viewPresenter.leader.activitySelection.ActivitySelectionActivity
@@ -64,9 +63,8 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
         }
     }
 
-    override fun showActivitySelectionActivity(member: Member) {
+    override fun showActivitySelectionActivity() {
         val intent = Intent(this, ActivitySelectionActivity::class.java)
-        intent.putExtras(member.generateBundle())
         startActivity(intent)
     }
 
