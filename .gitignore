@@ -9,3 +9,4 @@
 .externalNativeBuild
 .idea/
 gradle.properties
+app/src/main/java/com/crioprecipitati/androidpervasive1718/utils/Const.kt
