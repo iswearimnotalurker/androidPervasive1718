@@ -111,6 +111,7 @@ dependencies {
     androidTestImplementation ('com.android.support.test.espresso:espresso-accessibility:3.0.1')
     androidTestImplementation ('com.android.support.test.espresso:espresso-web:3.0.1')
     androidTestImplementation ('com.android.support.test.espresso.idling:idling-concurrent:3.0.1')
+    androidTestImplementation 'com.android.support.test.uiautomator:uiautomator-v18:2.1.2'
 
     // The following Espresso dependency can be either "compile"
     // or "androidTestCompile", depending on your app's implementation

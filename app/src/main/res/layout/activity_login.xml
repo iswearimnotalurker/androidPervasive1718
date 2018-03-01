@@ -21,6 +21,8 @@
             app:layout_constraintBottom_toBottomOf="@+id/tilUsername"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="8dp"
+            app:layout_constraintHorizontal_bias="0.571"
+            app:layout_constraintVertical_bias="0.0"
             >
 
         <android.support.design.widget.TextInputEditText
@@ -35,16 +37,15 @@
     <Button
             android:text="Crea nuova sessione"
             android:layout_width="209dp"
-            android:layout_height="108dp"
+            android:layout_height="92dp"
             android:id="@+id/btnCreateNewSession"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/glVertical"
             android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toTopOf="@+id/glHorizontal"
             android:fontFamily="monospace"
             android:layout_marginTop="8dp"
-            app:layout_constraintVertical_bias="1.0"
+            app:layout_constraintTop_toBottomOf="@+id/tilPatient"
             />
     <Button
             android:text="Richiedi sessioni aperte"
