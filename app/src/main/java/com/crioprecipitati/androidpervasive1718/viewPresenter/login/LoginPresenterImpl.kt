@@ -95,16 +95,22 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
             }
             MemberType.MEMBER -> {
                 TaskWSAdapter.sendAddMemberMessage()
-                view?.startTaskMonitoringActivity()
+//                view?.startTaskMonitoringActivity()
             }
         }
     }
 
     override fun update(payloadWrapper: PayloadWrapper) {
         with(payloadWrapper) {
-            fun leaderResponseHandling() = onLeaderCreationResponse(GenericResponse(body))
+            fun leaderResponseHandling() {
+                Log.d("leaderResponseHandling: AAA RICEVUTO LEADER")
+                onLeaderCreationResponse(GenericResponse(body))
+            }
 
-            fun sessionResponseHandling() = onSessionCreated(this.objectify(body))
+            fun sessionResponseHandling() {
+                Log.d("sessionResponseHandling: AAA RICEVUTO SESSIONE")
+                onSessionCreated(this.objectify(body))
+            }
 
             fun sessionErrorResponseHandling() {
                 val sessionDNSErrorResponse: GenericResponse = this.objectify(body)

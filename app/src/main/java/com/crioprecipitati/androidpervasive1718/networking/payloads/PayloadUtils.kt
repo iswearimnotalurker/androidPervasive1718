@@ -44,6 +44,7 @@ enum class WSOperations(val objectifier: (String) -> Any) {
     SUBSCRIBE({ GsonInitializer.fromJson(it, Subscription::class.java) }),
     UPDATE({ GsonInitializer.fromJson(it, Update::class.java) }),
     NOTIFY({ GsonInitializer.fromJson(it, Notification::class.java) }),
+    ANSWER({ GsonInitializer.fromJson(it, Response::class.java) }),
 
     // TASKS
     ADD_LEADER({ GsonInitializer.fromJson(it, MembersAdditionNotification::class.java) }),
@@ -68,6 +69,8 @@ data class GenericResponse(val message: String)
 data class Notification(val lifeParameter: LifeParameters, val boundaries: List<Boundary>)
 
 data class Update(val lifeParameter: LifeParameters, val value: Double)
+
+data class Response(val code: Int, val toMessage: String)
 
 data class Subscription(val subject: Member, val topics: List<LifeParameters>)
 

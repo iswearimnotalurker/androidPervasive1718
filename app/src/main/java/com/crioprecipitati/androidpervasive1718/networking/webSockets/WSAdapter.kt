@@ -11,28 +11,33 @@ import model.WSOperations
 import trikita.log.Log
 
 abstract class WSAdapter(private val baseAddress: String) {
-    private lateinit var webSocket: BaseWebSocket
+    private var webSocket: BaseWebSocket? = null
 
     fun initWS() {
-        Log.d("[START WS] $baseAddress")
-        webSocket = BaseWebSocket(baseAddress, CallbackHandler::onMessageReceived)
+        if (webSocket == null) {
+            Log.d("[START WS] $baseAddress")
+            webSocket = BaseWebSocket(baseAddress, CallbackHandler::onMessageReceived)
+        }
     }
 
     fun send(message: String) {
         Log.d("[ $baseAddress --> ] $message")
-        webSocket.send(message)
+        webSocket?.send(message)
     }
 
     fun closeWS() {
         Log.d("[CLOSE WS] $baseAddress")
-        webSocket.close()
+        webSocket?.close()
+        webSocket = null
     }
 }
 
 object SessionWSAdapter : WSAdapter(WS_DEFAULT_SESSION_URI) {
 
-    fun sendNewSessionMessage() =
+    fun sendNewSessionMessage() {
+        Log.d("sendNewSessionMessage: AAA MANDATO SESSION")
         SessionWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.NEW_SESSION, SessionAssignment(Prefs.patientCF, Prefs.userCF).toJson()).toJson())
+    }
 
 }
 
@@ -46,9 +51,14 @@ object TaskWSAdapter : WSAdapter(WS_DEFAULT_TASK_URI) {
                 MembersAdditionNotification(listOf(Member(Prefs.userCF))).toJson()).toJson())
     }
 
-    fun sendAddMemberMessage() = sendCustomMessage(WSOperations.ADD_MEMBER)
+    fun sendAddMemberMessage() {
+        sendCustomMessage(WSOperations.ADD_MEMBER)
+    }
 
-    fun sendAddLeaderMessage() = sendCustomMessage(WSOperations.ADD_LEADER)
+    fun sendAddLeaderMessage() {
+        Log.d("sendAddLeaderMessage: AAA MANDATO LEADER")
+        sendCustomMessage(WSOperations.ADD_LEADER)
+    }
 
 }
 
