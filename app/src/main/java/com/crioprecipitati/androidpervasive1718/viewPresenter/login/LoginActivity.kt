@@ -30,7 +30,7 @@ class LoginActivity : BaseActivity<LoginContract.LoginView, LoginContract.LoginP
         }
 
         btnCreateNewSession.setOnClickListener { consumeSessionButton(etUsername.text.toString(), etPatient.text.toString()) { presenter.onNewSessionRequested() } }
-        btnRequestOpenSessions.setOnClickListener { consumeSessionButton(etUsername.text.toString()) { presenter.onSessionJoinRequested() } }
+        btnRequestOpenSessions.setOnClickListener { consumeSessionButton(etUsername.text.toString()) { presenter.onSessionListRequested() } }
     }
 
     override fun onResume() {

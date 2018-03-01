@@ -34,6 +34,7 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
 
     override fun resumeView(){
         SessionWSAdapter.initWS()
+        onSessionListRequested()
         view?.setupUserParams(Prefs.memberType, Prefs.userCF, Prefs.patientCF)
     }
 
@@ -64,7 +65,7 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
         }
     }
 
-    override fun onSessionJoinRequested() {
+    override fun onSessionListRequested() {
         with(RestApiManager.createService(SessionApi::class.java)) {
             when (Prefs.memberType) {
                 MemberType.LEADER -> this.getAllSessionsByLeaderId(Prefs.userCF)

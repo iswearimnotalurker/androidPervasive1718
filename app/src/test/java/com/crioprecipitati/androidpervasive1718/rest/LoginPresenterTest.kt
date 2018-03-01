@@ -17,7 +17,7 @@ class LoginPresenterTest {
 
     @Test
     fun openSessionApi() {
-        presenter.onSessionJoinRequested()
+        presenter.onSessionListRequested()
         Thread.sleep(10000)
     }
 

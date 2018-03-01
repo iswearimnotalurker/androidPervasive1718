@@ -40,7 +40,7 @@ interface LoginContract {
 
         fun onLeaderCreationResponse(response: GenericResponse)
 
-        fun onSessionJoinRequested()
+        fun onSessionListRequested()
 
         fun onSessionSelected(sessionIndex: Int)
 

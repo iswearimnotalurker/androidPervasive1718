@@ -42,7 +42,7 @@ class WSTryTest{
     @Test
     fun WSGetAllSessions(){
         val presenter = LoginPresenterImpl()
-        presenter.onSessionJoinRequested()
+        presenter.onSessionListRequested()
         Thread(Runnable {
             presenter.onNewSessionRequested()
             //presenter.onSessionSelected(MemberType.LEADER, presenter.sessionId)
