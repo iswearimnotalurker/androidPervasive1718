@@ -30,12 +30,12 @@ data class Task @JvmOverloads constructor(val id: Int = 0, val sessionId: Int, v
     }
 }
 
-data class AugmentedTask(val task: Task, val linkedParameters: List<LifeParameters>) {
+data class AugmentedTask(val task: Task, val linkedParameters: List<LifeParameters>, val activityName: String) {
     companion object {
         fun emptyAugmentedTask(): AugmentedTask =
-                AugmentedTask(Task.emptyTask(), listOf())
+                AugmentedTask(Task.emptyTask(), listOf(), "")
 
         fun defaultAugmentedTask(): AugmentedTask =
-                AugmentedTask(Task.defaultTask(), listOf(LifeParameters.DIASTOLIC_BLOOD_PRESSURE, LifeParameters.SYSTOLIC_BLOOD_PRESSURE, LifeParameters.HEART_RATE))
+                AugmentedTask(Task.defaultTask(), listOf(LifeParameters.END_TIDAL_CARBON_DIOXIDE, LifeParameters.SYSTOLIC_BLOOD_PRESSURE, LifeParameters.HEART_RATE), "Fibroscopia")
     }
 }

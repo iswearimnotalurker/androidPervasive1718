@@ -1,6 +1,7 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonitoring
 
 import com.crioprecipitati.androidpervasive1718.model.Member
+import com.crioprecipitati.androidpervasive1718.model.Status
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.NotifierWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
 import com.crioprecipitati.androidpervasive1718.utils.CallbackHandler
@@ -28,23 +29,11 @@ class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.Tas
     }
 
     override fun onTaskCompletionRequested() {
-        //mock
-//        val member: Member = Member.emptyMember()
-//        val activity = Activity(1, "Ciao", 1, "FGT", 2)
-//        val task = Task(0, Prefs.sessionId, member.userCF, Timestamp(Date().time - 1000), Timestamp(Date().time), activity.id, Status.FINISHED.id)
-//
-//        TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CHANGE_TASK_STATUS, TaskAssignment(member, task).toJson()).toJson())
-//        NotifierWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CLOSE, Member.defaultMember().toJson()).toJson())TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CHANGE_TASK_STATUS, TaskAssignment(member, task).toJson()).toJson())
-//
         //TODO PERCHé DA UNA PARTE CHANGE TASK STATUS E DALL' ALTRA  CLOSE TAPIOCA
-        currentAssignedTask?.also {
-            TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CHANGE_TASK_STATUS, it.toJson()).toJson())
-            NotifierWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CLOSE, Member.defaultMember().toJson()).toJson())
-        }
-        try {
-            currentAssignedTask = queueAssignedTask.remove()
-        } catch (ex: NoSuchElementException) {
-            currentAssignedTask = null
+        currentAssignedTask?.run {
+            this.augmentedTask.task.statusId = Status.FINISHED.id
+            TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CHANGE_TASK_STATUS, this.toJson()).toJson())
+            NotifierWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CLOSE, Member(Prefs.userCF).toJson()).toJson())
         }
     }
 
@@ -62,9 +51,8 @@ class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.Tas
 
             fun newTaskAssigned() {
                 queueAssignedTask.offer(this.objectify(body))
-                currentAssignedTask ?: also {
-                    currentAssignedTask = queueAssignedTask.remove()
-                    view?.showNewTask(currentAssignedTask!!.augmentedTask)
+                currentAssignedTask ?: run {
+                    updateTheCurrentTask()
                 }
             }
 
@@ -74,6 +62,16 @@ class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.Tas
                 WSOperations.ADD_TASK -> newTaskAssigned()
                 else -> null
             }
+        }
+    }
+
+    private fun updateTheCurrentTask() {
+        try {
+            currentAssignedTask = queueAssignedTask.remove()
+            view?.showNewTask(currentAssignedTask!!.augmentedTask)
+            NotifierWSAdapter.sendSubscribeToParametersMessage(currentAssignedTask!!.augmentedTask.linkedParameters)
+        } catch (ex: NoSuchElementException) {
+            currentAssignedTask = null
         }
     }
 }

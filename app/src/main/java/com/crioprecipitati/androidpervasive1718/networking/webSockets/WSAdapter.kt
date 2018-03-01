@@ -65,4 +65,12 @@ object NotifierWSAdapter : WSAdapter(WS_DEFAULT_NOTIFIER_URI) {
                 Subscription(Member(Prefs.userCF), LifeParameters.values().toList()).toJson()).toJson())
     }
 
+    fun sendSubscribeToParametersMessage(parameters: List<LifeParameters>) {
+        NotifierWSAdapter.send(
+                PayloadWrapper(
+                        Prefs.sessionId,
+                        WSOperations.SUBSCRIBE,
+                        Subscription(Member(Prefs.userCF), parameters).toJson()).toJson())
+    }
+
 }
