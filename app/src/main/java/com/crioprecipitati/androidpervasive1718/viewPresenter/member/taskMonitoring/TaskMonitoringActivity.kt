@@ -7,12 +7,12 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.crioprecipitati.androidpervasive1718.R
-import com.crioprecipitati.androidpervasive1718.R.id.lifeParametersLinearLayout
 import com.crioprecipitati.androidpervasive1718.model.AugmentedTask
 import com.crioprecipitati.androidpervasive1718.model.LifeParameters
 import com.crioprecipitati.androidpervasive1718.utils.setHealthParameterValue
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_task_monitoring.*
+import kotlinx.android.synthetic.main.activity_task_monitoring.view.*
 
 class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMonitoringView, TaskMonitoringContract.TaskMonitoringPresenter>(), TaskMonitoringContract.TaskMonitoringView {
 

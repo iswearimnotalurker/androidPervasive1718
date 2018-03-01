@@ -2,11 +2,10 @@ package com.crioprecipitati.androidpervasive1718.viewPresenter.login
 
 import android.content.Intent
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
-import android.view.inputmethod.EditorInfo
+import android.view.WindowManager
 import com.crioprecipitati.androidpervasive1718.R
+import com.crioprecipitati.androidpervasive1718.utils.Prefs
 import com.crioprecipitati.androidpervasive1718.utils.consumeSessionButton
 import com.crioprecipitati.androidpervasive1718.utils.setTextWithBlankStringCheck
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseActivity
@@ -32,8 +31,23 @@ class LoginActivity : BaseActivity<LoginContract.LoginView, LoginContract.LoginP
             }
         }
 
+        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+
         btnCreateNewSession.setOnClickListener { consumeSessionButton(etUsername.text.toString(), etPatient.text.toString()) { presenter.onNewSessionRequested() } }
         btnRequestOpenSessions.setOnClickListener { consumeSessionButton(etUsername.text.toString()) { presenter.onSessionListRequested() } }
+
+        etUsername.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                Prefs.userCF = etUsername.text.toString()
+                presenter.onSessionListRequested()
+            }
+        }
+
+        etPatient.setOnFocusChangeListener { _, hasFocus ->
+            if (!hasFocus) {
+                Prefs.patientCF = etPatient.text.toString()
+            }
+        }
     }
 
     override fun onResume() {
