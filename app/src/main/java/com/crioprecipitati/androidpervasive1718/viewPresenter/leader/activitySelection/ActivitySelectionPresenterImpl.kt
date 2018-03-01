@@ -14,7 +14,7 @@ import model.*
 
 class ActivitySelectionPresenterImpl : BasePresenterImpl<ActivitySelectionContract.ActivitySelectionView>(), ActivitySelectionContract.ActivitySelectionPresenter, WSObserver {
 
-    override var activityList: List<Activity> = listOf()
+    override var activityList: MutableList<Activity> = mutableListOf()
 
     private val channels = listOf(WSOperations.SET_ALL_ACTIVITIES)
 
@@ -29,9 +29,10 @@ class ActivitySelectionPresenterImpl : BasePresenterImpl<ActivitySelectionContra
     }
 
     override fun onActivityTypeSelected(activityTypeId: Int) {
-        val selectedActivities: List<Activity> = activityList.filter { it.activityTypeId == activityTypeId }
-        view?.showActivityByActivityType(selectedActivities)
+        //TODO mandare richiesta a WSTask
     }
+
+
 
     override fun onActivitySelected(activityIndex: Int) {
         TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.ADD_TASK, TaskAssignment(Member(Prefs.userCF), AugmentedTask.emptyAugmentedTask()).toJson()).toJson())
@@ -48,7 +49,7 @@ class ActivitySelectionPresenterImpl : BasePresenterImpl<ActivitySelectionContra
         with(payloadWrapper) {
             fun activityAdditionHandling() {
                 val activityAddition: ActivityAdditionNotification = this.objectify(body)
-                activityList = activityAddition.activities
+                activityList = activityAddition.activities.toMutableList()
             }
 
             when (payloadWrapper.subject) {

@@ -24,7 +24,7 @@ class ActivitySelectionActivity : BaseActivity<ActivitySelectionContract.Activit
 
     }
 
-    override fun showActivityByActivityType(activityList: List<Activity>) {
+    override fun showActivityByActivityType() {
         runOnUiThread {
             with(rvActivityList) {
                 adapter = null
