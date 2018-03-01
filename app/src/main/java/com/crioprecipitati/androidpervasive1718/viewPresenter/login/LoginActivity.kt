@@ -2,7 +2,10 @@ package com.crioprecipitati.androidpervasive1718.viewPresenter.login
 
 import android.content.Intent
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import com.crioprecipitati.androidpervasive1718.R
 import com.crioprecipitati.androidpervasive1718.utils.consumeSessionButton
 import com.crioprecipitati.androidpervasive1718.utils.setTextWithBlankStringCheck

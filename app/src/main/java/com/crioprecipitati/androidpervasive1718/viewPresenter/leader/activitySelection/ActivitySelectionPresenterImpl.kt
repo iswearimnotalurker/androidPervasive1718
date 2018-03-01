@@ -33,9 +33,9 @@ class ActivitySelectionPresenterImpl : BasePresenterImpl<ActivitySelectionContra
         view?.showActivityByActivityType(selectedActivities)
     }
 
-    override fun onActivitySelected(currentMember: Member) {
-        TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.ADD_TASK, TaskAssignment(currentMember, AugmentedTask.emptyAugmentedTask()).toJson()).toJson())
-        NotifierWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.SUBSCRIBE, currentMember.toJson()).toJson())
+    override fun onActivitySelected(activityIndex: Int) {
+        TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.ADD_TASK, TaskAssignment(Member(Prefs.userCF), AugmentedTask.emptyAugmentedTask()).toJson()).toJson())
+        NotifierWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.SUBSCRIBE, Member(Prefs.userCF).toJson()).toJson())
 
     }
 

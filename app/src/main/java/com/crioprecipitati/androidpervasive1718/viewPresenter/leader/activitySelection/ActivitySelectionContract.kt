@@ -20,7 +20,7 @@ interface ActivitySelectionContract {
 
         fun onActivityTypeSelected(activityTypeId: Int)
 
-        fun onActivitySelected(currentMember: Member)
+        fun onActivitySelected(activityIndex: Int)
 
         fun getActivityByActivityType()
     }
