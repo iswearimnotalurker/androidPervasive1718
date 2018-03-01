@@ -53,6 +53,13 @@ object TaskWSAdapter : WSAdapter(WS_DEFAULT_TASK_URI) {
 
     fun sendAddLeaderMessage() = sendCustomMessage(WSOperations.ADD_LEADER)
 
+    fun sendAllMembersRequest() = TaskWSAdapter.send(
+        PayloadWrapper(
+            Prefs.sessionId,
+            WSOperations.LIST_MEMBERS_REQUEST,
+            Unit.toJson()).toJson())
+
+
 }
 
 object NotifierWSAdapter : WSAdapter(WS_DEFAULT_NOTIFIER_URI) {
@@ -67,10 +74,10 @@ object NotifierWSAdapter : WSAdapter(WS_DEFAULT_NOTIFIER_URI) {
 
     fun sendSubscribeToParametersMessage(parameters: List<LifeParameters>) {
         NotifierWSAdapter.send(
-                PayloadWrapper(
-                        Prefs.sessionId,
-                        WSOperations.SUBSCRIBE,
-                        Subscription(Member(Prefs.userCF), parameters).toJson()).toJson())
+            PayloadWrapper(
+                Prefs.sessionId,
+                WSOperations.SUBSCRIBE,
+                Subscription(Member(Prefs.userCF), parameters).toJson()).toJson())
     }
 
 }
