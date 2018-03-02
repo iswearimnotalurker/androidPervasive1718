@@ -18,9 +18,10 @@ import trikita.log.Log
 class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.TeamMonitoringView>(), TeamMonitoringContract.TeamMonitoringPresenter, WSObserver {
 
     override var member: Member? = null
+    override val memberList: MutableList<Member> = mutableListOf()
 
     private val channels = listOf(
-        WSOperations.LIST_MEMBERS,
+        WSOperations.LIST_MEMBERS_RESPONSE,
         WSOperations.ADD_MEMBER,
         WSOperations.ADD_TASK,
         WSOperations.CHANGE_TASK_STATUS,
@@ -33,6 +34,7 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
         super.attachView(view)
         CallbackHandler.attach(channels, this)
         NotifierWSAdapter.sendSubscribeToAllParametersMessage()
+        TaskWSAdapter.sendAllMembersRequest()
     }
 
     override fun detachView() {
@@ -43,8 +45,9 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
         NotifierWSAdapter.closeWS()
     }
 
-    override fun onMemberSelected() {
-//        member?.let { view?.showActivitySelectionActivity(it) }
+    override fun onMemberSelected(userIndex: Int) {
+        Log.d("onMemberSelected: ${memberList[userIndex]}")
+        view?.showActivitySelectionActivity()
     }
 
     override fun onTaskDeleted() {
@@ -75,7 +78,16 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
 
             fun memberAdditionHandling() {
                 val membersAddition: MembersAdditionNotification = this.objectify(body)
-                view?.showAndUpdateMemberList(membersAddition.members)
+                view?.showAndUpdateMemberList()
+            }
+
+            fun memberListAdditionHandling() {
+                val membersAddition: MembersAdditionNotification = this.objectify(body)
+                with(memberList) {
+                    clear()
+                    addAll(membersAddition.members)
+                }
+                view?.showAndUpdateMemberList()
             }
 
             fun taskAssignmentHandling() {
@@ -90,7 +102,7 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
 
             when (subject) {
                 WSOperations.UPDATE -> healthParameterUpdateHandling()
-                WSOperations.LIST_MEMBERS -> memberAdditionHandling()
+                WSOperations.LIST_MEMBERS_RESPONSE -> memberListAdditionHandling()
                 WSOperations.ADD_MEMBER -> memberAdditionHandling()
                 WSOperations.ADD_TASK -> taskAssignmentHandling()
                 WSOperations.CHANGE_TASK_STATUS -> taskAssignmentHandling()

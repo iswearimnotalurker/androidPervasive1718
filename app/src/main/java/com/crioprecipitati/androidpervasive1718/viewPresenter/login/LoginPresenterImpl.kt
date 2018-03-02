@@ -45,6 +45,7 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
 
     override fun onMemberTypeChanged(memberType: MemberType) {
         Prefs.memberType = memberType
+        onSessionListRequested()
         view?.toggleLeaderMode(memberType.isLeader())
     }
 
@@ -87,7 +88,7 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
 
         Prefs.instanceId = this.sessionList[sessionIndex].instanceId
         Prefs.sessionId = this.sessionList[sessionIndex].sessionId
-        
+
         setupWSAfterSessionHandshake()
 
         when (Prefs.memberType) {
