@@ -14,7 +14,9 @@ import java.util.*
 
 class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.TaskMonitoringView>(), TaskMonitoringContract.TaskMonitoringPresenter, WSObserver {
 
-    private val channels = listOf(WSOperations.NOTIFY)
+    private val channels = listOf(
+            WSOperations.NOTIFY,
+            WSOperations.ADD_TASK)
     private val queueAssignedTask = PriorityQueue<TaskAssignment>()
     private var currentAssignedTask: TaskAssignment? = null
 
@@ -34,6 +36,7 @@ class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.Tas
             this.augmentedTask.task.statusId = Status.FINISHED.id
             TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CHANGE_TASK_STATUS, this.toJson()).toJson())
             NotifierWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CLOSE, Member(Prefs.userCF).toJson()).toJson())
+            updateTheCurrentTask()
         }
     }
 
@@ -68,10 +71,13 @@ class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.Tas
     private fun updateTheCurrentTask() {
         try {
             currentAssignedTask = queueAssignedTask.remove()
-            view?.showNewTask(currentAssignedTask!!.augmentedTask)
-            NotifierWSAdapter.sendSubscribeToParametersMessage(currentAssignedTask!!.augmentedTask.linkedParameters)
         } catch (ex: NoSuchElementException) {
             currentAssignedTask = null
+        }
+
+        currentAssignedTask?. run {
+            view?.showNewTask(currentAssignedTask!!.augmentedTask)
+            NotifierWSAdapter.sendSubscribeToParametersMessage(currentAssignedTask!!.augmentedTask.linkedParameters)
         }
     }
 }
