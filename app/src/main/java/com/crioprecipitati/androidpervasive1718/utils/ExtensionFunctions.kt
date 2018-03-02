@@ -33,7 +33,7 @@ fun Activity.generateBundle(): Bundle {
     bundle.putString(BundleStrings.activityNameBundle, this.name)
     bundle.putString(BundleStrings.activityAcronymBundle,this.acronym)
     bundle.putInt(BundleStrings.activityTypeIdBundle,this.activityTypeId)
-    bundle.putInt(BundleStrings.boundaryIdBundle,this.boundaryId)
+    bundle.putIntArray(BundleStrings.healthParameterIdsBundle, this.healthParameterIds.toIntArray())
     return bundle
 }
 
@@ -47,7 +47,7 @@ object Unbundler {
                         bundleActivity.getString(BundleStrings.activityNameBundle),
                         bundleActivity.getInt(BundleStrings.activityTypeIdBundle),
                         bundleActivity.getString(BundleStrings.activityAcronymBundle),
-                        bundleActivity.getInt(BundleStrings.boundaryIdBundle))
+                        bundleActivity.getIntArray(BundleStrings.healthParameterIdsBundle).toList())
     }
 }
 

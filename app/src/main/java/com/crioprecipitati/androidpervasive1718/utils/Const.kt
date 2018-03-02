@@ -6,7 +6,7 @@ const val IP_EDOARDO = "192.168.1.102"
 const val IP_MATTEO = "192.168.0.8"
 const val IP_ALESSANDRO = "192.168.1.10"
 
-const val CURRENT_LOCAL_IP = IP_ALBERTO
+const val CURRENT_LOCAL_IP = IP_ALESSANDRO
 
 val WS_DEFAULT_TASK_URI = "ws://$CURRENT_LOCAL_IP:820${Prefs.instanceId}/task"
 val WS_DEFAULT_NOTIFIER_URI = "ws://$CURRENT_LOCAL_IP:830${Prefs.instanceId}/instanceid/${Prefs.instanceId}/notifier"

@@ -1,8 +1,6 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.leader.teamMonitoring
 
-import com.crioprecipitati.androidpervasive1718.model.AugmentedMember
-import com.crioprecipitati.androidpervasive1718.model.AugmentedTask
-import com.crioprecipitati.androidpervasive1718.model.Member
+import com.crioprecipitati.androidpervasive1718.model.*
 import com.crioprecipitati.androidpervasive1718.networking.RestApiManager
 import com.crioprecipitati.androidpervasive1718.networking.api.SessionApi
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.NotifierWSAdapter
@@ -15,6 +13,8 @@ import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BasePresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import model.*
 import trikita.log.Log
+import java.sql.Timestamp
+import java.util.*
 
 class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.TeamMonitoringView>(), TeamMonitoringContract.TeamMonitoringPresenter, WSObserver {
 
@@ -69,6 +69,35 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
             )
     }
 
+    override fun addTask(member: Member, activity : Activity) {
+
+        val assignment = TaskAssignment(member, AugmentedTask(
+                    Task(0,
+                            Prefs.sessionId,
+                            member.userCF,
+                            Timestamp(Date().time),
+                            Timestamp(Date().time + 1000),
+                            activity.id,
+                            Status.RUNNING.id),
+                    LifeParameters.values().filter { activity.healthParameterIds.contains(it.id) },
+                    activity.name
+            ))
+
+        val message = PayloadWrapper(
+                Prefs.instanceId,
+                WSOperations.ADD_TASK,
+                assignment.toJson()
+        )
+
+        memberList.firstOrNull {it.userCF == member.userCF}?.items?.add(assignment.task)
+
+        println("Assigning Task ${assignment.task.activityName} to ${assignment.member.userCF}")
+
+        TaskWSAdapter.send(message.toJson())
+
+        view?.showAndUpdateMemberList()
+    }
+
     override fun update(payloadWrapper: PayloadWrapper) {
         with(payloadWrapper) {
 
@@ -99,7 +128,7 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
 
             fun taskAssignmentHandling() {
                 val taskAssignment: TaskAssignment = this.objectify(body)
-                view?.showAndUpdateTaskList(taskAssignment.member, taskAssignment.augmentedTask)
+                view?.showAndUpdateTaskList(taskAssignment.member, taskAssignment.task)
             }
 
             fun taskErrorHandling() {
