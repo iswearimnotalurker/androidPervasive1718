@@ -1,5 +1,6 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.leader.teamMonitoring
 
+import com.crioprecipitati.androidpervasive1718.model.AugmentedMember
 import com.crioprecipitati.androidpervasive1718.model.AugmentedTask
 import com.crioprecipitati.androidpervasive1718.model.LifeParameters
 import com.crioprecipitati.androidpervasive1718.model.Member
@@ -25,7 +26,7 @@ interface TeamMonitoringContract {
 
     interface TeamMonitoringPresenter : BasePresenter<TeamMonitoringView> {
 
-        val memberList: MutableList<Member>
+        val memberList: MutableList<AugmentedMember>
 
         var member: Member?
 

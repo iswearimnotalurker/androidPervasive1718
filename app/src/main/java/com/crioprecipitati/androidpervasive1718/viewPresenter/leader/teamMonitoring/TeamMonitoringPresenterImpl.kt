@@ -1,5 +1,6 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.leader.teamMonitoring
 
+import com.crioprecipitati.androidpervasive1718.model.AugmentedMember
 import com.crioprecipitati.androidpervasive1718.model.AugmentedTask
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.networking.RestApiManager
@@ -18,7 +19,7 @@ import trikita.log.Log
 class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.TeamMonitoringView>(), TeamMonitoringContract.TeamMonitoringPresenter, WSObserver {
 
     override var member: Member? = null
-    override val memberList: MutableList<Member> = mutableListOf()
+    override val memberList: MutableList<AugmentedMember> = mutableListOf()
 
     private val channels = listOf(
         WSOperations.LIST_MEMBERS_RESPONSE,
@@ -47,7 +48,6 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
     }
 
     override fun onMemberSelected(userIndex: Int) {
-        Log.d("onMemberSelected: ${memberList[userIndex]}")
         view?.showActivitySelectionActivity()
     }
 
@@ -79,15 +79,19 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
 
             fun memberAdditionHandling() {
                 val membersAddition: MembersAdditionNotification = this.objectify(body)
+                if (membersAddition.members.isNotEmpty()) memberList.add(AugmentedMember(membersAddition.members.first().userCF))
                 view?.showAndUpdateMemberList()
                 view?.stopLoadingState()
             }
 
             fun memberListAdditionHandling() {
-                val membersAddition: MembersAdditionNotification = this.objectify(body)
+                val membersAddition: AugmentedMembersAdditionNotification = this.objectify(body)
                 with(memberList) {
                     clear()
-                    addAll(membersAddition.members)
+                    if (membersAddition.members.isNotEmpty()) membersAddition.members.forEach {
+                        this.add(AugmentedMember(it.userCF, it.items
+                                ?: mutableListOf<AugmentedTask>()))
+                    }
                 }
                 view?.showAndUpdateMemberList()
                 view?.stopLoadingState()

@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.crioprecipitati.androidpervasive1718.R
+import com.crioprecipitati.androidpervasive1718.R.id.btnCloseSession
 import com.crioprecipitati.androidpervasive1718.model.AugmentedTask
 import com.crioprecipitati.androidpervasive1718.model.LifeParameters
 import com.crioprecipitati.androidpervasive1718.model.Member
@@ -22,7 +23,6 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        savedInstanceState?.let { presenter.member = Unbundler.extractMember(it) }
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
