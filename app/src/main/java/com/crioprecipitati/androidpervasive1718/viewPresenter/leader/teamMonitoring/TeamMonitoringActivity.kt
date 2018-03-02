@@ -7,11 +7,15 @@ import com.crioprecipitati.androidpervasive1718.R
 import com.crioprecipitati.androidpervasive1718.model.AugmentedTask
 import com.crioprecipitati.androidpervasive1718.model.LifeParameters
 import com.crioprecipitati.androidpervasive1718.model.Member
+import com.crioprecipitati.androidpervasive1718.utils.BundleStrings
+import com.crioprecipitati.androidpervasive1718.utils.Prefs
+import com.crioprecipitati.androidpervasive1718.utils.generateBundle
 import com.crioprecipitati.androidpervasive1718.utils.setHealthParameterValue
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseActivity
 import com.crioprecipitati.androidpervasive1718.viewPresenter.leader.activitySelection.ActivitySelectionActivity
 import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_team_monitoring.*
+import org.jetbrains.anko.startActivityForResult
 
 
 class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitoringView, TeamMonitoringContract.TeamMonitoringPresenter>(), TeamMonitoringContract.TeamMonitoringView {
@@ -78,7 +82,8 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
 
     override fun showActivitySelectionActivity() {
         val intent = Intent(this, ActivitySelectionActivity::class.java)
-        startActivity(intent)
+        intent.putExtra(BundleStrings.memberExtraString,Member(Prefs.userCF).generateBundle())
+        startActivityForResult(intent, 52)
     }
 
     override fun onSessionClosed() {

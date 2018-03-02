@@ -12,6 +12,8 @@ interface ActivitySelectionContract {
 
         fun showActivityByActivityType()
 
+        fun startTeamMonitoringActivity(activity: Activity)
+
     }
 
     interface ActivitySelectionPresenter : BasePresenter<ActivitySelectionView> {

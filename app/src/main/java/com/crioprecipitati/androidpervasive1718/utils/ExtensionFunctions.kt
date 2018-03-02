@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.crioprecipitati.androidpervasive1718.model.Activity
 import com.crioprecipitati.androidpervasive1718.model.Member
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -23,6 +24,13 @@ fun TextInputEditText.setTextWithBlankStringCheck(string: String) =
 fun Member.generateBundle(): Bundle {
     val bundle = Bundle()
     bundle.putString("leaderCF", this.userCF)
+    return bundle
+}
+
+fun Activity.generateBundle(): Bundle {
+    val bundle = Bundle()
+    bundle.putString("activityName", this.name)
+    bundle.putString("activityAcronym",this.acronym)
     return bundle
 }
 

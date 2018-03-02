@@ -35,7 +35,7 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
         CallbackHandler.attach(channels, this)
         NotifierWSAdapter.sendSubscribeToAllParametersMessage()
         TaskWSAdapter.sendAllMembersRequest()
-        view?.startLoadingState()
+        view.startLoadingState()
     }
 
     override fun detachView() {
