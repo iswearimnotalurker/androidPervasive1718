@@ -21,8 +21,6 @@ interface ActivitySelectionContract {
         fun onActivityTypeSelected(activityTypeId: Int)
 
         fun onActivitySelected(activityIndex: Int)
-
-        fun getActivityByActivityType()
     }
 
 }

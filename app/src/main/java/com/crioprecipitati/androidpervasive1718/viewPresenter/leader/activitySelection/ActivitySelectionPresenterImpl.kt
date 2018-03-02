@@ -29,7 +29,7 @@ class ActivitySelectionPresenterImpl : BasePresenterImpl<ActivitySelectionContra
     }
 
     override fun onActivityTypeSelected(activityTypeId: Int) {
-        //TODO mandare richiesta a WSTask
+        TaskWSAdapter.sendGetActivitiesRequest(activityTypeId)
     }
 
 
@@ -40,16 +40,12 @@ class ActivitySelectionPresenterImpl : BasePresenterImpl<ActivitySelectionContra
 
     }
 
-    override fun getActivityByActivityType() {
-        val members: List<Member> = listOf(Member("Leader"))
-        TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.GET_ALL_ACTIVITIES, MembersAdditionNotification(members).toJson()).toJson())
-    }
-
     override fun update(payloadWrapper: PayloadWrapper) {
         with(payloadWrapper) {
             fun activityAdditionHandling() {
                 val activityAddition: ActivityAdditionNotification = this.objectify(body)
                 activityList = activityAddition.activities.toMutableList()
+                view?.showActivityByActivityType()
             }
 
             when (payloadWrapper.subject) {
