@@ -24,6 +24,8 @@ data class Member(val userCF: String) {
     }
 }
 
+data class AugmentedMemberFromServer(val userCF: String, val items: MutableList<AugmentedTask>?)
+
 class AugmentedMember(val userCF: String, items: MutableList<AugmentedTask> = mutableListOf()) : ExpandableGroup<AugmentedTask>(userCF, items) {
 
     companion object {

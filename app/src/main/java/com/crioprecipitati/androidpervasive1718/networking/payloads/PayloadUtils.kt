@@ -49,7 +49,7 @@ enum class WSOperations(val objectifier: (String) -> Any) {
     // TASKS
     ADD_LEADER({ GsonInitializer.fromJson(it, MembersAdditionNotification::class.java) }),
     LIST_MEMBERS_REQUEST({ GsonInitializer.fromJson(it, Unit::class.java) }),
-    LIST_MEMBERS_RESPONSE({ GsonInitializer.fromJson(it, MembersAdditionNotification::class.java) }),
+    LIST_MEMBERS_RESPONSE({ GsonInitializer.fromJson(it, AugmentedMembersAdditionNotification::class.java) }),
     LEADER_RESPONSE({ GsonInitializer.fromJson(it, GenericResponse::class.java) }),
     SESSION_HANDLER_ERROR_RESPONSE({ GsonInitializer.fromJson(it, GenericResponse::class.java) }),
     SESSION_HANDLER_RESPONSE({ GsonInitializer.fromJson(it, SessionDNS::class.java) }),
@@ -78,6 +78,8 @@ data class Subscription(val subject: Member, val topics: List<LifeParameters>)
 data class TaskAssignment(val member: Member, val augmentedTask: AugmentedTask)
 
 data class MembersAdditionNotification(val members: List<Member>)
+
+data class AugmentedMembersAdditionNotification(val members: List<AugmentedMemberFromServer>)
 
 data class ActivityAdditionNotification(val activities: List<Activity>)
 

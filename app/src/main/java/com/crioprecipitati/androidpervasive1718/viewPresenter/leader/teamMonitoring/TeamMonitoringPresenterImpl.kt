@@ -47,7 +47,6 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
     }
 
     override fun onMemberSelected(userIndex: Int) {
-        Log.d("onMemberSelected: ${memberList[userIndex]}")
         view?.showActivitySelectionActivity()
     }
 
@@ -79,14 +78,19 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
 
             fun memberAdditionHandling() {
                 val membersAddition: MembersAdditionNotification = this.objectify(body)
-                memberList.add(AugmentedMember.defaultMember())
+                if (membersAddition.members.isNotEmpty()) memberList.add(AugmentedMember(membersAddition.members.first().userCF))
                 view?.showAndUpdateMemberList()
             }
 
             fun memberListAdditionHandling() {
-                val membersAddition: MembersAdditionNotification = this.objectify(body)
-                memberList.clear()
-                membersAddition.members.forEach { memberList.add(AugmentedMember.defaultMember()) }
+                val membersAddition: AugmentedMembersAdditionNotification = this.objectify(body)
+                with(memberList) {
+                    clear()
+                    if (membersAddition.members.isNotEmpty()) membersAddition.members.forEach {
+                        this.add(AugmentedMember(it.userCF, it.items
+                                ?: mutableListOf<AugmentedTask>()))
+                    }
+                }
                 view?.showAndUpdateMemberList()
             }
 
