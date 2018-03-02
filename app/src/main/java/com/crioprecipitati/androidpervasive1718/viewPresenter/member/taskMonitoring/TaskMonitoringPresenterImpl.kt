@@ -33,7 +33,7 @@ class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.Tas
     override fun onTaskCompletionRequested() {
         //TODO PERCHé DA UNA PARTE CHANGE TASK STATUS E DALL' ALTRA  CLOSE TAPIOCA
         currentAssignedTask?.run {
-            this.augmentedTask.task.statusId = Status.FINISHED.id
+            this.task.task.statusId = Status.FINISHED.id
             TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CHANGE_TASK_STATUS, this.toJson()).toJson())
             NotifierWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CLOSE, Member(Prefs.userCF).toJson()).toJson())
         }
@@ -77,8 +77,8 @@ class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.Tas
     private fun updateTheCurrentTask() {
         try {
             currentAssignedTask = queueAssignedTask.remove()
-            view?.showNewTask(currentAssignedTask!!.augmentedTask)
-            NotifierWSAdapter.sendSubscribeToParametersMessage(currentAssignedTask!!.augmentedTask.linkedParameters)
+            view?.showNewTask(currentAssignedTask!!.task)
+            NotifierWSAdapter.sendSubscribeToParametersMessage(currentAssignedTask!!.task.linkedParameters)
         } catch (ex: NoSuchElementException) {
             currentAssignedTask = null
         }

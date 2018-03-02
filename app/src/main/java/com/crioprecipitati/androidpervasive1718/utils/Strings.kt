@@ -9,5 +9,5 @@ object BundleStrings{
     const val activityAcronymBundle = "activityAcronym"
     const val activityIdBundle = "activityId"
     const val activityTypeIdBundle = "activityTypeId"
-    const val boundaryIdBundle = "activityBoundaryId"
+    const val healthParameterIdsBundle = "healthParameterIds"
 }
