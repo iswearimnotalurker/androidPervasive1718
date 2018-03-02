@@ -10,6 +10,7 @@ import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.utils.setHealthParameterValue
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseActivity
 import com.crioprecipitati.androidpervasive1718.viewPresenter.leader.activitySelection.ActivitySelectionActivity
+import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_team_monitoring.*
 
 
@@ -32,6 +33,18 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
 
         itemOnClick = { _, position, _ -> presenter.onMemberSelected(position) }
 
+    }
+
+    override fun startLoadingState() {
+        runOnUiThread {
+            pbTeamSpinner.visibility = View.VISIBLE
+        }
+    }
+
+    override fun stopLoadingState() {
+        runOnUiThread {
+            pbTeamSpinner.visibility = View.GONE
+        }
     }
 
     override fun showAndUpdateMemberList() {

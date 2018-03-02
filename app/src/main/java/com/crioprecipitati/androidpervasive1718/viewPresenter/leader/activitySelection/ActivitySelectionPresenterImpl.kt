@@ -30,6 +30,7 @@ class ActivitySelectionPresenterImpl : BasePresenterImpl<ActivitySelectionContra
 
     override fun onActivityTypeSelected(activityTypeId: Int) {
         TaskWSAdapter.sendGetActivitiesRequest(activityTypeId)
+        view?.startLoadingState()
     }
 
 
@@ -46,6 +47,7 @@ class ActivitySelectionPresenterImpl : BasePresenterImpl<ActivitySelectionContra
                 val activityAddition: ActivityAdditionNotification = this.objectify(body)
                 activityList = activityAddition.activities.toMutableList()
                 view?.showActivityByActivityType()
+                view?.stopLoadingState()
             }
 
             when (payloadWrapper.subject) {

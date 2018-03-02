@@ -2,13 +2,12 @@ package com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonito
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.AttributeSet
 import android.view.Gravity
+import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import com.crioprecipitati.androidpervasive1718.R
-import com.crioprecipitati.androidpervasive1718.R.id.lifeParametersLinearLayout
 import com.crioprecipitati.androidpervasive1718.model.AugmentedTask
 import com.crioprecipitati.androidpervasive1718.model.LifeParameters
 import com.crioprecipitati.androidpervasive1718.utils.setHealthParameterValue
@@ -35,6 +34,18 @@ class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMonitorin
                 createNewTable(LifeParameters.values().toList())
                 showEmptyTask()
             }
+        }
+    }
+
+    override fun startLoadingState() {
+        runOnUiThread {
+            pbTaskMonitoringSpinner.visibility = View.VISIBLE
+        }
+    }
+
+    override fun stopLoadingState() {
+        runOnUiThread {
+            pbTaskMonitoringSpinner.visibility = View.GONE
         }
     }
 

@@ -35,6 +35,7 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
         CallbackHandler.attach(channels, this)
         NotifierWSAdapter.sendSubscribeToAllParametersMessage()
         TaskWSAdapter.sendAllMembersRequest()
+        view?.startLoadingState()
     }
 
     override fun detachView() {
@@ -79,6 +80,7 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
             fun memberAdditionHandling() {
                 val membersAddition: MembersAdditionNotification = this.objectify(body)
                 view?.showAndUpdateMemberList()
+                view?.stopLoadingState()
             }
 
             fun memberListAdditionHandling() {
@@ -88,6 +90,7 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
                     addAll(membersAddition.members)
                 }
                 view?.showAndUpdateMemberList()
+                view?.stopLoadingState()
             }
 
             fun taskAssignmentHandling() {

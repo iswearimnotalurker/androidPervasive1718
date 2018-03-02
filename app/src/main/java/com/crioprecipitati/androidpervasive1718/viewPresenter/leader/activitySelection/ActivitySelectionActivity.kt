@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.view.View
 import com.crioprecipitati.androidpervasive1718.R
 import com.crioprecipitati.androidpervasive1718.model.Activites
-import com.crioprecipitati.androidpervasive1718.model.Activity
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_activity_selection.*
 
@@ -22,6 +21,18 @@ class ActivitySelectionActivity : BaseActivity<ActivitySelectionContract.Activit
         btnDrugs.setOnClickListener{presenter.onActivityTypeSelected(Activites.DRUGS.id)}
         btnManeuvers.setOnClickListener{presenter.onActivityTypeSelected(Activites.MANEUVERS.id)}
 
+    }
+
+    override fun startLoadingState() {
+        runOnUiThread {
+            pbActivitiesSpinner.visibility = View.VISIBLE
+        }
+    }
+
+    override fun stopLoadingState() {
+        runOnUiThread {
+            pbActivitiesSpinner.visibility = View.GONE
+        }
     }
 
     override fun showActivityByActivityType() {

@@ -55,7 +55,6 @@ class LoginActivity : BaseActivity<LoginContract.LoginView, LoginContract.LoginP
         presenter.resumeView()
     }
 
-    //////////////////// LOADING
     override fun startLoadingState() {
         runOnUiThread {
             pbLoadingSpinner.visibility = View.VISIBLE
