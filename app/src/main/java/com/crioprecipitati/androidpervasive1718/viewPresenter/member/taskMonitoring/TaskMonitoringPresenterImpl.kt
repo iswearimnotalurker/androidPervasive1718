@@ -2,6 +2,7 @@ package com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonito
 
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.Status
+import com.crioprecipitati.androidpervasive1718.model.Task
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.NotifierWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
 import com.crioprecipitati.androidpervasive1718.utils.CallbackHandler
@@ -14,9 +15,9 @@ import java.util.*
 
 class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.TaskMonitoringView>(), TaskMonitoringContract.TaskMonitoringPresenter, WSObserver {
 
-    private val channels = listOf(
-            WSOperations.NOTIFY,
-            WSOperations.ADD_TASK)
+    private val channels = listOf(WSOperations.NOTIFY,
+                                    WSOperations.MEMBER_COMEBACK_RESPONSE,
+                                    WSOperations.ADD_TASK)
     private val queueAssignedTask = PriorityQueue<TaskAssignment>()
     private var currentAssignedTask: TaskAssignment? = null
 
@@ -33,10 +34,9 @@ class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.Tas
     override fun onTaskCompletionRequested() {
         //TODO PERCHé DA UNA PARTE CHANGE TASK STATUS E DALL' ALTRA  CLOSE TAPIOCA
         currentAssignedTask?.run {
-            this.augmentedTask.task.statusId = Status.FINISHED.id
+            this.task.task.statusId = Status.FINISHED.id
             TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CHANGE_TASK_STATUS, this.toJson()).toJson())
             NotifierWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CLOSE, Member(Prefs.userCF).toJson()).toJson())
-            updateTheCurrentTask()
         }
     }
 
@@ -59,10 +59,17 @@ class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.Tas
                 }
             }
 
+            fun loadMemberTasks(){
+                val memberTaskList: AugmentedMembersAdditionNotification = this.objectify(body)
+                memberTaskList.members.first().items?.forEach { queueAssignedTask.offer(TaskAssignment(Member(Prefs.userCF),it)) }
+                updateTheCurrentTask()
+            }
+
             when (payloadWrapper.subject) {
                 WSOperations.NOTIFY -> notifyHandling()
                 WSOperations.UPDATE -> manageUpdate()
                 WSOperations.ADD_TASK -> newTaskAssigned()
+                WSOperations.MEMBER_COMEBACK_RESPONSE -> loadMemberTasks()
                 else -> null
             }
         }
@@ -74,10 +81,9 @@ class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.Tas
         } catch (ex: NoSuchElementException) {
             currentAssignedTask = null
         }
-
         currentAssignedTask?. run {
-            view?.showNewTask(currentAssignedTask!!.augmentedTask)
-            NotifierWSAdapter.sendSubscribeToParametersMessage(currentAssignedTask!!.augmentedTask.linkedParameters)
+            view?.showNewTask(currentAssignedTask!!.task)
+            NotifierWSAdapter.sendSubscribeToParametersMessage(currentAssignedTask!!.task.linkedParameters)
         }
     }
 }

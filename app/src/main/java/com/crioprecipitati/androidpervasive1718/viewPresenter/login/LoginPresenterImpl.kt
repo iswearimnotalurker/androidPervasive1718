@@ -40,7 +40,7 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
 
     override fun detachView() {
         super.detachView()
-        CallbackHandler.detach(channels, this)
+        CallbackHandler.detach(channels, this)//da fare nella onpause per workaroundare
     }
 
     override fun onMemberTypeChanged(memberType: MemberType) {

@@ -7,13 +7,13 @@ import kotlinx.android.parcel.Parcelize
 import java.sql.Timestamp
 import java.util.*
 
-data class Activity(val id: Int = 0, val name: String, val activityTypeId: Int, val acronym: String, val boundaryId: Int)
+data class Activity(val id: Int = 0, val name: String, val activityTypeId: Int, val acronym: String, val healthParameterIds: List<Int>)
 
 data class SessionDNS(val sessionId: Int, val patientCF: String, val instanceId: Int, val leaderCF: String)
 
 data class SessionAssignment(val patientCF: String, val leaderCF: String)
 
-data class Boundary(val id: Int = 0, val healthParameterId: Int, val activityId: Int, val upperBound: Double, val lowerBound: Double, val lightWarningOffset: Double, val status: String, val itsGood: Boolean, val minAge: Double, val maxAge: Double)
+data class Boundary(val id: Int = 0, val healthParameterId: Int, val upperBound: Double, val lowerBound: Double, val lightWarningOffset: Double, val status: String, val itsGood: Boolean, val minAge: Double, val maxAge: Double)
 
 data class Member(val userCF: String) {
 
