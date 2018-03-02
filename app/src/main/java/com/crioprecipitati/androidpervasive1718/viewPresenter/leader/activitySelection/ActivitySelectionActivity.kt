@@ -26,7 +26,7 @@ class ActivitySelectionActivity : BaseActivity<ActivitySelectionContract.Activit
         btnDrugs.setOnClickListener{presenter.onActivityTypeSelected(Activites.DRUGS.id)}
         btnManeuvers.setOnClickListener{presenter.onActivityTypeSelected(Activites.MANEUVERS.id)}
 
-        memberBundle = intent.getBundleExtra("memberType")
+        memberBundle = intent.getBundleExtra(BundleStrings.memberExtraString)
 
     }
 
