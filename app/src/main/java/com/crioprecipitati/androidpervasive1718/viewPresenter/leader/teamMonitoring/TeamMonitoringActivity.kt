@@ -80,7 +80,7 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
     override fun showActivitySelectionActivity() {
         val intent = Intent(this, ActivitySelectionActivity::class.java)
         intent.putExtra(BundleStrings.memberExtraString,Member(Prefs.userCF).generateBundle())
-        startActivityForResult(intent, 52)
+        startActivityForResult(intent, MagicNumbers.activitySelectionActivityLaunchIntentCode)
     }
 
     override fun onSessionClosed() {
@@ -88,13 +88,12 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode === 1) {
-            if (resultCode === Activity.RESULT_OK) {
-                val member = Unbundler.extractMember(intent.getBundleExtra(BundleStrings.memberExtraString))
-                val activity = Unbundler.extractActivity(intent.getBundleExtra(BundleStrings.activityExtraString))
-                Log.d("PERVASIVE",activity)
+        if (requestCode == MagicNumbers.activitySelectionActivityLaunchIntentCode) {
+            if (resultCode == Activity.RESULT_OK) {
+                val member = Unbundler.extractMember(data!!.getBundleExtra(BundleStrings.memberExtraString))
+                val activity = Unbundler.extractActivity(data!!.getBundleExtra(BundleStrings.activityExtraString))
             }
-            if (resultCode === Activity.RESULT_CANCELED) {
+            if (resultCode == Activity.RESULT_CANCELED) {
                 //TODO
             }
         }

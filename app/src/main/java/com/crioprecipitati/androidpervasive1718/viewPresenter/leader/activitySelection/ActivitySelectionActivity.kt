@@ -6,17 +6,20 @@ import android.view.View
 import com.crioprecipitati.androidpervasive1718.R
 import com.crioprecipitati.androidpervasive1718.model.Activites
 import com.crioprecipitati.androidpervasive1718.model.Activity
+import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.utils.BundleStrings
+import com.crioprecipitati.androidpervasive1718.utils.Unbundler
 import com.crioprecipitati.androidpervasive1718.utils.generateBundle
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_activity_selection.*
+import trikita.log.Log
 
 class ActivitySelectionActivity : BaseActivity<ActivitySelectionContract.ActivitySelectionView, ActivitySelectionContract.ActivitySelectionPresenter>(), ActivitySelectionContract.ActivitySelectionView {
 
     override var presenter: ActivitySelectionContract.ActivitySelectionPresenter = ActivitySelectionPresenterImpl()
     override val layout: Int = R.layout.activity_activity_selection
     private lateinit var itemOnClick: (View, Int, Int) -> Unit
-    private lateinit var memberBundle: Bundle
+    private lateinit var member: Member
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,7 +29,7 @@ class ActivitySelectionActivity : BaseActivity<ActivitySelectionContract.Activit
         btnDrugs.setOnClickListener{presenter.onActivityTypeSelected(Activites.DRUGS.id)}
         btnManeuvers.setOnClickListener{presenter.onActivityTypeSelected(Activites.MANEUVERS.id)}
 
-        memberBundle = intent.getBundleExtra(BundleStrings.memberExtraString)
+        member = Unbundler.extractMember(intent.getBundleExtra(BundleStrings.memberExtraString))
 
     }
 
@@ -57,7 +60,7 @@ class ActivitySelectionActivity : BaseActivity<ActivitySelectionContract.Activit
 
     override fun startTeamMonitoringActivity(activity: Activity) {
         val resultIntent = Intent()
-        resultIntent.putExtra(BundleStrings.memberExtraString,memberBundle)
+        resultIntent.putExtra(BundleStrings.memberExtraString,member.generateBundle())
         resultIntent.putExtra(BundleStrings.activityExtraString,activity.generateBundle())
         setResult(android.app.Activity.RESULT_OK,resultIntent)
         finish()
