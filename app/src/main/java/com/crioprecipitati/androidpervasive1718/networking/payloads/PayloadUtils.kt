@@ -50,6 +50,7 @@ enum class WSOperations(val objectifier: (String) -> Any) {
     ADD_LEADER({ GsonInitializer.fromJson(it, MembersAdditionNotification::class.java) }),
     LIST_MEMBERS_REQUEST({ GsonInitializer.fromJson(it, Unit::class.java) }),
     LIST_MEMBERS_RESPONSE({ GsonInitializer.fromJson(it, AugmentedMembersAdditionNotification::class.java) }),
+    MEMBER_COMEBACK_RESPONSE({ GsonInitializer.fromJson(it, AugmentedMembersAdditionNotification::class.java) }),
     LEADER_RESPONSE({ GsonInitializer.fromJson(it, GenericResponse::class.java) }),
     SESSION_HANDLER_ERROR_RESPONSE({ GsonInitializer.fromJson(it, GenericResponse::class.java) }),
     SESSION_HANDLER_RESPONSE({ GsonInitializer.fromJson(it, SessionDNS::class.java) }),
@@ -59,6 +60,7 @@ enum class WSOperations(val objectifier: (String) -> Any) {
     CHANGE_TASK_STATUS({ GsonInitializer.fromJson(it, TaskAssignment::class.java) }),
     ERROR_REMOVING_TASK({ GsonInitializer.fromJson(it, TaskError::class.java) }),
     ERROR_CHANGING_STATUS({ GsonInitializer.fromJson(it, StatusError::class.java) }),
+    ERROR_CREATING_INSTANCE_POOL_FULL({ GsonInitializer.fromJson(it, kotlin.Unit::class.java)}),
 
     // ACTIVITIES
     GET_ALL_ACTIVITIES({ GsonInitializer.fromJson(it, ActivityRequest::class.java) }),

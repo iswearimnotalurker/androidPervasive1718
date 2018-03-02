@@ -2,6 +2,7 @@ package com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonito
 
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.Status
+import com.crioprecipitati.androidpervasive1718.model.Task
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.NotifierWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
 import com.crioprecipitati.androidpervasive1718.utils.CallbackHandler
@@ -14,7 +15,8 @@ import java.util.*
 
 class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.TaskMonitoringView>(), TaskMonitoringContract.TaskMonitoringPresenter, WSObserver {
 
-    private val channels = listOf(WSOperations.NOTIFY)
+    private val channels = listOf(WSOperations.NOTIFY,
+                                    WSOperations.MEMBER_COMEBACK_RESPONSE)
     private val queueAssignedTask = PriorityQueue<TaskAssignment>()
     private var currentAssignedTask: TaskAssignment? = null
 
@@ -56,10 +58,17 @@ class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.Tas
                 }
             }
 
+            fun loadMemberTasks(){
+                val memberTaskList: AugmentedMembersAdditionNotification = this.objectify(body)
+                memberTaskList.members.first().items?.forEach { queueAssignedTask.offer(TaskAssignment(Member(Prefs.userCF),it)) }
+                updateTheCurrentTask()
+            }
+
             when (payloadWrapper.subject) {
                 WSOperations.NOTIFY -> notifyHandling()
                 WSOperations.UPDATE -> manageUpdate()
                 WSOperations.ADD_TASK -> newTaskAssigned()
+                WSOperations.MEMBER_COMEBACK_RESPONSE -> loadMemberTasks()
                 else -> null
             }
         }
