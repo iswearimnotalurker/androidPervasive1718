@@ -24,10 +24,6 @@ interface LoginContract {
         fun setupUserParams(memberType: MemberType, userCF: String, patientCF: String = "")
 
         fun toggleLeaderMode(isEnabled: Boolean)
-
-        fun stopLoadingState(): Any
-
-        fun startLoadingState(): Any
     }
 
     interface LoginPresenter : BasePresenter<LoginView> {

@@ -61,7 +61,7 @@ enum class WSOperations(val objectifier: (String) -> Any) {
     ERROR_CHANGING_STATUS({ GsonInitializer.fromJson(it, StatusError::class.java) }),
 
     // ACTIVITIES
-    GET_ALL_ACTIVITIES({ GsonInitializer.fromJson(it, MembersAdditionNotification::class.java) }),
+    GET_ALL_ACTIVITIES({ GsonInitializer.fromJson(it, ActivityRequest::class.java) }),
     SET_ALL_ACTIVITIES({ GsonInitializer.fromJson(it, ActivityAdditionNotification::class.java) });
 }
 
@@ -80,6 +80,8 @@ data class TaskAssignment(val member: Member, val augmentedTask: AugmentedTask)
 data class MembersAdditionNotification(val members: List<Member>)
 
 data class AugmentedMembersAdditionNotification(val members: List<AugmentedMemberFromServer>)
+
+data class ActivityRequest(val activityTypeId: Int)
 
 data class ActivityAdditionNotification(val activities: List<Activity>)
 

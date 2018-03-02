@@ -1,5 +1,6 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.leader.activitySelection
 
+import android.content.Intent
 import com.crioprecipitati.androidpervasive1718.model.Activity
 import com.crioprecipitati.androidpervasive1718.model.AugmentedTask
 import com.crioprecipitati.androidpervasive1718.model.Member
@@ -29,20 +30,14 @@ class ActivitySelectionPresenterImpl : BasePresenterImpl<ActivitySelectionContra
     }
 
     override fun onActivityTypeSelected(activityTypeId: Int) {
-        //TODO mandare richiesta a WSTask
+        TaskWSAdapter.sendGetActivitiesRequest(activityTypeId)
+        view?.startLoadingState()
     }
 
 
 
     override fun onActivitySelected(activityIndex: Int) {
-        TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.ADD_TASK, TaskAssignment(Member(Prefs.userCF), AugmentedTask.emptyAugmentedTask()).toJson()).toJson())
-        NotifierWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.SUBSCRIBE, Member(Prefs.userCF).toJson()).toJson())
-
-    }
-
-    override fun getActivityByActivityType() {
-        val members: List<Member> = listOf(Member("Leader"))
-        TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.GET_ALL_ACTIVITIES, MembersAdditionNotification(members).toJson()).toJson())
+        view?.startTeamMonitoringActivity(activityList[activityIndex])
     }
 
     override fun update(payloadWrapper: PayloadWrapper) {
@@ -50,6 +45,8 @@ class ActivitySelectionPresenterImpl : BasePresenterImpl<ActivitySelectionContra
             fun activityAdditionHandling() {
                 val activityAddition: ActivityAdditionNotification = this.objectify(body)
                 activityList = activityAddition.activities.toMutableList()
+                view?.showActivityByActivityType()
+                view?.stopLoadingState()
             }
 
             when (payloadWrapper.subject) {

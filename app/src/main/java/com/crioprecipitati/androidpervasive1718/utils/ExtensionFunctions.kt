@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import com.crioprecipitati.androidpervasive1718.model.Activity
 import com.crioprecipitati.androidpervasive1718.model.Member
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
@@ -22,13 +23,31 @@ fun TextInputEditText.setTextWithBlankStringCheck(string: String) =
 
 fun Member.generateBundle(): Bundle {
     val bundle = Bundle()
-    bundle.putString("leaderCF", this.userCF)
+    bundle.putString(BundleStrings.leaderCFBundle, this.userCF)
     return bundle
 }
 
-object Unbudler {
+fun Activity.generateBundle(): Bundle {
+    val bundle = Bundle()
+    bundle.putInt(BundleStrings.activityIdBundle,this.id)
+    bundle.putString(BundleStrings.activityNameBundle, this.name)
+    bundle.putString(BundleStrings.activityAcronymBundle,this.acronym)
+    bundle.putInt(BundleStrings.activityTypeIdBundle,this.activityTypeId)
+    bundle.putInt(BundleStrings.boundaryIdBundle,this.boundaryId)
+    return bundle
+}
+
+object Unbundler {
     fun extractMember(bundledMember: Bundle): Member {
-        return Member(bundledMember.getString("leaderCF"))
+        return Member(bundledMember.getString(BundleStrings.leaderCFBundle))
+    }
+
+    fun extractActivity(bundleActivity: Bundle): Activity {
+        return Activity(bundleActivity.getInt(BundleStrings.activityIdBundle),
+                        bundleActivity.getString(BundleStrings.activityNameBundle),
+                        bundleActivity.getInt(BundleStrings.activityTypeIdBundle),
+                        bundleActivity.getString(BundleStrings.activityAcronymBundle),
+                        bundleActivity.getInt(BundleStrings.boundaryIdBundle))
     }
 }
 

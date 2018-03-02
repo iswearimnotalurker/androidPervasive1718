@@ -4,4 +4,6 @@
     <string name="title_activity_task_monitoring">TaskMonitoringActivity</string>
     <string name="title_activity_activity_selection">TaskSelectionActivity</string>
     <string name="title_activity_team_monitoring">TeamMonitoringActivity</string>
+    <string name="title_drugs_button">Farmaci</string>
+    <string name="title_maneuvers_button">Manovre</string>
 </resources>

@@ -24,13 +24,10 @@ class LoginActivityTest {
     @JvmField
     val activity = ActivityTestRule<LoginActivity>(LoginActivity::class.java)
     companion object {
-
         val leaderCF1 = "CFLeader1"
         val leaderCF2 = "CFLeader2"
         val patientCF1 = "CFPatient1"
         val patientCF2 = "CFPatient2"
-
-
     }
 
     fun createSessions(){

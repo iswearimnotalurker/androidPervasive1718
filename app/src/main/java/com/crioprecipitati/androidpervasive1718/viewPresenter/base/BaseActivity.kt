@@ -18,6 +18,10 @@ interface BaseView {
 
     fun showMessage(@StringRes messageResId: Int)
 
+    fun stopLoadingState(): Any
+
+    fun startLoadingState(): Any
+
 }
 
 abstract class BaseActivity<V : BaseView, P : BasePresenter<V>> : AppCompatActivity(), BaseView {

@@ -1,16 +1,19 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.leader.teamMonitoring
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.crioprecipitati.androidpervasive1718.R
+import com.crioprecipitati.androidpervasive1718.R.id.btnCloseSession
 import com.crioprecipitati.androidpervasive1718.model.AugmentedTask
 import com.crioprecipitati.androidpervasive1718.model.LifeParameters
 import com.crioprecipitati.androidpervasive1718.model.Member
-import com.crioprecipitati.androidpervasive1718.utils.setHealthParameterValue
+import com.crioprecipitati.androidpervasive1718.utils.*
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseActivity
 import com.crioprecipitati.androidpervasive1718.viewPresenter.leader.activitySelection.ActivitySelectionActivity
 import kotlinx.android.synthetic.main.activity_team_monitoring.*
+import trikita.log.Log
 
 
 class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitoringView, TeamMonitoringContract.TeamMonitoringPresenter>(), TeamMonitoringContract.TeamMonitoringView {
@@ -31,6 +34,18 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
 
         itemOnClick = { _, position, _ -> presenter.onMemberSelected(position) }
 
+    }
+
+    override fun startLoadingState() {
+        runOnUiThread {
+            pbTeamSpinner.visibility = View.VISIBLE
+        }
+    }
+
+    override fun stopLoadingState() {
+        runOnUiThread {
+            pbTeamSpinner.visibility = View.GONE
+        }
     }
 
     override fun showAndUpdateMemberList() {
@@ -64,10 +79,23 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
 
     override fun showActivitySelectionActivity() {
         val intent = Intent(this, ActivitySelectionActivity::class.java)
-        startActivity(intent)
+        intent.putExtra(BundleStrings.memberExtraString,Member(Prefs.userCF).generateBundle())
+        startActivityForResult(intent, MagicNumbers.activitySelectionActivityLaunchIntentCode)
     }
 
     override fun onSessionClosed() {
         finish()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == MagicNumbers.activitySelectionActivityLaunchIntentCode) {
+            if (resultCode == Activity.RESULT_OK) {
+                val member = Unbundler.extractMember(data!!.getBundleExtra(BundleStrings.memberExtraString))
+                val activity = Unbundler.extractActivity(data!!.getBundleExtra(BundleStrings.activityExtraString))
+            }
+            if (resultCode == Activity.RESULT_CANCELED) {
+                //TODO
+            }
+        }
     }
 }

@@ -4,10 +4,7 @@ import com.crioprecipitati.androidpervasive1718.model.LifeParameters
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.SessionAssignment
 import com.crioprecipitati.androidpervasive1718.utils.*
-import model.MembersAdditionNotification
-import model.PayloadWrapper
-import model.Subscription
-import model.WSOperations
+import model.*
 import trikita.log.Log
 
 abstract class WSAdapter(private val baseAddress: String) {
@@ -57,7 +54,15 @@ object TaskWSAdapter : WSAdapter(WS_DEFAULT_TASK_URI) {
         PayloadWrapper(
             Prefs.sessionId,
             WSOperations.LIST_MEMBERS_REQUEST,
-            Unit.toJson()).toJson())
+            Unit.toJson()).toJson()
+    )
+
+    fun sendGetActivitiesRequest(activityTypeId: Int) = TaskWSAdapter.send(
+            PayloadWrapper(
+                Prefs.sessionId,
+                WSOperations.GET_ALL_ACTIVITIES,
+                    ActivityRequest(activityTypeId).toJson()).toJson()
+    )
 
 
 }
