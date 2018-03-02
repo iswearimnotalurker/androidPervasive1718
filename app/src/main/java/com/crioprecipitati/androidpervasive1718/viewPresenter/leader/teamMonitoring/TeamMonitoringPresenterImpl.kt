@@ -1,5 +1,6 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.leader.teamMonitoring
 
+import com.crioprecipitati.androidpervasive1718.model.AugmentedMember
 import com.crioprecipitati.androidpervasive1718.model.AugmentedTask
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.networking.RestApiManager
@@ -18,7 +19,7 @@ import trikita.log.Log
 class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.TeamMonitoringView>(), TeamMonitoringContract.TeamMonitoringPresenter, WSObserver {
 
     override var member: Member? = null
-    override val memberList: MutableList<Member> = mutableListOf()
+    override val memberList: MutableList<AugmentedMember> = mutableListOf()
 
     private val channels = listOf(
         WSOperations.LIST_MEMBERS_RESPONSE,
@@ -78,15 +79,14 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
 
             fun memberAdditionHandling() {
                 val membersAddition: MembersAdditionNotification = this.objectify(body)
+                memberList.add(AugmentedMember.defaultMember())
                 view?.showAndUpdateMemberList()
             }
 
             fun memberListAdditionHandling() {
                 val membersAddition: MembersAdditionNotification = this.objectify(body)
-                with(memberList) {
-                    clear()
-                    addAll(membersAddition.members)
-                }
+                memberList.clear()
+                membersAddition.members.forEach { memberList.add(AugmentedMember.defaultMember()) }
                 view?.showAndUpdateMemberList()
             }
 

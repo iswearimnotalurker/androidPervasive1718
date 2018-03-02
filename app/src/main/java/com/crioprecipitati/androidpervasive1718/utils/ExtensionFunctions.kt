@@ -42,6 +42,15 @@ fun <T : RecyclerView.ViewHolder> T.onClick(event: (view: View, position: Int, t
     return this
 }
 
+fun <T : RecyclerView.ViewHolder> T.onLongClick(event: (view: View, position: Int, type: Int) -> Unit): T {
+    itemView.setOnLongClickListener {
+        event.invoke(it, adapterPosition, itemViewType)
+        true
+    }
+    return this
+}
+
+
 fun TextView.setHealthParameterValue(value: String) {
     doAsync {
         uiThread {

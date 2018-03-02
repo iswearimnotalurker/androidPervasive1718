@@ -3,7 +3,6 @@ package com.crioprecipitati.androidpervasive1718.utils
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.WSCallbacks
 import model.PayloadWrapper
 import model.WSOperations
-import trikita.log.Log
 
 interface WSObserver {
 
@@ -56,9 +55,9 @@ object CallbackHandler : WSCallbacks, WSSubject {
     }
 
     override fun onMessageReceived(messageString: String?) {
-        Log.d("onMessageReceived: $messageString")
+//        Log.d("onMessageReceived: $messageString")
         with(GsonInitializer.fromJson(messageString!!, PayloadWrapper::class.java)) {
-            Log.d("[ <-- ${subject.name} ]: ${this.body}")
+            //            Log.d("[ <-- ${subject.name} ]: ${this.body}")
             notifyAllObservers(this.subject, this)
         }
     }
