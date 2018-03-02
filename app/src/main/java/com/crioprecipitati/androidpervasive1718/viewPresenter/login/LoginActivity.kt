@@ -56,9 +56,17 @@ class LoginActivity : BaseActivity<LoginContract.LoginView, LoginContract.LoginP
     }
 
     //////////////////// LOADING
-//    override fun startLoadingState() = urlFetchingWaitDialog.show()
+    override fun startLoadingState() {
+        runOnUiThread {
+            pbLoadingSpinner.visibility = View.VISIBLE
+        }
+    }
 
-//    override fun stopLoadingState() = urlFetchingWaitDialog.cancel()
+    override fun stopLoadingState() {
+        runOnUiThread {
+            pbLoadingSpinner.visibility = View.GONE
+        }
+    }
 
     override fun toggleLeaderMode(isEnabled: Boolean) {
         btnCreateNewSession.isEnabled = isEnabled

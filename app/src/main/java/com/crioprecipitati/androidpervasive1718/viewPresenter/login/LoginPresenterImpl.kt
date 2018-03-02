@@ -4,9 +4,9 @@ import com.chibatching.kotpref.blockingBulk
 import com.crioprecipitati.androidpervasive1718.model.SessionDNS
 import com.crioprecipitati.androidpervasive1718.networking.RestApiManager
 import com.crioprecipitati.androidpervasive1718.networking.api.SessionApi
-import com.crioprecipitati.androidpervasive1718.networking.webSockets.NotifierWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.SessionWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
+import com.crioprecipitati.androidpervasive1718.networking.webSockets.WSHelper
 import com.crioprecipitati.androidpervasive1718.utils.CallbackHandler
 import com.crioprecipitati.androidpervasive1718.utils.Prefs
 import com.crioprecipitati.androidpervasive1718.utils.WSObserver
@@ -32,8 +32,8 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
         CallbackHandler.attach(channels, this)
     }
 
-    override fun resumeView(){
-        SessionWSAdapter.initWS()
+    override fun resumeView() {
+        WSHelper.initStartingPointWS()
         onSessionListRequested()
         view?.setupUserParams(Prefs.memberType, Prefs.userCF, Prefs.patientCF)
     }
@@ -49,14 +49,17 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
         view?.toggleLeaderMode(memberType.isLeader())
     }
 
-    override fun onNewSessionRequested() = SessionWSAdapter.sendNewSessionMessage()
+    override fun onNewSessionRequested() {
+        SessionWSAdapter.sendNewSessionMessage()
+        view?.startLoadingState()
+    }
 
     override fun onSessionCreated(sessionDNS: SessionDNS) {
         Prefs.blockingBulk {
             instanceId = sessionDNS.instanceId
             sessionId = sessionDNS.sessionId
         }
-        setupWSAfterSessionHandshake()
+        WSHelper.setupWSAfterSessionHandshake()
         TaskWSAdapter.sendAddLeaderMessage()
     }
 
@@ -71,7 +74,10 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
             when (Prefs.memberType) {
                 MemberType.LEADER -> this.getAllSessionsByLeaderId(Prefs.userCF)
                 MemberType.MEMBER -> this.getAllSessions()
-            }.observeOn(AndroidSchedulers.mainThread())
+            }
+                .doOnSubscribe { view?.startLoadingState() }
+                .doAfterTerminate { view?.stopLoadingState() }
+                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(
                     { sessionList ->
                         with(this@LoginPresenterImpl.sessionList) {
@@ -89,7 +95,8 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
         Prefs.instanceId = this.sessionList[sessionIndex].instanceId
         Prefs.sessionId = this.sessionList[sessionIndex].sessionId
 
-        setupWSAfterSessionHandshake()
+        WSHelper.setupWSAfterSessionHandshake()
+        view?.stopLoadingState()
 
         when (Prefs.memberType) {
             MemberType.LEADER -> {
@@ -121,11 +128,5 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
                 else -> Log.d("MESSAGE NOT HANDLED: $subject")
             }
         }
-    }
-
-    private fun setupWSAfterSessionHandshake() {
-        SessionWSAdapter.closeWS()
-        TaskWSAdapter.initWS()
-        NotifierWSAdapter.initWS()
     }
 }
