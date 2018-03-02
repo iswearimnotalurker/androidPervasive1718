@@ -81,3 +81,17 @@ object NotifierWSAdapter : WSAdapter(WS_DEFAULT_NOTIFIER_URI) {
     }
 
 }
+
+object WSHelper {
+
+    fun initStartingPointWS() {
+        SessionWSAdapter.initWS()
+    }
+
+    fun setupWSAfterSessionHandshake() {
+        SessionWSAdapter.closeWS()
+        TaskWSAdapter.initWS()
+        NotifierWSAdapter.initWS()
+    }
+
+}
