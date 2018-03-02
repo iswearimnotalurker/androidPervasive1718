@@ -12,7 +12,6 @@ import com.crioprecipitati.androidpervasive1718.utils.*
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseActivity
 import com.crioprecipitati.androidpervasive1718.viewPresenter.leader.activitySelection.ActivitySelectionActivity
 import kotlinx.android.synthetic.main.activity_team_monitoring.*
-import trikita.log.Log
 
 
 class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitoringView, TeamMonitoringContract.TeamMonitoringPresenter>(), TeamMonitoringContract.TeamMonitoringView {
