@@ -23,20 +23,31 @@ fun TextInputEditText.setTextWithBlankStringCheck(string: String) =
 
 fun Member.generateBundle(): Bundle {
     val bundle = Bundle()
-    bundle.putString("leaderCF", this.userCF)
+    bundle.putString(BundleStrings.leaderCFBundle, this.userCF)
     return bundle
 }
 
 fun Activity.generateBundle(): Bundle {
     val bundle = Bundle()
-    bundle.putString("activityName", this.name)
-    bundle.putString("activityAcronym",this.acronym)
+    bundle.putInt(BundleStrings.activityIdBundle,this.id)
+    bundle.putString(BundleStrings.activityNameBundle, this.name)
+    bundle.putString(BundleStrings.activityAcronymBundle,this.acronym)
+    bundle.putInt(BundleStrings.activityTypeIdBundle,this.activityTypeId)
+    bundle.putInt(BundleStrings.boundaryIdBundle,this.boundaryId)
     return bundle
 }
 
-object Unbudler {
+object Unbundler {
     fun extractMember(bundledMember: Bundle): Member {
-        return Member(bundledMember.getString("leaderCF"))
+        return Member(bundledMember.getString(BundleStrings.leaderCFBundle))
+    }
+
+    fun extractActivity(bundleActivity: Bundle): Activity {
+        return Activity(bundleActivity.getInt(BundleStrings.activityIdBundle),
+                        bundleActivity.getString(BundleStrings.activityNameBundle),
+                        bundleActivity.getInt(BundleStrings.activityTypeIdBundle),
+                        bundleActivity.getString(BundleStrings.activityAcronymBundle),
+                        bundleActivity.getInt(BundleStrings.boundaryIdBundle))
     }
 }
 

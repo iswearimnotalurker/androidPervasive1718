@@ -1,5 +1,6 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.leader.teamMonitoring
 
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -7,15 +8,13 @@ import com.crioprecipitati.androidpervasive1718.R
 import com.crioprecipitati.androidpervasive1718.model.AugmentedTask
 import com.crioprecipitati.androidpervasive1718.model.LifeParameters
 import com.crioprecipitati.androidpervasive1718.model.Member
-import com.crioprecipitati.androidpervasive1718.utils.BundleStrings
-import com.crioprecipitati.androidpervasive1718.utils.Prefs
-import com.crioprecipitati.androidpervasive1718.utils.generateBundle
-import com.crioprecipitati.androidpervasive1718.utils.setHealthParameterValue
+import com.crioprecipitati.androidpervasive1718.utils.*
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseActivity
 import com.crioprecipitati.androidpervasive1718.viewPresenter.leader.activitySelection.ActivitySelectionActivity
-import kotlinx.android.synthetic.main.activity_login.*
 import kotlinx.android.synthetic.main.activity_team_monitoring.*
-import org.jetbrains.anko.startActivityForResult
+
+
+
 
 
 class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitoringView, TeamMonitoringContract.TeamMonitoringPresenter>(), TeamMonitoringContract.TeamMonitoringView {
@@ -26,7 +25,7 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-//        savedInstanceState?.let { presenter.member = Unbudler.extractMember(it) }
+//        savedInstanceState?.let { presenter.member = Unbundler.extractMember(it) }
 
         setSupportActionBar(toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
@@ -88,5 +87,17 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
 
     override fun onSessionClosed() {
         finish()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode === 1) {
+            if (resultCode === Activity.RESULT_OK) {
+                val member = Unbundler.extractMember(intent.getBundleExtra(BundleStrings.memberExtraString))
+                val activity = Unbundler.extractActivity(intent.getBundleExtra(BundleStrings.activityExtraString))
+            }
+            if (resultCode === Activity.RESULT_CANCELED) {
+                //TODO
+            }
+        }
     }
 }
