@@ -47,7 +47,7 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
         }
     }
 
-    override fun showAndUpdateMemberList() {
+    override fun showAndUpdateMemberAndTaskList() {
         runOnUiThread {
             with(rvMemberList) {
                 adapter = null
@@ -59,9 +59,6 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
         }
     }
 
-    override fun showAndUpdateTaskList(member: Member, task: AugmentedTask) {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
 
     override fun showAndUpdateHealthParameters(lifeParameter: LifeParameters, value: Double) {
         with(value.toString()) {
@@ -76,9 +73,9 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
         }
     }
 
-    override fun showActivitySelectionActivity() {
+    override fun showActivitySelectionActivity(userCF: String) {
         val intent = Intent(this, ActivitySelectionActivity::class.java)
-        intent.putExtra(BundleStrings.memberExtraString,Member(Prefs.userCF).generateBundle())
+        intent.putExtra(BundleStrings.memberExtraString,Member(userCF).generateBundle())
         startActivityForResult(intent, MagicNumbers.activitySelectionActivityLaunchIntentCode)
     }
 
