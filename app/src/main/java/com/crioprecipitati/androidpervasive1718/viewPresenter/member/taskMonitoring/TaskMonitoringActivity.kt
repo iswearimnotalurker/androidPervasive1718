@@ -14,18 +14,22 @@ import com.crioprecipitati.androidpervasive1718.utils.setHealthParameterValue
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_task_monitoring.*
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.uiThread
 
-class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMonitoringView, TaskMonitoringContract.TaskMonitoringPresenter>(), TaskMonitoringContract.TaskMonitoringView {
+open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMonitoringView, TaskMonitoringContract.TaskMonitoringPresenter>(), TaskMonitoringContract.TaskMonitoringView {
 
     override var presenter: TaskMonitoringContract.TaskMonitoringPresenter = TaskMonitoringPresenterImpl()
     override val layout: Int = R.layout.activity_task_monitoring
 
     private val parametersViews: HashMap<LifeParameters, Pair<TextView, TextView>> = HashMap()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        btnEndOperation.onClick {
+            presenter.onTaskCompletionRequested()
+        }
 
         doAsync {
             Thread.sleep(1000)
@@ -50,23 +54,31 @@ class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMonitorin
     }
 
     override fun showNewTask(augmentedTask: AugmentedTask) {
-        activityName.text = augmentedTask.activityName
-        createNewTable(augmentedTask.linkedParameters)
-        btnEndOperation.isEnabled = true
+        runOnUiThread {
+            activityName.text = augmentedTask.activityName
+            createNewTable(augmentedTask.linkedParameters)
+            btnEndOperation.isEnabled = true
+        }
     }
 
     override fun showEmptyTask() {
-        activityName.text = "In attesa..."
-        lifeParametersLinearLayout.removeAllViews()
-        btnEndOperation.isEnabled = false
+        runOnUiThread {
+            activityName.text = "In attesa..."
+            lifeParametersLinearLayout.removeAllViews()
+            btnEndOperation.isEnabled = false
+        }
     }
 
     override fun showAlarmedTask() {
-        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        runOnUiThread {
+            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        }
     }
 
     override fun updateHealthParameterValues(parameter: LifeParameters, value: Double) {
-        parametersViews[parameter]!!.second.setHealthParameterValue(value.toString())
+        runOnUiThread {
+            parametersViews[parameter]!!.second.setHealthParameterValue(value.toString())
+        }
     }
 
     private fun createNewTable(parameters: List<LifeParameters>) {
