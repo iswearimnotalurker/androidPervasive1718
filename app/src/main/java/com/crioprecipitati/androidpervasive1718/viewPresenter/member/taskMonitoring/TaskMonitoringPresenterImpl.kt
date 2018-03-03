@@ -16,7 +16,8 @@ import java.util.*
 class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.TaskMonitoringView>(), TaskMonitoringContract.TaskMonitoringPresenter, WSObserver {
 
     private val channels = listOf(WSOperations.NOTIFY,
-                                    WSOperations.MEMBER_COMEBACK_RESPONSE)
+                                    WSOperations.MEMBER_COMEBACK_RESPONSE,
+                                    WSOperations.ADD_TASK)
     private val queueAssignedTask = PriorityQueue<TaskAssignment>()
     private var currentAssignedTask: TaskAssignment? = null
 
@@ -77,10 +78,12 @@ class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.Tas
     private fun updateTheCurrentTask() {
         try {
             currentAssignedTask = queueAssignedTask.remove()
-            view?.showNewTask(currentAssignedTask!!.task)
-            NotifierWSAdapter.sendSubscribeToParametersMessage(currentAssignedTask!!.task.linkedParameters)
         } catch (ex: NoSuchElementException) {
             currentAssignedTask = null
+        }
+        currentAssignedTask?. run {
+            view?.showNewTask(currentAssignedTask!!.task)
+            NotifierWSAdapter.sendSubscribeToParametersMessage(currentAssignedTask!!.task.linkedParameters)
         }
     }
 }
