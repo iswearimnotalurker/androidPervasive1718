@@ -37,7 +37,7 @@ class AugmentedMember(val userCF: String, items: MutableList<AugmentedTask> = mu
 }
 
 @Parcelize
-data class Task @JvmOverloads constructor(val id: Int = 0, val sessionId: Int, val userCF: String, @KlaxonDate val startTime: Timestamp, @KlaxonDate val endTime: Timestamp, val activityId: Int, var statusId: Int) : Parcelable {
+data class Task(val id: Int = 0, val sessionId: Int, val operatorCF: String, @KlaxonDate val startTime: Timestamp, @KlaxonDate val endTime: Timestamp, val activityId: Int, var statusId: Int): Parcelable {
     companion object {
         fun emptyTask(): Task =
                 Task(EmptyTask.emptyTaskId, EmptyTask.emptySessionId, EmptyTask.emptyTaskOperatorId, EmptyTask.emptyTaskStartTime, EmptyTask.emptyTaskEndTime, EmptyTask.emptyTaskActivityId, EmptyTask.emptyTaskStatusId)
