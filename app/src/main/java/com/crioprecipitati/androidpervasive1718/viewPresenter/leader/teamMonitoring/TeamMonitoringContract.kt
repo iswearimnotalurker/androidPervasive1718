@@ -9,13 +9,11 @@ interface TeamMonitoringContract {
 
     interface TeamMonitoringView : BaseView {
 
-        fun showAndUpdateMemberList()
-
-        fun showAndUpdateTaskList(member: Member, task: AugmentedTask)
+        fun showAndUpdateMemberAndTaskList()
 
         fun showAndUpdateHealthParameters(lifeParameter: LifeParameters, value: Double)
 
-        fun showActivitySelectionActivity()
+        fun showActivitySelectionActivity(userCF: String)
 
         fun onSessionClosed()
 

@@ -48,7 +48,7 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
     }
 
     override fun onMemberSelected(userIndex: Int) {
-        view?.showActivitySelectionActivity()
+        view?.showActivitySelectionActivity(this.memberList.get(userIndex).userCF)
     }
 
     override fun onTaskDeleted() {
@@ -88,14 +88,7 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
                 WSOperations.ADD_TASK,
                 assignment.toJson()
         )
-
-        memberList.firstOrNull {it.userCF == member.userCF}?.items?.add(assignment.task)
-
-        println("Assigning Task ${assignment.task.activityName} to ${assignment.member.userCF}")
-
         TaskWSAdapter.send(message.toJson())
-
-        view?.showAndUpdateMemberList()
     }
 
     override fun update(payloadWrapper: PayloadWrapper) {
@@ -109,7 +102,7 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
             fun memberAdditionHandling() {
                 val membersAddition: MembersAdditionNotification = this.objectify(body)
                 if (membersAddition.members.isNotEmpty()) memberList.add(AugmentedMember(membersAddition.members.first().userCF))
-                view?.showAndUpdateMemberList()
+                view?.showAndUpdateMemberAndTaskList()
                 view?.stopLoadingState()
             }
 
@@ -122,13 +115,14 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
                                 ?: mutableListOf<AugmentedTask>()))
                     }
                 }
-                view?.showAndUpdateMemberList()
+                view?.showAndUpdateMemberAndTaskList()
                 view?.stopLoadingState()
             }
 
             fun taskAssignmentHandling() {
                 val taskAssignment: TaskAssignment = this.objectify(body)
-                view?.showAndUpdateTaskList(taskAssignment.member, taskAssignment.task)
+                memberList.firstOrNull {it.userCF == taskAssignment.member.userCF}?.items?.add(taskAssignment.task)
+                view?.showAndUpdateMemberAndTaskList()
             }
 
             fun taskErrorHandling() {
