@@ -2,7 +2,6 @@ package com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonito
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.TextView
@@ -91,13 +90,6 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
             parametersViews[it]!!.first.width = customWidth
             parametersViews[it]!!.second.height = lifeParametersLinearLayout.height
             parametersViews[it]!!.second.width = customWidth
-
-            Log.d("CHECK MISURE", "lifeParametersLinearLayout.width/parameters.size : " + lifeParametersLinearLayout.width / parameters.size)
-            Log.d("CHECK MISURE", "Height di " + it + " " + parametersViews[it]!!.first.height)
-            Log.d("CHECK MISURE", "Width di " + it + " " + parametersViews[it]!!.first.width)
-            Log.d("CHECK MISURE", "Height di " + it + " " + parametersViews[it]!!.second.height)
-            Log.d("CHECK MISURE", "Width di " + it + " " + parametersViews[it]!!.second.width)
-
 
 //            val paramWrapper = LinearLayout(this)
 //            paramWrapper.layoutParams = ViewGroup.LayoutParams(lifeParametersLinearLayout.width/parameters.size, lifeParametersLinearLayout.height)
