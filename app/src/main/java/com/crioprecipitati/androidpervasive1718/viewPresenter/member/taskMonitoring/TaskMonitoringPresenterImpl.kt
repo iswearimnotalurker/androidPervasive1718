@@ -12,13 +12,16 @@ import com.crioprecipitati.androidpervasive1718.utils.toJson
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BasePresenterImpl
 import model.*
 import java.util.*
+import kotlin.Comparator
 
 class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.TaskMonitoringView>(), TaskMonitoringContract.TaskMonitoringPresenter, WSObserver {
 
     private val channels = listOf(WSOperations.NOTIFY,
                                     WSOperations.MEMBER_COMEBACK_RESPONSE,
                                     WSOperations.ADD_TASK)
-    private val queueAssignedTask = PriorityQueue<TaskAssignment>()
+    private val queueAssignedTask = PriorityQueue<TaskAssignment>(10, Comparator<TaskAssignment>{
+        x,y -> x.task.task.startTime.compareTo(y.task.task.startTime)
+    })
     private var currentAssignedTask: TaskAssignment? = null
 
     override fun attachView(view: TaskMonitoringContract.TaskMonitoringView) {
