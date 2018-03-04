@@ -1,5 +1,7 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonitoring
 
+import android.util.Log
+import com.crioprecipitati.androidpervasive1718.model.AugmentedTask
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.Status
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.NotifierWSAdapter
@@ -55,7 +57,8 @@ open class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContrac
             }
 
             fun newTaskAssigned() {
-                queueAssignedTask.offer(this.objectify(body))
+                val task: TaskAssignment = this.objectify(body)
+                queueAssignedTask.offer(task)
                 currentAssignedTask ?: run {
                     updateTheCurrentTask()
                 }
