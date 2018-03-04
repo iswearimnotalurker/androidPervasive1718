@@ -36,7 +36,7 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
             uiThread {
                 initializeParametersViews()
                 createNewTable(LifeParameters.values().toList())
-                showEmptyTask()
+                //showEmptyTask()
             }
         }
     }
@@ -115,7 +115,7 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
         parameterValueView.setBackgroundColor(Color.WHITE)
         parameterValueView.gravity = Gravity.CENTER
         parameterAcronymView.textSize = 25.0F
-        parameterValueView.text = ""
+        parameterValueView.text = "0"
         parameterValueView.setTextColor(Color.BLACK)
 
         return Pair(parameterAcronymView, parameterValueView)
