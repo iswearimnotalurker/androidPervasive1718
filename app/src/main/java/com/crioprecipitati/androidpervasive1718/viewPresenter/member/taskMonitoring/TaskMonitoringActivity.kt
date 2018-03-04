@@ -2,10 +2,9 @@ package com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonito
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.View
-import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import com.crioprecipitati.androidpervasive1718.R
 import com.crioprecipitati.androidpervasive1718.model.AugmentedTask
@@ -86,16 +85,29 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
 
         parameters.forEach {
 
-            parametersViews[it]!!.first.height = lifeParametersLinearLayout.height/2
-            parametersViews[it]!!.first.width = lifeParametersLinearLayout.width/parameters.size
-            parametersViews[it]!!.second.height = lifeParametersLinearLayout.height/2
-            parametersViews[it]!!.second.width = lifeParametersLinearLayout.width/parameters.size
+            val customWidth = lifeParametersLinearLayout.width / (parameters.size * 2)
 
-            val paramWrapper = LinearLayout(this)
-            paramWrapper.layoutParams = ViewGroup.LayoutParams(lifeParametersLinearLayout.width/parameters.size, lifeParametersLinearLayout.height)
-            paramWrapper.addView(parametersViews[it]!!.first)
-            paramWrapper.addView(parametersViews[it]!!.second)
-            lifeParametersLinearLayout.addView(paramWrapper, ViewGroup.LayoutParams.MATCH_PARENT)
+            parametersViews[it]!!.first.height = lifeParametersLinearLayout.height
+            parametersViews[it]!!.first.width = customWidth
+            parametersViews[it]!!.second.height = lifeParametersLinearLayout.height
+            parametersViews[it]!!.second.width = customWidth
+
+            Log.d("CHECK MISURE", "lifeParametersLinearLayout.width/parameters.size : " + lifeParametersLinearLayout.width / parameters.size)
+            Log.d("CHECK MISURE", "Height di " + it + " " + parametersViews[it]!!.first.height)
+            Log.d("CHECK MISURE", "Width di " + it + " " + parametersViews[it]!!.first.width)
+            Log.d("CHECK MISURE", "Height di " + it + " " + parametersViews[it]!!.second.height)
+            Log.d("CHECK MISURE", "Width di " + it + " " + parametersViews[it]!!.second.width)
+
+
+//            val paramWrapper = LinearLayout(this)
+//            paramWrapper.layoutParams = ViewGroup.LayoutParams(lifeParametersLinearLayout.width/parameters.size, lifeParametersLinearLayout.height)
+//            paramWrapper.addView(parametersViews[it]!!.first)
+//            paramWrapper.addView(parametersViews[it]!!.second)
+//            lifeParametersLinearLayout.addView(paramWrapper, ViewGroup.LayoutParams.MATCH_PARENT)
+
+            lifeParametersLinearLayout.addView(parametersViews[it]!!.first)
+            lifeParametersLinearLayout.addView(parametersViews[it]!!.second)
+
         }
     }
 
