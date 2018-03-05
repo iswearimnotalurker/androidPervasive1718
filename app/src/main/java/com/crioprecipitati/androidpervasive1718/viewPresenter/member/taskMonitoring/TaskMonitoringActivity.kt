@@ -2,6 +2,7 @@ package com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonito
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.TextView
@@ -75,6 +76,8 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
 
     override fun updateHealthParameterValues(parameter: LifeParameters, value: Double) {
         runOnUiThread {
+
+            Log.e("WEWE","parameter: $parameter value: $value")
             parametersViews[parameter]!!.second.setHealthParameterValue(value.toString())
         }
     }

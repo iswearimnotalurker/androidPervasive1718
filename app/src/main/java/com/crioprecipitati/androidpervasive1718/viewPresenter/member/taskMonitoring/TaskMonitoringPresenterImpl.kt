@@ -52,6 +52,7 @@ open class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContrac
             }
 
             fun manageUpdate() {
+                Log.e("WEWE","MANAGEUPDATE")
                 val update: Update = this.objectify(body)
                 view?.updateHealthParameterValues(update.lifeParameter, update.value)
             }
