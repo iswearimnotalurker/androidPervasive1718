@@ -22,6 +22,7 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
 
     @Volatile
     var initializationCompleted: Boolean = false
+    var pendingOperation: MutableList<() -> Unit> = mutableListOf()
 
     private val parametersViews: HashMap<LifeParameters, Pair<TextView, TextView>> = HashMap()
 
@@ -36,9 +37,12 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
             Thread.sleep(1000)
             uiThread {
                 initializeParametersViews()
+                showEmptyTask()
                 initializationCompleted = true
-                createNewTable(LifeParameters.values().map { it.toString() }.toList())
-                //showEmptyTask()
+                if (!pendingOperation.isEmpty()) {
+                    pendingOperation.forEach { it.invoke() }
+                    pendingOperation.clear()
+                }
             }
         }
     }
@@ -57,11 +61,16 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
 
     override fun showNewTask(augmentedTask: AugmentedTask) {
         runOnUiThread {
-            if (initializationCompleted) {
+            var job = {
                 activityName.text = augmentedTask.activityName
                 lifeParametersLinearLayout.removeAllViews()
                 createNewTable(augmentedTask.linkedParameters.map { it.toString() })
                 btnEndOperation.isEnabled = true
+            }
+            if (initializationCompleted) {
+                job.invoke()
+            } else {
+                pendingOperation.add(job)
             }
         }
     }
