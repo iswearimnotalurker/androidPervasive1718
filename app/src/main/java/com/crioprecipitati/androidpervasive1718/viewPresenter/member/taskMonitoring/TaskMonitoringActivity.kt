@@ -86,13 +86,15 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
         lifeParametersLinearLayout.setBackgroundColor(Color.LTGRAY)
 
         parameters.forEach {
+            val lifeParameterCOnCrisiDiIdentita = LifeParameters.Utils.getByEnumName(it.toString())
+            Log.d("Ora sono: ", lifeParameterCOnCrisiDiIdentita.toString())
 
             val customWidth = lifeParametersLinearLayout.width / (parameters.size * 2)
 
-            parametersViews[it]!!.first.height = lifeParametersLinearLayout.height
-            parametersViews[it]!!.first.width = customWidth
-            parametersViews[it]!!.second.height = lifeParametersLinearLayout.height
-            parametersViews[it]!!.second.width = customWidth
+            parametersViews[lifeParameterCOnCrisiDiIdentita]!!.first.height = lifeParametersLinearLayout.height
+            parametersViews[lifeParameterCOnCrisiDiIdentita]!!.first.width = customWidth
+            parametersViews[lifeParameterCOnCrisiDiIdentita]!!.second.height = lifeParametersLinearLayout.height
+            parametersViews[lifeParameterCOnCrisiDiIdentita]!!.second.width = customWidth
 
 //            val paramWrapper = LinearLayout(this)
 //            paramWrapper.layoutParams = ViewGroup.LayoutParams(lifeParametersLinearLayout.width/parameters.size, lifeParametersLinearLayout.height)
