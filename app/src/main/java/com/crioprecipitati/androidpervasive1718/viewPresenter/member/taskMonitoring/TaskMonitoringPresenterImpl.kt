@@ -1,7 +1,5 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonitoring
 
-import android.util.Log
-import com.crioprecipitati.androidpervasive1718.model.AugmentedTask
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.Status
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.NotifierWSAdapter
@@ -18,8 +16,11 @@ import kotlin.Comparator
 open class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.TaskMonitoringView>(), TaskMonitoringContract.TaskMonitoringPresenter, WSObserver {
 
     private val channels = listOf(WSOperations.NOTIFY,
+            WSOperations.UPDATE,
                                     WSOperations.MEMBER_COMEBACK_RESPONSE,
-                                    WSOperations.ADD_TASK)
+            WSOperations.ADD_TASK,
+            WSOperations.ANSWER)
+
     private val queueAssignedTask = PriorityQueue<TaskAssignment>(10, Comparator<TaskAssignment>{
         x,y -> x.task.task.startTime.compareTo(y.task.task.startTime)
     })
