@@ -11,7 +11,6 @@ import com.crioprecipitati.androidpervasive1718.utils.WSObserver
 import com.crioprecipitati.androidpervasive1718.utils.toJson
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BasePresenterImpl
 import model.*
-import trikita.log.Log
 import java.util.*
 import kotlin.Comparator
 
