@@ -1,11 +1,11 @@
 package com.crioprecipitati.androidpervasive1718.networking.webSockets
 
-import com.crioprecipitati.androidpervasive1718.model.*
+import com.crioprecipitati.androidpervasive1718.model.LifeParameters
+import com.crioprecipitati.androidpervasive1718.model.Member
+import com.crioprecipitati.androidpervasive1718.model.SessionAssignment
 import com.crioprecipitati.androidpervasive1718.utils.*
 import model.*
 import trikita.log.Log
-import java.sql.Timestamp
-import java.util.*
 
 abstract class WSAdapter(private val baseAddress: String) {
     private var webSocket: BaseWebSocket? = null

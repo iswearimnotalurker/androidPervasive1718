@@ -34,7 +34,7 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
             Thread.sleep(1000)
             uiThread {
                 initializeParametersViews()
-                createNewTable(LifeParameters.values().toList())
+                createNewTable(LifeParameters.values().map { it.toString() }.toList())
                 //showEmptyTask()
             }
         }
@@ -55,7 +55,7 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
     override fun showNewTask(augmentedTask: AugmentedTask) {
         runOnUiThread {
             activityName.text = augmentedTask.activityName
-            createNewTable(augmentedTask.linkedParameters)
+            createNewTable(augmentedTask.linkedParameters.map { it.toString() })
             btnEndOperation.isEnabled = true
         }
     }
@@ -80,11 +80,11 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
         }
     }
 
-    private fun createNewTable(parameters: List<LifeParameters>) {
+    private fun createNewTable(parameters: List<String>) {
         lifeParametersLinearLayout.setBackgroundColor(Color.LTGRAY)
 
         parameters.forEach {
-            val lifeParameterCOnCrisiDiIdentita = LifeParameters.Utils.getByEnumName(it.toString())
+            val lifeParameterCOnCrisiDiIdentita = LifeParameters.Utils.getByEnumName(it)
             Log.d("Ora sono: ", lifeParameterCOnCrisiDiIdentita.toString())
 
             val customWidth = lifeParametersLinearLayout.width / (parameters.size * 2)
@@ -100,8 +100,8 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
 //            paramWrapper.addView(parametersViews[it]!!.second)
 //            lifeParametersLinearLayout.addView(paramWrapper, ViewGroup.LayoutParams.MATCH_PARENT)
 
-            lifeParametersLinearLayout.addView(parametersViews[it]!!.first)
-            lifeParametersLinearLayout.addView(parametersViews[it]!!.second)
+            lifeParametersLinearLayout.addView(parametersViews[lifeParameterCOnCrisiDiIdentita]!!.first)
+            lifeParametersLinearLayout.addView(parametersViews[lifeParameterCOnCrisiDiIdentita]!!.second)
 
         }
     }
