@@ -2,6 +2,7 @@ package com.crioprecipitati.androidpervasive1718.model
 
 import android.os.Parcelable
 import com.crioprecipitati.androidpervasive1718.utils.KlaxonDate
+import com.crioprecipitati.androidpervasive1718.utils.KlaxonListLifeParameter
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup
 import kotlinx.android.parcel.Parcelize
 import java.sql.Timestamp
@@ -48,7 +49,7 @@ data class Task(val id: Int = 0, val sessionId: Int, val operatorCF: String, @Kl
 }
 
 @Parcelize
-data class AugmentedTask(val task: Task, val linkedParameters: List<LifeParameters>, val activityName: String) : Parcelable {
+data class AugmentedTask(val task: Task, @KlaxonListLifeParameter val linkedParameters: List<LifeParameters>, val activityName: String) : Parcelable {
     companion object {
         fun emptyAugmentedTask(): AugmentedTask =
                 AugmentedTask(Task.emptyTask(), listOf(), "")
