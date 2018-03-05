@@ -2,7 +2,6 @@ package com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonito
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.TextView
@@ -21,6 +20,9 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
     override var presenter: TaskMonitoringContract.TaskMonitoringPresenter = TaskMonitoringPresenterImpl()
     override val layout: Int = R.layout.activity_task_monitoring
 
+    @Volatile
+    var initializationCompleted: Boolean = false
+
     private val parametersViews: HashMap<LifeParameters, Pair<TextView, TextView>> = HashMap()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,6 +36,7 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
             Thread.sleep(1000)
             uiThread {
                 initializeParametersViews()
+                initializationCompleted = true
                 createNewTable(LifeParameters.values().map { it.toString() }.toList())
                 //showEmptyTask()
             }
@@ -54,9 +57,12 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
 
     override fun showNewTask(augmentedTask: AugmentedTask) {
         runOnUiThread {
-            activityName.text = augmentedTask.activityName
-            createNewTable(augmentedTask.linkedParameters.map { it.toString() })
-            btnEndOperation.isEnabled = true
+            if (initializationCompleted) {
+                activityName.text = augmentedTask.activityName
+                lifeParametersLinearLayout.removeAllViews()
+                createNewTable(augmentedTask.linkedParameters.map { it.toString() })
+                btnEndOperation.isEnabled = true
+            }
         }
     }
 
@@ -76,7 +82,9 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
 
     override fun updateHealthParameterValues(parameter: LifeParameters, value: Double) {
         runOnUiThread {
-            parametersViews[parameter]!!.second.setHealthParameterValue(value.toString())
+            if (initializationCompleted) {
+                parametersViews[parameter]!!.second.setHealthParameterValue(value.toString())
+            }
         }
     }
 
@@ -84,15 +92,15 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
         lifeParametersLinearLayout.setBackgroundColor(Color.LTGRAY)
 
         parameters.forEach {
-            val lifeParameterCOnCrisiDiIdentita = LifeParameters.Utils.getByEnumName(it)
-            Log.d("Ora sono: ", lifeParameterCOnCrisiDiIdentita.toString())
+            val lifeParameter = LifeParameters.Utils.getByEnumName(it)
+            //Log.d("Ora sono: ", lifeParameter.toString())
 
             val customWidth = lifeParametersLinearLayout.width / (parameters.size * 2)
 
-            parametersViews[lifeParameterCOnCrisiDiIdentita]!!.first.height = lifeParametersLinearLayout.height
-            parametersViews[lifeParameterCOnCrisiDiIdentita]!!.first.width = customWidth
-            parametersViews[lifeParameterCOnCrisiDiIdentita]!!.second.height = lifeParametersLinearLayout.height
-            parametersViews[lifeParameterCOnCrisiDiIdentita]!!.second.width = customWidth
+            parametersViews[lifeParameter]!!.first.height = lifeParametersLinearLayout.height
+            parametersViews[lifeParameter]!!.first.width = customWidth
+            parametersViews[lifeParameter]!!.second.height = lifeParametersLinearLayout.height
+            parametersViews[lifeParameter]!!.second.width = customWidth
 
 //            val paramWrapper = LinearLayout(this)
 //            paramWrapper.layoutParams = ViewGroup.LayoutParams(lifeParametersLinearLayout.width/parameters.size, lifeParametersLinearLayout.height)
@@ -100,8 +108,8 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
 //            paramWrapper.addView(parametersViews[it]!!.second)
 //            lifeParametersLinearLayout.addView(paramWrapper, ViewGroup.LayoutParams.MATCH_PARENT)
 
-            lifeParametersLinearLayout.addView(parametersViews[lifeParameterCOnCrisiDiIdentita]!!.first)
-            lifeParametersLinearLayout.addView(parametersViews[lifeParameterCOnCrisiDiIdentita]!!.second)
+            lifeParametersLinearLayout.addView(parametersViews[lifeParameter]!!.first)
+            lifeParametersLinearLayout.addView(parametersViews[lifeParameter]!!.second)
 
         }
     }
