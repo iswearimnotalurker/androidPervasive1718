@@ -2,6 +2,7 @@ package com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonito
 
 import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.view.Gravity
 import android.view.View
 import android.widget.TextView
@@ -11,9 +12,7 @@ import com.crioprecipitati.androidpervasive1718.model.LifeParameters
 import com.crioprecipitati.androidpervasive1718.utils.setHealthParameterValue
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_task_monitoring.*
-import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.sdk25.coroutines.onClick
-import org.jetbrains.anko.uiThread
 
 open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMonitoringView, TaskMonitoringContract.TaskMonitoringPresenter>(), TaskMonitoringContract.TaskMonitoringView {
 
@@ -32,18 +31,17 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
         btnEndOperation.onClick {
             presenter.onTaskCompletionRequested()
         }
+    }
 
-        doAsync {
-            Thread.sleep(1000)
-            uiThread {
-                initializeParametersViews()
-                showEmptyTask()
-                initializationCompleted = true
-                if (!pendingOperation.isEmpty()) {
-                    pendingOperation.forEach { it.invoke() }
-                    pendingOperation.clear()
-                }
-            }
+    override fun onResume() {
+        super.onResume()
+        initializeParametersViews()
+        //createNewTable(LifeParameters.values().map { it.toString() }.toList())
+        showEmptyTask()
+        initializationCompleted = true
+        if (!pendingOperation.isEmpty()) {
+            pendingOperation.forEach { it.invoke() }
+            pendingOperation.clear()
         }
     }
 
@@ -60,10 +58,13 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
     }
 
     override fun showNewTask(augmentedTask: AugmentedTask) {
+        Log.d("Task monitoring", "Ho chiamato showNewTask")
         runOnUiThread {
             var job = {
+                Log.d("Task monitoring", "Sto eseguendo il pending job")
                 activityName.text = augmentedTask.activityName
                 lifeParametersLinearLayout.removeAllViews()
+                //initializeParamentersViews(augmentedTask.linkedParameters)
                 createNewTable(augmentedTask.linkedParameters.map { it.toString() })
                 btnEndOperation.isEnabled = true
             }
@@ -125,6 +126,10 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
 
     private fun initializeParametersViews() {
         LifeParameters.values().forEach { parametersViews[it] = createParameterView(it) }
+    }
+
+    private fun initializeParamentersViews(parameters: List<LifeParameters>) {
+        parameters.forEach { parametersViews[it] = createParameterView(it) }
     }
 
     private fun createParameterView(parameter: LifeParameters): Pair<TextView, TextView> {

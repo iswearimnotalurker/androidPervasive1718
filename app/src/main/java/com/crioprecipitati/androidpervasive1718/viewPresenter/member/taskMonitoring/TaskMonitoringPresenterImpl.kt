@@ -1,5 +1,6 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonitoring
 
+import android.util.Log
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.Status
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.NotifierWSAdapter
@@ -29,11 +30,14 @@ open class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContrac
 
     override fun attachView(view: TaskMonitoringContract.TaskMonitoringView) {
         super.attachView(view)
+        Log.d("Task monitoring pres", "Mi sto attaccando alla view")
         CallbackHandler.attach(channels, this)
+        TaskWSAdapter.sendAddMemberMessage()
     }
 
     override fun detachView() {
         super.detachView()
+        Log.d("Task monitoring pres", "Mi sto staccando dalla view")
         CallbackHandler.detach(channels, this)
     }
 
