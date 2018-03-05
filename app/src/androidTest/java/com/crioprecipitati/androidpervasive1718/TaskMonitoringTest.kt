@@ -9,6 +9,7 @@ import com.crioprecipitati.androidpervasive1718.model.Status
 import com.crioprecipitati.androidpervasive1718.utils.Prefs
 import com.crioprecipitati.androidpervasive1718.utils.toJson
 import com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonitoring.TaskMonitoringActivity
+import com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonitoring.TaskMonitoringContract
 import com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonitoring.TaskMonitoringPresenterImpl
 import model.PayloadWrapper
 import model.TaskAssignment
@@ -33,10 +34,12 @@ class TaskMonitoringTest {
 
     @Rule
     @JvmField
+    val activityTestRule = ActivityTestRule<MockTaskMonitoringActivity>(MockTaskMonitoringActivity::class.java)
+
     var presenter = TaskMonitoringPresenterWithMockedWS(listTaskWSAdapterMessages,
             listNotifierWSAdapterMessages,
             listParamametersRegistered)
-    val activity = ActivityTestRule<MockTaskMonitoringActivity>(MockTaskMonitoringActivity::class.java)
+
 
     companion object {
         val leaderCF1 = "CFLeader1"
@@ -55,7 +58,7 @@ class TaskMonitoringTest {
     fun closeTask(){
         Thread.sleep(2500)
         createTask()
-
+        activityTestRule.activity.getPresenterRef()
         //onView(withId(R.id.etUsername)).perform(clearText()).perform(typeText(leaderCF1)).perform(closeSoftKeyboard())
         //onView(withId(R.id.btnRequestOpenSessions)).perform(click())
         Thread.sleep(10000)
@@ -90,6 +93,8 @@ class MockTaskMonitoringActivity : TaskMonitoringActivity() {
     fun setPresenter(presenter: TaskMonitoringPresenterImpl) {
         this.presenter = presenter
     }
+
+    fun getPresenterRef(): TaskMonitoringContract.TaskMonitoringPresenter = this.presenter
 }
 
 class TaskMonitoringPresenterWithMockedWS(var listTaskWSAdapterMessages: ArrayList<String>,

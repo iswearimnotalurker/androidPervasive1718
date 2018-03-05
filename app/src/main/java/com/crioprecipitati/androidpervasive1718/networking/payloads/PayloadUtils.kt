@@ -56,17 +56,32 @@ enum class WSOperations(val objectifier: (String) -> Any) {
     SESSION_HANDLER_RESPONSE({ GsonInitializer.fromJson(it, SessionDNS::class.java) }),
     ADD_MEMBER({ GsonInitializer.fromJson(it, MembersAdditionNotification::class.java) }),
     ADD_TASK({
-        com.beust.klaxon.Klaxon().fieldConverter(com.crioprecipitati.androidpervasive1718.utils.KlaxonDate::class,
-            com.crioprecipitati.androidpervasive1718.utils.dateConverter).parse<model.TaskAssignment>(it)!!
+        com.beust.klaxon.Klaxon()
+                .fieldConverter(com.crioprecipitati.androidpervasive1718.utils.KlaxonDate::class,
+                        com.crioprecipitati.androidpervasive1718.utils.dateConverter)
+                .fieldConverter(com.crioprecipitati.androidpervasive1718.utils.KlaxonListLifeParameter::class,
+                        com.crioprecipitati.androidpervasive1718.utils.listLifeParameterConverter).parse<model.TaskAssignment>(it)!!
     }),
-    REMOVE_TASK({ com.beust.klaxon.Klaxon().fieldConverter(com.crioprecipitati.androidpervasive1718.utils.KlaxonDate::class,
-            com.crioprecipitati.androidpervasive1718.utils.dateConverter).parse<model.TaskAssignment>(it)!!
+    REMOVE_TASK({
+        com.beust.klaxon.Klaxon()
+                .fieldConverter(com.crioprecipitati.androidpervasive1718.utils.KlaxonDate::class,
+                        com.crioprecipitati.androidpervasive1718.utils.dateConverter)
+                .fieldConverter(com.crioprecipitati.androidpervasive1718.utils.KlaxonListLifeParameter::class,
+                        com.crioprecipitati.androidpervasive1718.utils.listLifeParameterConverter).parse<model.TaskAssignment>(it)!!
     }),
-    CHANGE_TASK_STATUS({ com.beust.klaxon.Klaxon().fieldConverter(com.crioprecipitati.androidpervasive1718.utils.KlaxonDate::class,
-            com.crioprecipitati.androidpervasive1718.utils.dateConverter).parse<model.TaskAssignment>(it)!!
+    CHANGE_TASK_STATUS({
+        com.beust.klaxon.Klaxon()
+                .fieldConverter(com.crioprecipitati.androidpervasive1718.utils.KlaxonDate::class,
+                        com.crioprecipitati.androidpervasive1718.utils.dateConverter)
+                .fieldConverter(com.crioprecipitati.androidpervasive1718.utils.KlaxonListLifeParameter::class,
+                        com.crioprecipitati.androidpervasive1718.utils.listLifeParameterConverter).parse<model.TaskAssignment>(it)!!
     }),
-    ERROR_REMOVING_TASK({ com.beust.klaxon.Klaxon().fieldConverter(com.crioprecipitati.androidpervasive1718.utils.KlaxonDate::class,
-            com.crioprecipitati.androidpervasive1718.utils.dateConverter).parse<model.TaskError>(it)!!
+    ERROR_REMOVING_TASK({
+        com.beust.klaxon.Klaxon()
+                .fieldConverter(com.crioprecipitati.androidpervasive1718.utils.KlaxonDate::class,
+                        com.crioprecipitati.androidpervasive1718.utils.dateConverter)
+                .fieldConverter(com.crioprecipitati.androidpervasive1718.utils.KlaxonListLifeParameter::class,
+                        com.crioprecipitati.androidpervasive1718.utils.listLifeParameterConverter).parse<model.TaskError>(it)!!
     }),
     ERROR_CHANGING_STATUS({ GsonInitializer.fromJson(it, StatusError::class.java) }),
     ERROR_CREATING_INSTANCE_POOL_FULL({ GsonInitializer.fromJson(it, kotlin.Unit::class.java)}),
@@ -99,3 +114,4 @@ data class ActivityAdditionNotification(val activities: List<Activity>)
 data class TaskError(val task: Task, val error: String)
 
 data class StatusError(val statusId: Int, val task: Task, val error: String)
+
