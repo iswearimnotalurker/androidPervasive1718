@@ -49,9 +49,7 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
     }
 
     override fun showNewTask(augmentedTask: AugmentedTask) {
-        Log.d("Task monitoring", "Ho chiamato showNewTask")
         runOnUiThread {
-            Log.d("Task monitoring", "Sto eseguendo il pending job")
             activityName.text = augmentedTask.activityName
             lifeParametersLinearLayout.removeAllViews()
             createNewTable(augmentedTask.linkedParameters)

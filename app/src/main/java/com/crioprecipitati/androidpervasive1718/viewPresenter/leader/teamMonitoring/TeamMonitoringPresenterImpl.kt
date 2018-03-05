@@ -121,7 +121,12 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
 
             fun taskAssignmentHandling() {
                 val taskAssignment: TaskAssignment = this.objectify(body)
-                memberList.firstOrNull {it.userCF == taskAssignment.member.userCF}?.items?.add(taskAssignment.task)
+                if(taskAssignment.task.task.statusId == Status.FINISHED.id){
+                    val items = memberList.firstOrNull {it.userCF == taskAssignment.member.userCF}?.items
+                    items?.remove(items.firstOrNull{it.task.activityId == taskAssignment.task.task.activityId})
+                }else {
+                    memberList.firstOrNull { it.userCF == taskAssignment.member.userCF }?.items?.add(taskAssignment.task)
+                }
                 view?.showAndUpdateMemberAndTaskList()
             }
 

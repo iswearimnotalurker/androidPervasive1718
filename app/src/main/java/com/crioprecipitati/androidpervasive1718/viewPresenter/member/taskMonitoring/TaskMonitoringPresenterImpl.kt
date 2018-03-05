@@ -43,6 +43,7 @@ open class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContrac
     override fun onTaskCompletionRequested() {
         currentAssignedTask?.run {
             this.task.task.statusId = Status.FINISHED.id
+            println(this)
             TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CHANGE_TASK_STATUS, this.toJson()).toJson())
             NotifierWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CLOSE, Member(Prefs.userCF).toJson()).toJson())
             updateTheCurrentTask()
