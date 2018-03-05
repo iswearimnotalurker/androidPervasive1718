@@ -103,7 +103,6 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
                 TaskWSAdapter.sendAddLeaderMessage()
             }
             MemberType.MEMBER -> {
-                TaskWSAdapter.sendAddMemberMessage()
                 view?.startTaskMonitoringActivity()
             }
         }
