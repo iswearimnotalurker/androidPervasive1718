@@ -4,6 +4,7 @@ import com.crioprecipitati.androidpervasive1718.model.AugmentedTask
 import com.crioprecipitati.androidpervasive1718.model.LifeParameters
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BasePresenter
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseView
+import model.Notification
 
 interface TaskMonitoringContract {
 
@@ -13,7 +14,7 @@ interface TaskMonitoringContract {
 
         fun showEmptyTask()
 
-        fun showAlarmedTask()
+        fun showAlarmedTask(notification : Notification)
 
         fun updateHealthParameterValues(parameter: LifeParameters, value: Double)
 

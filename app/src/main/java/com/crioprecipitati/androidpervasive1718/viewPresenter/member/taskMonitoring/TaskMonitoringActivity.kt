@@ -12,7 +12,9 @@ import com.crioprecipitati.androidpervasive1718.model.LifeParameters
 import com.crioprecipitati.androidpervasive1718.utils.setHealthParameterValue
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_task_monitoring.*
+import model.Notification
 import org.jetbrains.anko.sdk25.coroutines.onClick
+import org.jetbrains.anko.textColor
 
 open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMonitoringView, TaskMonitoringContract.TaskMonitoringPresenter>(), TaskMonitoringContract.TaskMonitoringView {
 
@@ -65,9 +67,10 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
         }
     }
 
-    override fun showAlarmedTask() {
+    override fun showAlarmedTask(notification : Notification) {
         runOnUiThread {
-            TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+            activityName.setTextColor(Color.RED)
+            parametersViews[notification.lifeParameter]!!.first.textColor = Color.RED
         }
     }
 

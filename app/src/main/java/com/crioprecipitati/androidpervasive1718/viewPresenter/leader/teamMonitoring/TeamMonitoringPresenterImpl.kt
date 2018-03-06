@@ -112,7 +112,7 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
                     clear()
                     if (membersAddition.members.isNotEmpty()) membersAddition.members.forEach {
                         this.add(AugmentedMember(it.userCF, it.items
-                                ?: mutableListOf<AugmentedTask>()))
+                                ?: mutableListOf()))
                     }
                 }
                 view?.showAndUpdateMemberAndTaskList()

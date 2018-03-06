@@ -53,8 +53,8 @@ open class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContrac
     override fun update(payloadWrapper: PayloadWrapper) {
         with(payloadWrapper) {
             fun notifyHandling() {
-                val activityAddition: Notification = this.objectify(body)
-                activityAddition.lifeParameter
+                val notification: Notification = this.objectify(body)
+                view?.showAlarmedTask(notification)
             }
 
             fun manageUpdate() {
