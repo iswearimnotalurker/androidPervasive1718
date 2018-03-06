@@ -74,7 +74,6 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
 
     override fun showAlarmedTask(notification : Notification) {
         runOnUiThread {
-            activityName.setTextColor(Color.RED)
             parametersViews[notification.lifeParameter]!!.first.textColor = Color.RED
             parametersViews[notification.lifeParameter]!!.second.textColor = Color.RED
         }
@@ -82,7 +81,6 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
 
     override fun updateHealthParameterValues(parameter: LifeParameters, value: Double) {
         runOnUiThread {
-            activityName.setTextColor(oldColors)
             parametersViews[parameter]!!.first.textColor = oldColors.defaultColor
             parametersViews[parameter]!!.second.textColor = oldColors.defaultColor
             parametersViews[parameter]!!.second.setHealthParameterValue(value.toString())
