@@ -5,6 +5,7 @@ import java.util.*
 
 object EmptyTask{
     const val emptyTaskId: Int = -1
+    const val emptyTaskName: String = "Task"
     const val emptyTaskOperatorId: String = "testCF"
     val emptyTaskStatusId: Int = Status.EMPTY.id
     const val emptyTaskActivityId: Int = -1

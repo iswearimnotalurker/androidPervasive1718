@@ -13,6 +13,7 @@ import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BasePresenter
 import io.reactivex.android.schedulers.AndroidSchedulers
 import model.*
 import trikita.log.Log
+import utils.newTask
 import java.sql.Timestamp
 import java.util.*
 
@@ -72,13 +73,7 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
     override fun addTask(member: Member, activity : Activity) {
 
         val assignment = TaskAssignment(member, AugmentedTask(
-                    Task(0,
-                            Prefs.sessionId,
-                            member.userCF,
-                            Timestamp(Date().time),
-                            Timestamp(Date().time + 1000),
-                            activity.id,
-                            Status.RUNNING.id),
+                    Task.Companion.newTask(Prefs.sessionId,activity.id,member.userCF),
                     LifeParameters.values().filter { activity.healthParameterIds.contains(it.id) },
                     activity.name
             ))
@@ -123,7 +118,7 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
                 val taskAssignment: TaskAssignment = this.objectify(body)
                 if (taskAssignment.augmentedTask.task.statusId == Status.FINISHED.id) {
                     val items = memberList.firstOrNull {it.userCF == taskAssignment.member.userCF}?.items
-                    items?.remove(items.firstOrNull { it.task.activityId == taskAssignment.augmentedTask.task.activityId })
+                    items?.remove(items.firstOrNull { it.task.name == taskAssignment.augmentedTask.task.name })
                 }else {
                     memberList.firstOrNull { it.userCF == taskAssignment.member.userCF }?.items?.add(taskAssignment.augmentedTask)
                 }
