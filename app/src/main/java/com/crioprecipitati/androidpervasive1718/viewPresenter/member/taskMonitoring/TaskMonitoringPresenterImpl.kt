@@ -18,7 +18,7 @@ open class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContrac
 
     private val channels = listOf(WSOperations.NOTIFY,
             WSOperations.UPDATE,
-                                    WSOperations.MEMBER_COMEBACK_RESPONSE,
+            WSOperations.MEMBER_COMEBACK_RESPONSE,
             WSOperations.ADD_TASK,
             WSOperations.ANSWER)
 

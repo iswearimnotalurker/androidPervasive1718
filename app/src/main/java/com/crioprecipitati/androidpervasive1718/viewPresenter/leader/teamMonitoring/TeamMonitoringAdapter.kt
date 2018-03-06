@@ -40,7 +40,7 @@ class TeamMonitoringAdapter(private val memberList: List<AugmentedMember>,
     class MemberViewHolder(itemView: View) : GroupViewHolder(itemView) {
         @SuppressLint("SetTextI18n")
         fun bind(itemUser: AugmentedMember) {
-            itemView.tvUserCF.text = "CF Membro ${itemUser.userCF} con n augmentedTask ${itemUser.items.size}"
+            itemView.tvUserCF.text = "CF Membro ${itemUser.userCF} con n task ${itemUser.items.size}"
         }
     }
 

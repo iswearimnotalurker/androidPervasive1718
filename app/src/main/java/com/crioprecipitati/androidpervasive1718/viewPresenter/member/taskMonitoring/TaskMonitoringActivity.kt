@@ -1,5 +1,6 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonitoring
 
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
@@ -23,12 +24,16 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
 
     private val parametersViews: HashMap<LifeParameters, Pair<TextView, TextView>> = HashMap()
 
+    private lateinit var oldColors: ColorStateList
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         btnEndOperation.onClick {
             presenter.onTaskCompletionRequested()
         }
+
+        oldColors = activityName.textColors
     }
 
     override fun onResume() {
@@ -71,11 +76,15 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
         runOnUiThread {
             activityName.setTextColor(Color.RED)
             parametersViews[notification.lifeParameter]!!.first.textColor = Color.RED
+            parametersViews[notification.lifeParameter]!!.second.textColor = Color.RED
         }
     }
 
     override fun updateHealthParameterValues(parameter: LifeParameters, value: Double) {
         runOnUiThread {
+            activityName.setTextColor(oldColors)
+            parametersViews[parameter]!!.first.textColor = oldColors.defaultColor
+            parametersViews[parameter]!!.second.textColor = oldColors.defaultColor
             parametersViews[parameter]!!.second.setHealthParameterValue(value.toString())
         }
     }
