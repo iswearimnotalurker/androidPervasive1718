@@ -11,6 +11,8 @@ import com.crioprecipitati.androidpervasive1718.utils.WSObserver
 import com.crioprecipitati.androidpervasive1718.utils.toJson
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BasePresenterImpl
 import model.*
+import java.sql.Time
+import java.sql.Timestamp
 import java.util.*
 import kotlin.Comparator
 
@@ -43,6 +45,7 @@ open class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContrac
     override fun onTaskCompletionRequested() {
         currentAssignedTask?.run {
             this.augmentedTask.task.statusId = Status.FINISHED.id
+            this.augmentedTask.task.endTime = Timestamp(Date().time)
             println(this)
             TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CHANGE_TASK_STATUS, this.toJson()).toJson())
             NotifierWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CLOSE, Member(Prefs.userCF).toJson()).toJson())
