@@ -22,8 +22,8 @@ open class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContrac
             WSOperations.ADD_TASK,
             WSOperations.ANSWER)
 
-    private val queueAssignedTask = PriorityQueue<TaskAssignment>(10, Comparator<TaskAssignment>{
-        x,y -> x.task.task.startTime.compareTo(y.task.task.startTime)
+    private val queueAssignedTask = PriorityQueue<TaskAssignment>(10, Comparator<TaskAssignment>{ x, y ->
+        x.augmentedTask.task.startTime.compareTo(y.augmentedTask.task.startTime)
     })
     private var currentAssignedTask: TaskAssignment? = null
 
@@ -42,7 +42,7 @@ open class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContrac
 
     override fun onTaskCompletionRequested() {
         currentAssignedTask?.run {
-            this.task.task.statusId = Status.FINISHED.id
+            this.augmentedTask.task.statusId = Status.FINISHED.id
             println(this)
             TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CHANGE_TASK_STATUS, this.toJson()).toJson())
             NotifierWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CLOSE, Member(Prefs.userCF).toJson()).toJson())
@@ -93,8 +93,8 @@ open class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContrac
             currentAssignedTask = null
         }
         currentAssignedTask?. run {
-            view?.showNewTask(currentAssignedTask!!.task)
-            NotifierWSAdapter.sendSubscribeToParametersMessage(currentAssignedTask!!.task.linkedParameters)
+            view?.showNewTask(currentAssignedTask!!.augmentedTask)
+            NotifierWSAdapter.sendSubscribeToParametersMessage(currentAssignedTask!!.augmentedTask.linkedParameters)
         } ?: run {
             view?.showEmptyTask()
         }
