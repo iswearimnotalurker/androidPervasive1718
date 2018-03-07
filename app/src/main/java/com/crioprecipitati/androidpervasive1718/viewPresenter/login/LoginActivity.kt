@@ -18,11 +18,12 @@ class LoginActivity : BaseActivity<LoginContract.LoginView, LoginContract.LoginP
     override var presenter: LoginContract.LoginPresenter = LoginPresenterImpl()
     override val layout: Int = R.layout.activity_login
     private lateinit var itemOnClick: (View, Int, Int) -> Unit
+    private var isRvClickable: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        itemOnClick = { _, position, _ -> presenter.onSessionSelected(position) }
+        itemOnClick = { _, position, _ -> if(isRvClickable) presenter.onSessionSelected(position) }
 
         rgMemberType.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
@@ -58,12 +59,18 @@ class LoginActivity : BaseActivity<LoginContract.LoginView, LoginContract.LoginP
     override fun startLoadingState() {
         runOnUiThread {
             pbLoadingSpinner.visibility = View.VISIBLE
+            btnCreateNewSession.isEnabled = false
+            btnRequestOpenSessions.isEnabled = false
+            isRvClickable = false
         }
     }
 
     override fun stopLoadingState() {
         runOnUiThread {
             pbLoadingSpinner.visibility = View.GONE
+            btnCreateNewSession.isEnabled = true
+            btnRequestOpenSessions.isEnabled = true
+            isRvClickable = true
         }
     }
 

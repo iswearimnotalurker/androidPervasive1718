@@ -5,8 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import com.crioprecipitati.androidpervasive1718.R
-import com.crioprecipitati.androidpervasive1718.R.id.btnCloseSession
-import com.crioprecipitati.androidpervasive1718.model.AugmentedTask
 import com.crioprecipitati.androidpervasive1718.model.LifeParameters
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.utils.*
@@ -20,6 +18,7 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
     override var presenter: TeamMonitoringContract.TeamMonitoringPresenter = TeamMonitoringPresenterImpl()
     override val layout: Int = R.layout.activity_team_monitoring
     private lateinit var itemOnClick: (View, Int, Int) -> Unit
+    private var isRvClickable: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,19 +30,21 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
 
         btnCloseSession.setOnClickListener { presenter.onSessionCloseRequested() }
 
-        itemOnClick = { _, position, _ -> presenter.onMemberSelected(position) }
+        itemOnClick = { _, position, _ -> if(isRvClickable) presenter.onMemberSelected(position) }
 
     }
 
     override fun startLoadingState() {
         runOnUiThread {
             pbTeamSpinner.visibility = View.VISIBLE
+            isRvClickable = false
         }
     }
 
     override fun stopLoadingState() {
         runOnUiThread {
             pbTeamSpinner.visibility = View.GONE
+            isRvClickable = true
         }
     }
 
