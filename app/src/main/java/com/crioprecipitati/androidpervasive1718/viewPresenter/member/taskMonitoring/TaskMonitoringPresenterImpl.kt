@@ -46,7 +46,6 @@ open class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContrac
         currentAssignedTask?.run {
             this.augmentedTask.task.statusId = Status.FINISHED.id
             this.augmentedTask.task.endTime = Timestamp(Date().time)
-            println(this)
             TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CHANGE_TASK_STATUS, this.toJson()).toJson())
             NotifierWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CLOSE, Member(Prefs.userCF).toJson()).toJson())
             updateTheCurrentTask()
