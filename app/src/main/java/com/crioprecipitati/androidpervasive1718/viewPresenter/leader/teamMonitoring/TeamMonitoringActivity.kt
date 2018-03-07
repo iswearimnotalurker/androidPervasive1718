@@ -48,6 +48,7 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
     }
 
     override fun showAndUpdateMemberAndTaskList() {
+        stopLoadingState()
         runOnUiThread {
             with(rvMemberList) {
                 adapter = null
@@ -86,9 +87,9 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == MagicNumbers.activitySelectionActivityLaunchIntentCode) {
             if (resultCode == Activity.RESULT_OK) {
+                startLoadingState()
                 val member = Unbundler.extractMember(data!!.getBundleExtra(BundleStrings.memberExtraString))
                 val activity = Unbundler.extractActivity(data!!.getBundleExtra(BundleStrings.activityExtraString))
-
                 presenter.addTask(member, activity)
             }
             if (resultCode == Activity.RESULT_CANCELED) {
