@@ -103,11 +103,8 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
 
             fun memberListAdditionHandling() {
                 val membersAddition: AugmentedMembersAdditionNotification = this.objectify(body)
-                Log.e("XD",membersAddition)
                 with(memberList) {
-                    Log.e("XDD",membersAddition)
                     clear()
-                    Log.e("XDDD",memberList)
                     if (membersAddition.members.isNotEmpty()) membersAddition.members.forEach {
                         this.add(AugmentedMember(it.userCF, it.items
                                 ?: mutableListOf()))

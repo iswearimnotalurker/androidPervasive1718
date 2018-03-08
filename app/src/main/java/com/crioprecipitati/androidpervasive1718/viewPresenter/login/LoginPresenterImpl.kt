@@ -55,11 +55,8 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
     }
 
     override fun onSessionCreated(sessionDNS: SessionDNS) {
-        Log.d("SessionDNS ", sessionDNS.toString())
         Prefs.instanceId = sessionDNS.instanceId
         Prefs.sessionId = sessionDNS.sessionId
-        Log.e("instance",Prefs.instanceId)
-        Log.e("session",Prefs.sessionId)
         TaskWSAdapter.changeAddress()
         NotifierWSAdapter.changeAddress()
         WSHelper.setupWSAfterSessionHandshake()

@@ -45,7 +45,6 @@ object SessionWSAdapter : WSAdapter(WS_DEFAULT_SESSION_URI) {
 object TaskWSAdapter : WSAdapter(WS_DEFAULT_TASK_URI) {
 
     private fun sendCustomMessage(operation: WSOperations) {
-        Log.e("Indirizzo WS", this.baseAddress)
         TaskWSAdapter.send(
             PayloadWrapper(
                 Prefs.sessionId,
@@ -57,15 +56,12 @@ object TaskWSAdapter : WSAdapter(WS_DEFAULT_TASK_URI) {
 
     fun sendAddLeaderMessage() = sendCustomMessage(WSOperations.ADD_LEADER)
 
-    fun sendAllMembersRequest() {
-        Log.e("SESSION & ADDRESS" , ""+Prefs.sessionId + " "+ baseAddress)
-        TaskWSAdapter.send(
-                PayloadWrapper(
-                        Prefs.sessionId,
-                        WSOperations.LIST_MEMBERS_REQUEST,
-                        Unit.toJson()).toJson()
-        )
-    }
+    fun sendAllMembersRequest() = TaskWSAdapter.send(
+        PayloadWrapper(
+            Prefs.sessionId,
+            WSOperations.LIST_MEMBERS_REQUEST,
+            Unit.toJson()).toJson()
+    )
 
     fun sendGetActivitiesRequest(activityTypeId: Int) = TaskWSAdapter.send(
             PayloadWrapper(
@@ -84,7 +80,6 @@ object TaskWSAdapter : WSAdapter(WS_DEFAULT_TASK_URI) {
 object NotifierWSAdapter : WSAdapter(WS_DEFAULT_NOTIFIER_URI) {
 
     fun sendSubscribeToAllParametersMessage() {
-        Log.e("Indirizzo WS",baseAddress)
         NotifierWSAdapter.send(
             PayloadWrapper(
                 Prefs.sessionId,
