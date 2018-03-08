@@ -4,9 +4,11 @@ import com.chibatching.kotpref.blockingBulk
 import com.crioprecipitati.androidpervasive1718.model.SessionDNS
 import com.crioprecipitati.androidpervasive1718.networking.RestApiManager
 import com.crioprecipitati.androidpervasive1718.networking.api.SessionApi
+import com.crioprecipitati.androidpervasive1718.networking.webSockets.NotifierWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.SessionWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.WSHelper
+import com.crioprecipitati.androidpervasive1718.utils.CURRENT_LOCAL_IP
 import com.crioprecipitati.androidpervasive1718.utils.CallbackHandler
 import com.crioprecipitati.androidpervasive1718.utils.Prefs
 import com.crioprecipitati.androidpervasive1718.utils.WSObserver
@@ -59,6 +61,10 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
             instanceId = sessionDNS.instanceId
             sessionId = sessionDNS.sessionId
         }
+        Log.e("instance",Prefs.instanceId)
+        Log.e("session",Prefs.sessionId)
+        TaskWSAdapter.changeAddress()
+        NotifierWSAdapter.changeAddress()
         WSHelper.setupWSAfterSessionHandshake()
         TaskWSAdapter.sendAddLeaderMessage()
     }
@@ -95,6 +101,8 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
         Prefs.instanceId = this.sessionList[sessionIndex].instanceId
         Prefs.sessionId = this.sessionList[sessionIndex].sessionId
 
+        TaskWSAdapter.changeAddress()
+        NotifierWSAdapter.changeAddress()
         WSHelper.setupWSAfterSessionHandshake()
         view?.stopLoadingState()
 

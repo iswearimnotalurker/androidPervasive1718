@@ -31,6 +31,8 @@ interface TeamMonitoringContract {
 
         fun onSessionCloseRequested()
 
+        fun refreshWS()
+
         fun addTask(member: Member, activity: Activity)
     }
 }

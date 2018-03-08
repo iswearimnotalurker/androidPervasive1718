@@ -7,7 +7,7 @@ import com.crioprecipitati.androidpervasive1718.utils.*
 import model.*
 import trikita.log.Log
 
-abstract class WSAdapter(private val baseAddress: String) {
+abstract class WSAdapter(var baseAddress: String) {
     private var webSocket: BaseWebSocket? = null
 
     fun initWS() {
@@ -27,6 +27,8 @@ abstract class WSAdapter(private val baseAddress: String) {
         webSocket?.close()
         webSocket = null
     }
+
+    abstract fun changeAddress()
 }
 
 object SessionWSAdapter : WSAdapter(WS_DEFAULT_SESSION_URI) {
@@ -34,11 +36,16 @@ object SessionWSAdapter : WSAdapter(WS_DEFAULT_SESSION_URI) {
     fun sendNewSessionMessage() =
         SessionWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.NEW_SESSION, SessionAssignment(Prefs.patientCF, Prefs.userCF).toJson()).toJson())
 
+    override fun changeAddress() {
+        this.baseAddress = WS_DEFAULT_SESSION_URI
+    }
+
 }
 
 object TaskWSAdapter : WSAdapter(WS_DEFAULT_TASK_URI) {
 
     private fun sendCustomMessage(operation: WSOperations) {
+        Log.e("Indirizzo WS", this.baseAddress)
         TaskWSAdapter.send(
             PayloadWrapper(
                 Prefs.sessionId,
@@ -50,12 +57,15 @@ object TaskWSAdapter : WSAdapter(WS_DEFAULT_TASK_URI) {
 
     fun sendAddLeaderMessage() = sendCustomMessage(WSOperations.ADD_LEADER)
 
-    fun sendAllMembersRequest() = TaskWSAdapter.send(
-        PayloadWrapper(
-            Prefs.sessionId,
-            WSOperations.LIST_MEMBERS_REQUEST,
-            Unit.toJson()).toJson()
-    )
+    fun sendAllMembersRequest() {
+        Log.e("SESSION & ADDRESS" , ""+Prefs.sessionId + " "+ baseAddress)
+        TaskWSAdapter.send(
+                PayloadWrapper(
+                        Prefs.sessionId,
+                        WSOperations.LIST_MEMBERS_REQUEST,
+                        Unit.toJson()).toJson()
+        )
+    }
 
     fun sendGetActivitiesRequest(activityTypeId: Int) = TaskWSAdapter.send(
             PayloadWrapper(
@@ -64,12 +74,17 @@ object TaskWSAdapter : WSAdapter(WS_DEFAULT_TASK_URI) {
                     ActivityRequest(activityTypeId).toJson()).toJson()
     )
 
+    override fun changeAddress(){
+        this.baseAddress = "ws://$CURRENT_LOCAL_IP:820${Prefs.instanceId}/task"
+    }
+
 
 }
 
 object NotifierWSAdapter : WSAdapter(WS_DEFAULT_NOTIFIER_URI) {
 
     fun sendSubscribeToAllParametersMessage() {
+        Log.e("Indirizzo WS",baseAddress)
         NotifierWSAdapter.send(
             PayloadWrapper(
                 Prefs.sessionId,
@@ -85,6 +100,10 @@ object NotifierWSAdapter : WSAdapter(WS_DEFAULT_NOTIFIER_URI) {
                 Subscription(Member(Prefs.userCF), parameters).toJson()).toJson())
     }
 
+
+    override fun changeAddress(){
+        this.baseAddress = "ws://$CURRENT_LOCAL_IP:830${Prefs.instanceId}/instanceid/${Prefs.instanceId}/notifier"
+    }
 }
 
 object WSHelper {

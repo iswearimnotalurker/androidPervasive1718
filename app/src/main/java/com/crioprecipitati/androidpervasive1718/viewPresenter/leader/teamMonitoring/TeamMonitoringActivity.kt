@@ -11,6 +11,7 @@ import com.crioprecipitati.androidpervasive1718.utils.*
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseActivity
 import com.crioprecipitati.androidpervasive1718.viewPresenter.leader.activitySelection.ActivitySelectionActivity
 import kotlinx.android.synthetic.main.activity_team_monitoring.*
+import trikita.log.Log
 
 
 class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitoringView, TeamMonitoringContract.TeamMonitoringPresenter>(), TeamMonitoringContract.TeamMonitoringView {
@@ -34,6 +35,12 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        Log.e("ONRESUME","ONRESUME")
+        presenter.refreshWS()
+    }
+
     override fun startLoadingState() {
         runOnUiThread {
             pbTeamSpinner.visibility = View.VISIBLE
@@ -49,6 +56,7 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
     }
 
     override fun showAndUpdateMemberAndTaskList() {
+        Log.e("XDDDDD","mozzarella")
         stopLoadingState()
         runOnUiThread {
             with(rvMemberList) {
