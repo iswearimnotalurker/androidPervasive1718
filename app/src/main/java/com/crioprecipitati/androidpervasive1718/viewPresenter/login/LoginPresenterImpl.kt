@@ -1,6 +1,5 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.login
 
-import com.chibatching.kotpref.blockingBulk
 import com.crioprecipitati.androidpervasive1718.model.SessionDNS
 import com.crioprecipitati.androidpervasive1718.networking.RestApiManager
 import com.crioprecipitati.androidpervasive1718.networking.api.SessionApi
@@ -8,7 +7,6 @@ import com.crioprecipitati.androidpervasive1718.networking.webSockets.NotifierWS
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.SessionWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.WSHelper
-import com.crioprecipitati.androidpervasive1718.utils.CURRENT_LOCAL_IP
 import com.crioprecipitati.androidpervasive1718.utils.CallbackHandler
 import com.crioprecipitati.androidpervasive1718.utils.Prefs
 import com.crioprecipitati.androidpervasive1718.utils.WSObserver
@@ -57,10 +55,9 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
     }
 
     override fun onSessionCreated(sessionDNS: SessionDNS) {
-        Prefs.blockingBulk {
-            instanceId = sessionDNS.instanceId
-            sessionId = sessionDNS.sessionId
-        }
+        Log.d("SessionDNS ", sessionDNS.toString())
+        Prefs.instanceId = sessionDNS.instanceId
+        Prefs.sessionId = sessionDNS.sessionId
         Log.e("instance",Prefs.instanceId)
         Log.e("session",Prefs.sessionId)
         TaskWSAdapter.changeAddress()

@@ -7,7 +7,7 @@ import com.crioprecipitati.androidpervasive1718.utils.*
 import model.*
 import trikita.log.Log
 
-abstract class WSAdapter(var baseAddress: String) {
+abstract class WSAdapter(@Volatile var baseAddress: String) {
     private var webSocket: BaseWebSocket? = null
 
     fun initWS() {
@@ -37,7 +37,7 @@ object SessionWSAdapter : WSAdapter(WS_DEFAULT_SESSION_URI) {
         SessionWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.NEW_SESSION, SessionAssignment(Prefs.patientCF, Prefs.userCF).toJson()).toJson())
 
     override fun changeAddress() {
-        this.baseAddress = WS_DEFAULT_SESSION_URI
+        super.baseAddress = WS_DEFAULT_SESSION_URI
     }
 
 }
@@ -75,7 +75,7 @@ object TaskWSAdapter : WSAdapter(WS_DEFAULT_TASK_URI) {
     )
 
     override fun changeAddress(){
-        this.baseAddress = "ws://$CURRENT_LOCAL_IP:820${Prefs.instanceId}/task"
+        super.baseAddress = "ws://$CURRENT_LOCAL_IP:820${Prefs.instanceId}/task"
     }
 
 
@@ -102,20 +102,27 @@ object NotifierWSAdapter : WSAdapter(WS_DEFAULT_NOTIFIER_URI) {
 
 
     override fun changeAddress(){
-        this.baseAddress = "ws://$CURRENT_LOCAL_IP:830${Prefs.instanceId}/instanceid/${Prefs.instanceId}/notifier"
+        super.baseAddress = "ws://$CURRENT_LOCAL_IP:830${Prefs.instanceId}/instanceid/${Prefs.instanceId}/notifier"
     }
 }
 
 object WSHelper {
+
+    var alreadyOpened = false
 
     fun initStartingPointWS() {
         SessionWSAdapter.initWS()
     }
 
     fun setupWSAfterSessionHandshake() {
+        if (alreadyOpened) {
+            TaskWSAdapter.closeWS()
+            NotifierWSAdapter.closeWS()
+        }
         SessionWSAdapter.closeWS()
         TaskWSAdapter.initWS()
         NotifierWSAdapter.initWS()
+        alreadyOpened = true
     }
 
 }
