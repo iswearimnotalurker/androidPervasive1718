@@ -95,7 +95,7 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
             if (resultCode == Activity.RESULT_OK) {
                 startLoadingState()
                 val member = Unbundler.extractMember(data!!.getBundleExtra(BundleStrings.memberExtraString))
-                val activity = Unbundler.extractActivity(data!!.getBundleExtra(BundleStrings.activityExtraString))
+                val activity = Unbundler.extractActivity(data.getBundleExtra(BundleStrings.activityExtraString))
                 presenter.addTask(member, activity)
             }
             if (resultCode == Activity.RESULT_CANCELED) {

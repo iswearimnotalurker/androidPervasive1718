@@ -110,13 +110,11 @@ class LoginActivity : BaseActivity<LoginContract.LoginView, LoginContract.LoginP
 
     override fun startTaskMonitoringActivity() {
         val intent = Intent(this, TaskMonitoringActivity::class.java)
-//        intent.putExtras(member.generateBundle())
         startActivity(intent)
     }
 
     override fun startTeamMonitoringActivity() {
         val intent = Intent(this, TeamMonitoringActivity::class.java)
-//        intent.putExtras(member.generateBundle())
         startActivity(intent)
     }
 }

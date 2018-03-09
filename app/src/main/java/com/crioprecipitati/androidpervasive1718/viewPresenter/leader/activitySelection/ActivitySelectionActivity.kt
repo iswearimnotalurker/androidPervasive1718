@@ -12,7 +12,6 @@ import com.crioprecipitati.androidpervasive1718.utils.Unbundler
 import com.crioprecipitati.androidpervasive1718.utils.generateBundle
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_activity_selection.*
-import trikita.log.Log
 
 class ActivitySelectionActivity : BaseActivity<ActivitySelectionContract.ActivitySelectionView, ActivitySelectionContract.ActivitySelectionPresenter>(), ActivitySelectionContract.ActivitySelectionView {
 

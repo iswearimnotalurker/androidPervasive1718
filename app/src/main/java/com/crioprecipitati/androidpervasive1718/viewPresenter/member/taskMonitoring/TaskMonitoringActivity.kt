@@ -116,7 +116,7 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
         LifeParameters.values().forEach { parametersViews[it] = createParameterView(it) }
     }
 
-    private fun initializeParamentersViews(parameters: List<LifeParameters>) {
+    private fun initializeParametersViews(parameters: List<LifeParameters>) {
         parameters.forEach { parametersViews[it] = createParameterView(it) }
     }
 
