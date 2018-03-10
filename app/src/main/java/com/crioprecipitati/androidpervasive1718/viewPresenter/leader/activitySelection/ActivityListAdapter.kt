@@ -28,7 +28,7 @@ class ActivityListAdapter(private val activityList: List<Activity>,
 
         @SuppressLint("SetTextI18n")
         fun bind(itemActivity: Activity) {
-            itemView.tvSessionName.text = "${itemActivity.name}"
+            itemView.tvSessionName.text =  itemActivity.name
         }
 
     }

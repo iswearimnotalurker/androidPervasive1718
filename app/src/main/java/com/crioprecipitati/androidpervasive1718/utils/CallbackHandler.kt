@@ -55,9 +55,7 @@ object CallbackHandler : WSCallbacks, WSSubject {
     }
 
     override fun onMessageReceived(messageString: String?) {
-//        Log.d("onMessageReceived: $messageString")
         with(GsonInitializer.fromJson(messageString!!, PayloadWrapper::class.java)) {
-            //            Log.d("[ <-- ${subject.name} ]: ${this.body}")
             notifyAllObservers(this.subject, this)
         }
     }

@@ -15,8 +15,6 @@ import org.hamcrest.CoreMatchers.not
 import android.support.test.InstrumentationRegistry
 import android.support.test.uiautomator.UiDevice
 
-//TODO vedere se sostituire gli sleep con degli idling
-
 @RunWith(AndroidJUnit4::class)
 class LoginActivityTest {
 

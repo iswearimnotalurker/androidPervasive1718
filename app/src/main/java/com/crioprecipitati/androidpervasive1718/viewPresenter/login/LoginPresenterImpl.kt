@@ -40,7 +40,7 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
 
     override fun detachView() {
         super.detachView()
-        CallbackHandler.detach(channels, this)//da fare nella onpause per workaroundare
+        CallbackHandler.detach(channels, this)
     }
 
     override fun onMemberTypeChanged(memberType: MemberType) {
@@ -119,7 +119,6 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
             fun sessionErrorResponseHandling() {
                 val sessionDNSErrorResponse: GenericResponse = this.objectify(body)
                 Log.d("RECEIVED ERROR $sessionDNSErrorResponse")
-                // TODO fai le cose
             }
 
             when (subject) {

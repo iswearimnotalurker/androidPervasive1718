@@ -39,7 +39,6 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
     override fun onResume() {
         super.onResume()
         initializeParametersViews()
-        //createNewTable(LifeParameters.values().map { it.toString() }.toList())
         showEmptyTask()
     }
 
@@ -91,20 +90,12 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
         lifeParametersLinearLayout.setBackgroundColor(Color.LTGRAY)
 
         parameters.forEach {
-            //Log.d("Ora sono: ", lifeParameter.toString())
-
             val customWidth = lifeParametersLinearLayout.width / (parameters.size * 2)
 
             parametersViews[it]!!.first.height = lifeParametersLinearLayout.height
             parametersViews[it]!!.first.width = customWidth
             parametersViews[it]!!.second.height = lifeParametersLinearLayout.height
             parametersViews[it]!!.second.width = customWidth
-
-//            val paramWrapper = LinearLayout(this)
-//            paramWrapper.layoutParams = ViewGroup.LayoutParams(lifeParametersLinearLayout.width/parameters.size, lifeParametersLinearLayout.height)
-//            paramWrapper.addView(parametersViews[it]!!.first)
-//            paramWrapper.addView(parametersViews[it]!!.second)
-//            lifeParametersLinearLayout.addView(paramWrapper, ViewGroup.LayoutParams.MATCH_PARENT)
 
             lifeParametersLinearLayout.addView(parametersViews[it]!!.first)
             lifeParametersLinearLayout.addView(parametersViews[it]!!.second)
@@ -114,10 +105,6 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
 
     private fun initializeParametersViews() {
         LifeParameters.values().forEach { parametersViews[it] = createParameterView(it) }
-    }
-
-    private fun initializeParametersViews(parameters: List<LifeParameters>) {
-        parameters.forEach { parametersViews[it] = createParameterView(it) }
     }
 
     private fun createParameterView(parameter: LifeParameters): Pair<TextView, TextView> {
