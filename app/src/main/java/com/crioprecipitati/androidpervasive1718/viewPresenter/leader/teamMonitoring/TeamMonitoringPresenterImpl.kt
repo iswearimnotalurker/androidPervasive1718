@@ -14,8 +14,6 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import model.*
 import trikita.log.Log
 import utils.newTask
-import java.sql.Timestamp
-import java.util.*
 
 class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.TeamMonitoringView>(), TeamMonitoringContract.TeamMonitoringPresenter, WSObserver {
 
@@ -49,7 +47,7 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
     }
 
     override fun onMemberSelected(userIndex: Int) {
-        view?.showActivitySelectionActivity(this.memberList.get(userIndex).userCF)
+        view?.showActivitySelectionActivity(this.memberList[userIndex].userCF)
     }
 
     override fun onTaskDeleted() {

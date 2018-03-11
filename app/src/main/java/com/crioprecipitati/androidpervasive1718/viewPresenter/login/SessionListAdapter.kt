@@ -15,7 +15,7 @@ class SessionListAdapter(private val sessionList: List<SessionDNS>,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SessionViewHolder {
         val holder = SessionViewHolder(parent.inflate(R.layout.item_session))
-        holder.onClick(onClickListener)
+        holder.onClick(event = onClickListener)
         return holder
     }
 

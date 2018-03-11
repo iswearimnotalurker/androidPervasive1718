@@ -54,16 +54,16 @@ object Unbundler {
 fun ViewGroup.inflate(layoutRes: Int): View =
     LayoutInflater.from(context).inflate(layoutRes, this, false)
 
-fun <T : RecyclerView.ViewHolder> T.onClick(event: (view: View, position: Int, type: Int) -> Unit): T {
-    itemView.setOnClickListener {
-        event.invoke(it, adapterPosition, itemViewType)
+fun <T : RecyclerView.ViewHolder> T.onClick(flatPosition: Int? = null, event: (view: View, position: Int, type: Int) -> Unit): T {
+    this.itemView.setOnClickListener {
+        event.invoke(it, flatPosition ?: this@onClick.adapterPosition, this@onClick.itemViewType)
     }
     return this
 }
 
-fun <T : RecyclerView.ViewHolder> T.onLongClick(event: (view: View, position: Int, type: Int) -> Unit): T {
-    itemView.setOnLongClickListener {
-        event.invoke(it, adapterPosition, itemViewType)
+fun <T : RecyclerView.ViewHolder> T.onLongClick(flatPosition: Int? = null, event: (view: View, position: Int, type: Int) -> Unit): T {
+    this.itemView.setOnLongClickListener {
+        event(it, flatPosition ?: this@onLongClick.adapterPosition, this@onLongClick.itemViewType)
         true
     }
     return this

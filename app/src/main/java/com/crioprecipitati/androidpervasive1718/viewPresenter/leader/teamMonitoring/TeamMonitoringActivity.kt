@@ -17,7 +17,8 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
 
     override var presenter: TeamMonitoringContract.TeamMonitoringPresenter = TeamMonitoringPresenterImpl()
     override val layout: Int = R.layout.activity_team_monitoring
-    private lateinit var itemOnClick: (View, Int, Int) -> Unit
+    private lateinit var memberOnClick: (View, Int, Int) -> Unit
+    private lateinit var taskOnClick: (View, Int, Int) -> Unit
     private var isRvClickable: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -30,7 +31,7 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
 
         btnCloseSession.setOnClickListener { presenter.onSessionCloseRequested() }
 
-        itemOnClick = { _, position, _ -> if(isRvClickable) presenter.onMemberSelected(position) }
+        memberOnClick = { _, position, _ -> if (isRvClickable) presenter.onMemberSelected(position) }
 
     }
 
@@ -60,7 +61,7 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
                 adapter = null
                 layoutManager = null
                 layoutManager = android.support.v7.widget.LinearLayoutManager(this@TeamMonitoringActivity, android.widget.LinearLayout.VERTICAL, false)
-                adapter = TeamMonitoringAdapter(presenter.memberList, itemOnClick)
+                adapter = TeamMonitoringAdapter(presenter.memberList, memberOnClick, taskOnClick)
                 adapter.notifyDataSetChanged()
             }
         }

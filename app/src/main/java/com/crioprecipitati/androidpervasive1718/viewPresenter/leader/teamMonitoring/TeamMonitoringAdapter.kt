@@ -16,13 +16,12 @@ import kotlinx.android.synthetic.main.item_task.view.*
 import kotlinx.android.synthetic.main.item_team_member.view.*
 
 class TeamMonitoringAdapter(private val memberList: List<AugmentedMember>,
-                            private val onGroupClickListener: (View, Int, Int) -> Unit)
+                            private val onGroupClickListener: (View, Int, Int) -> Unit,
+                            private val onChildClickListener: (View, Int, Int) -> Unit)
     : ExpandableRecyclerViewAdapter<TeamMonitoringAdapter.MemberViewHolder, TeamMonitoringAdapter.TaskViewHolder>(memberList) {
 
     override fun onCreateGroupViewHolder(parent: ViewGroup, viewType: Int): MemberViewHolder {
-        val holder = MemberViewHolder(parent.inflate(R.layout.item_team_member))
-        holder.onLongClick(onGroupClickListener)
-        return holder
+        return MemberViewHolder(parent.inflate(R.layout.item_team_member))
     }
 
     override fun onCreateChildViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
@@ -30,10 +29,12 @@ class TeamMonitoringAdapter(private val memberList: List<AugmentedMember>,
     }
 
     override fun onBindGroupViewHolder(holder: MemberViewHolder, flatPosition: Int, group: ExpandableGroup<*>) {
+        holder.onLongClick(flatPosition, onGroupClickListener)
         holder.bind(memberList[flatPosition])
     }
 
     override fun onBindChildViewHolder(holder: TaskViewHolder, flatPosition: Int, group: ExpandableGroup<*>, childIndex: Int) {
+        holder.onLongClick(event = onChildClickListener)
         holder.bind((group as AugmentedMember).items[childIndex])
     }
 

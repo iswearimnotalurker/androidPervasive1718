@@ -15,7 +15,7 @@ class ActivityListAdapter(private val activityList: List<Activity>,
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ActivityViewHolder {
         val holder = ActivityViewHolder(parent.inflate(R.layout.item_activity))
-        holder.onClick(onClickListener)
+        holder.onClick(event = onClickListener)
         return holder
     }
 
