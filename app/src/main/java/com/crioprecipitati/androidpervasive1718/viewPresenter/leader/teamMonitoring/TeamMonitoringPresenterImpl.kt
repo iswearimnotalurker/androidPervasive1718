@@ -46,12 +46,32 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
         NotifierWSAdapter.closeWS()
     }
 
-    override fun onMemberSelected(userIndex: Int) {
-        view?.showActivitySelectionActivity(this.memberList[userIndex].userCF)
+    override fun onTaskAdditionRequested(member: Member, activity: Activity) {
+
+        val assignment = TaskAssignment(member, AugmentedTask(
+            Task.Companion.newTask(Prefs.sessionId, activity.id, member.userCF),
+            LifeParameters.values().filter { activity.healthParameterIds.contains(it.id) },
+            activity.name
+        ))
+
+        val message = PayloadWrapper(
+            Prefs.instanceId,
+            WSOperations.ADD_TASK,
+            assignment.toJson()
+        )
+        TaskWSAdapter.send(message.toJson())
     }
 
     override fun onTaskDeleted() {
         TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.REMOVE_TASK, TaskAssignment(Member.defaultMember(), AugmentedTask.defaultAugmentedTask()).toJson()).toJson())
+    }
+
+    override fun onMemberSelected(memberIndex: Int) {
+        view?.showActivitySelectionActivity(this.memberList[memberIndex].userCF)
+    }
+
+    override fun onTaskSelected(memberIndex: Int, taskIndex: Int) {
+        Log.d("onTaskSelected:" + this.memberList[memberIndex].userCF + "\n" + this.memberList[memberIndex].items[taskIndex])
     }
 
     override fun onSessionCloseRequested() {
@@ -66,22 +86,6 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
                 },
                 { Log.d(it.message) }
             )
-    }
-
-    override fun addTask(member: Member, activity : Activity) {
-
-        val assignment = TaskAssignment(member, AugmentedTask(
-                    Task.Companion.newTask(Prefs.sessionId,activity.id,member.userCF),
-                    LifeParameters.values().filter { activity.healthParameterIds.contains(it.id) },
-                    activity.name
-            ))
-
-        val message = PayloadWrapper(
-                Prefs.instanceId,
-                WSOperations.ADD_TASK,
-                assignment.toJson()
-        )
-        TaskWSAdapter.send(message.toJson())
     }
 
     override fun update(payloadWrapper: PayloadWrapper) {
@@ -143,7 +147,7 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
 
     }
 
-    override fun refreshWS() {
+    override fun onWSRefreshRequested() {
         TaskWSAdapter.changeAddress()
         NotifierWSAdapter.changeAddress()
     }

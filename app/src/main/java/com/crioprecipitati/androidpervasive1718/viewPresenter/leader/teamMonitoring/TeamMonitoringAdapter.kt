@@ -7,7 +7,8 @@ import com.crioprecipitati.androidpervasive1718.R
 import com.crioprecipitati.androidpervasive1718.model.AugmentedMember
 import com.crioprecipitati.androidpervasive1718.model.AugmentedTask
 import com.crioprecipitati.androidpervasive1718.utils.inflate
-import com.crioprecipitati.androidpervasive1718.utils.onLongClick
+import com.crioprecipitati.androidpervasive1718.utils.onMemberLongClick
+import com.crioprecipitati.androidpervasive1718.utils.onTaskClick
 import com.thoughtbot.expandablerecyclerview.ExpandableRecyclerViewAdapter
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup
 import com.thoughtbot.expandablerecyclerview.viewholders.ChildViewHolder
@@ -17,7 +18,7 @@ import kotlinx.android.synthetic.main.item_team_member.view.*
 
 class TeamMonitoringAdapter(private val memberList: List<AugmentedMember>,
                             private val onGroupClickListener: (View, Int, Int) -> Unit,
-                            private val onChildClickListener: (View, Int, Int) -> Unit)
+                            private val onChildClickListener: (View, Int, Int, Int) -> Unit)
     : ExpandableRecyclerViewAdapter<TeamMonitoringAdapter.MemberViewHolder, TeamMonitoringAdapter.TaskViewHolder>(memberList) {
 
     override fun onCreateGroupViewHolder(parent: ViewGroup, viewType: Int): MemberViewHolder {
@@ -29,12 +30,12 @@ class TeamMonitoringAdapter(private val memberList: List<AugmentedMember>,
     }
 
     override fun onBindGroupViewHolder(holder: MemberViewHolder, flatPosition: Int, group: ExpandableGroup<*>) {
-        holder.onLongClick(flatPosition, onGroupClickListener)
+        holder.onMemberLongClick(flatPosition, onGroupClickListener)
         holder.bind(memberList[flatPosition])
     }
 
     override fun onBindChildViewHolder(holder: TaskViewHolder, flatPosition: Int, group: ExpandableGroup<*>, childIndex: Int) {
-        holder.onLongClick(event = onChildClickListener)
+        holder.onTaskClick(memberList.indexOfFirst { it.userCF == group.title }, childIndex, onChildClickListener)
         holder.bind((group as AugmentedMember).items[childIndex])
     }
 

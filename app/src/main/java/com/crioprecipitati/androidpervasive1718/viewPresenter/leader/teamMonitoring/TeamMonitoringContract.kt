@@ -1,6 +1,9 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.leader.teamMonitoring
 
-import com.crioprecipitati.androidpervasive1718.model.*
+import com.crioprecipitati.androidpervasive1718.model.Activity
+import com.crioprecipitati.androidpervasive1718.model.AugmentedMember
+import com.crioprecipitati.androidpervasive1718.model.LifeParameters
+import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BasePresenter
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseView
 
@@ -25,14 +28,17 @@ interface TeamMonitoringContract {
 
         var member: Member?
 
+        fun onTaskAdditionRequested(member: Member, activity: Activity)
+
         fun onTaskDeleted()
 
-        fun onMemberSelected(userIndex: Int)
+        fun onMemberSelected(memberIndex: Int)
+
+        fun onTaskSelected(memberIndex: Int, taskIndex: Int)
 
         fun onSessionCloseRequested()
 
-        fun refreshWS()
+        fun onWSRefreshRequested()
 
-        fun addTask(member: Member, activity: Activity)
     }
 }

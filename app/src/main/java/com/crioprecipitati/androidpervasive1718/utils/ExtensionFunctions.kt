@@ -61,11 +61,17 @@ fun <T : RecyclerView.ViewHolder> T.onClick(flatPosition: Int? = null, event: (v
     return this
 }
 
-fun <T : RecyclerView.ViewHolder> T.onLongClick(flatPosition: Int? = null, event: (view: View, position: Int, type: Int) -> Unit): T {
+fun <T : RecyclerView.ViewHolder> T.onMemberLongClick(flatPosition: Int? = null, event: (view: View, position: Int, type: Int) -> Unit): T {
     this.itemView.setOnLongClickListener {
-        event(it, flatPosition ?: this@onLongClick.adapterPosition, this@onLongClick.itemViewType)
+        event(it, flatPosition
+                ?: this@onMemberLongClick.adapterPosition, this@onMemberLongClick.itemViewType)
         true
     }
+    return this
+}
+
+fun <T : RecyclerView.ViewHolder> T.onTaskClick(memberFlatPosition: Int, taskPosition: Int, event: (view: View, memberPosition: Int, taskPosition: Int, type: Int) -> Unit): T {
+    this.itemView.setOnClickListener { event(it, memberFlatPosition, taskPosition, this@onTaskClick.itemViewType) }
     return this
 }
 

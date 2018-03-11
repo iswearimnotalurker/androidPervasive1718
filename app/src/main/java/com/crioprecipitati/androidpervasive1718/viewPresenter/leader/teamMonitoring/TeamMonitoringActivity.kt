@@ -18,7 +18,7 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
     override var presenter: TeamMonitoringContract.TeamMonitoringPresenter = TeamMonitoringPresenterImpl()
     override val layout: Int = R.layout.activity_team_monitoring
     private lateinit var memberOnClick: (View, Int, Int) -> Unit
-    private lateinit var taskOnClick: (View, Int, Int) -> Unit
+    private lateinit var taskOnClick: (View, Int, Int, Int) -> Unit
     private var isRvClickable: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,11 +33,13 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
 
         memberOnClick = { _, position, _ -> if (isRvClickable) presenter.onMemberSelected(position) }
 
+        taskOnClick = { _, memberPosition, taskPosition, _ -> if (isRvClickable) presenter.onTaskSelected(memberPosition, taskPosition) }
+
     }
 
     override fun onResume() {
         super.onResume()
-        presenter.refreshWS()
+        presenter.onWSRefreshRequested()
     }
 
     override fun startLoadingState() {
@@ -97,7 +99,7 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
                 startLoadingState()
                 val member = Unbundler.extractMember(data!!.getBundleExtra(BundleStrings.memberExtraString))
                 val activity = Unbundler.extractActivity(data.getBundleExtra(BundleStrings.activityExtraString))
-                presenter.addTask(member, activity)
+                presenter.onTaskAdditionRequested(member, activity)
             }
             if (resultCode == Activity.RESULT_CANCELED) {
                 //TODO
