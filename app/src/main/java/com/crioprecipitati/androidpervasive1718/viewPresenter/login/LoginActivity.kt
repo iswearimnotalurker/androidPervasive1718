@@ -71,6 +71,7 @@ class LoginActivity : BaseActivity<LoginContract.LoginView, LoginContract.LoginP
             btnCreateNewSession.isEnabled = true
             btnRequestOpenSessions.isEnabled = true
             isRvClickable = true
+            toggleLeaderMode(Prefs.memberType.isLeader())
         }
     }
 
