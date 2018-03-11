@@ -12,13 +12,18 @@ import com.crioprecipitati.androidpervasive1718.utils.toJson
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BasePresenterImpl
 import io.reactivex.android.schedulers.AndroidSchedulers
 import model.*
+import model.Status
 import trikita.log.Log
 import utils.newTask
 
 class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.TeamMonitoringView>(), TeamMonitoringContract.TeamMonitoringPresenter, WSObserver {
 
+    data class SelectedTask(val memberIndex: Int, val taskIndex: Int)
+
     override var member: Member? = null
     override var memberList: MutableList<AugmentedMember> = mutableListOf()
+
+    private lateinit var selectedTask: SelectedTask
 
     private val channels = listOf(
         WSOperations.LIST_MEMBERS_RESPONSE,
@@ -62,8 +67,20 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
         TaskWSAdapter.send(message.toJson())
     }
 
-    override fun onTaskDeleted() {
-        TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.REMOVE_TASK, TaskAssignment(Member.defaultMember(), AugmentedTask.defaultAugmentedTask()).toJson()).toJson())
+    private fun getSelectedTaskMember() = Member(this.memberList[selectedTask.memberIndex].userCF)
+
+    private fun getSelectedTask() =
+        this.memberList[selectedTask.memberIndex].items[selectedTask.taskIndex]
+
+
+    override fun onTaskCompletionRequested() {
+        TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CHANGE_TASK_STATUS, TaskAssignment(getSelectedTaskMember(), getSelectedTask().apply { this.task.statusId = Status.FINISHED.id }).toJson()).toJson())
+        view?.startLoadingState()
+    }
+
+    override fun onTaskDeletionRequested() {
+        TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.REMOVE_TASK, TaskAssignment(getSelectedTaskMember(), getSelectedTask()).toJson()).toJson())
+        view?.startLoadingState()
     }
 
     override fun onMemberSelected(memberIndex: Int) {
@@ -71,7 +88,8 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
     }
 
     override fun onTaskSelected(memberIndex: Int, taskIndex: Int) {
-        Log.d("onTaskSelected:" + this.memberList[memberIndex].userCF + "\n" + this.memberList[memberIndex].items[taskIndex])
+        selectedTask = SelectedTask(memberIndex, taskIndex)
+        view?.showTaskDialog()
     }
 
     override fun onSessionCloseRequested() {
@@ -118,12 +136,14 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
 
             fun taskAssignmentHandling() {
                 val taskAssignment: TaskAssignment = this.objectify(body)
-                if (taskAssignment.augmentedTask.task.statusId == Status.FINISHED.id) {
+                if (taskAssignment.augmentedTask.task.statusId == Status.FINISHED.id ||
+                    taskAssignment.augmentedTask.task.statusId == Status.ELIMINATED.id) {
                     val items = memberList.firstOrNull {it.userCF == taskAssignment.member.userCF}?.items
                     items?.remove(items.firstOrNull { it.task.name == taskAssignment.augmentedTask.task.name })
                 }else {
                     memberList.firstOrNull { it.userCF == taskAssignment.member.userCF }?.items?.add(taskAssignment.augmentedTask)
                 }
+                view?.stopLoadingState()
                 view?.showAndUpdateMemberAndTaskList()
             }
 

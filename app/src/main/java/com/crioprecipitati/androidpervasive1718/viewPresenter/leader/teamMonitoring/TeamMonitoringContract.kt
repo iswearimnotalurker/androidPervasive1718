@@ -16,6 +16,8 @@ interface TeamMonitoringContract {
 
         fun showAndUpdateHealthParameters(lifeParameter: LifeParameters, value: Double)
 
+        fun showTaskDialog()
+
         fun showActivitySelectionActivity(userCF: String)
 
         fun onSessionClosed()
@@ -30,7 +32,9 @@ interface TeamMonitoringContract {
 
         fun onTaskAdditionRequested(member: Member, activity: Activity)
 
-        fun onTaskDeleted()
+        fun onTaskDeletionRequested()
+
+        fun onTaskCompletionRequested()
 
         fun onMemberSelected(memberIndex: Int)
 

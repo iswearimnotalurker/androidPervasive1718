@@ -115,3 +115,11 @@ data class TaskError(val task: Task, val error: String)
 
 data class StatusError(val statusId: Int, val task: Task, val error: String)
 
+enum class Status(val id: Int) {
+    SUSPENDED(1),
+    RUNNING(2),
+    FINISHED(3),
+    ELIMINATED(4),
+    MONITORING(5),
+    EMPTY(6)
+}
