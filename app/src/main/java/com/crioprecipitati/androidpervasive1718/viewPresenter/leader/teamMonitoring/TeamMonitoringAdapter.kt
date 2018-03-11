@@ -35,14 +35,14 @@ class TeamMonitoringAdapter(private val memberList: List<AugmentedMember>,
     }
 
     override fun onBindChildViewHolder(holder: TaskViewHolder, flatPosition: Int, group: ExpandableGroup<*>, childIndex: Int) {
-        holder.onTaskClick(memberList.indexOfFirst { it.userCF == group.title }, childIndex, onChildClickListener)
+        holder.onTaskClick(memberList.indexOfFirst { it.member.userCF == group.title }, childIndex, onChildClickListener)
         holder.bind((group as AugmentedMember).items[childIndex])
     }
 
     class MemberViewHolder(itemView: View) : GroupViewHolder(itemView) {
         @SuppressLint("SetTextI18n")
         fun bind(itemUser: AugmentedMember) {
-            itemView.tvUserCF.text = "CF Membro ${itemUser.userCF} con n task ${itemUser.items.size}"
+            itemView.tvUserCF.text = "${itemUser.member.name} ${itemUser.member.surname} - ${itemUser.items.size} task assegnati"
         }
     }
 

@@ -11,7 +11,6 @@ import com.crioprecipitati.androidpervasive1718.utils.WSObserver
 import com.crioprecipitati.androidpervasive1718.utils.toJson
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BasePresenterImpl
 import model.*
-import java.sql.Time
 import java.sql.Timestamp
 import java.util.*
 import kotlin.Comparator
@@ -73,8 +72,8 @@ open class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContrac
             }
 
             fun loadMemberTasks(){
-                val memberTaskList: AugmentedMembersAdditionNotification = this.objectify(body)
-                memberTaskList.members.first().items?.forEach { queueAssignedTask.offer(TaskAssignment(Member(Prefs.userCF),it)) }
+                val members: AugmentedMembersAdditionNotification = this.objectify(body)
+                members.members.first().items?.forEach { queueAssignedTask.offer(TaskAssignment(Member(Prefs.userCF), it)) }
                 updateTheCurrentTask()
             }
 

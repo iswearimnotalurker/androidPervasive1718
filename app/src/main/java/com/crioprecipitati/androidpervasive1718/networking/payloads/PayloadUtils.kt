@@ -47,14 +47,16 @@ enum class WSOperations(val objectifier: (String) -> Any) {
     ANSWER({ GsonInitializer.fromJson(it, Response::class.java) }),
 
     // TASKS
-    ADD_LEADER({ GsonInitializer.fromJson(it, MembersAdditionNotification::class.java) }),
-    LIST_MEMBERS_REQUEST({ GsonInitializer.fromJson(it, Unit::class.java) }),
-    LIST_MEMBERS_RESPONSE({ GsonInitializer.fromJson(it, AugmentedMembersAdditionNotification::class.java) }),
-    MEMBER_COMEBACK_RESPONSE({ GsonInitializer.fromJson(it, AugmentedMembersAdditionNotification::class.java) }),
-    LEADER_RESPONSE({ GsonInitializer.fromJson(it, GenericResponse::class.java) }),
     SESSION_HANDLER_ERROR_RESPONSE({ GsonInitializer.fromJson(it, GenericResponse::class.java) }),
     SESSION_HANDLER_RESPONSE({ GsonInitializer.fromJson(it, SessionDNS::class.java) }),
-    ADD_MEMBER({ GsonInitializer.fromJson(it, MembersAdditionNotification::class.java) }),
+    ADD_LEADER({ GsonInitializer.fromJson(it, Member::class.java) }),
+    LEADER_RESPONSE({ GsonInitializer.fromJson(it, GenericResponse::class.java) }),
+    ADD_MEMBER({ GsonInitializer.fromJson(it, Member::class.java) }),
+    ADD_MEMBER_NOTIFICATION({ GsonInitializer.fromJson(it, MemberWithNameSurname::class.java) }),
+    MEMBER_COMEBACK_RESPONSE({ GsonInitializer.fromJson(it, AugmentedMemberFromServer::class.java) }),
+    LIST_MEMBERS_REQUEST({ GsonInitializer.fromJson(it, Unit::class.java) }),
+    LIST_MEMBERS_RESPONSE({ GsonInitializer.fromJson(it, model.AugmentedMembersAdditionNotification::class.java) }),
+
     ADD_TASK({
         com.beust.klaxon.Klaxon()
                 .fieldConverter(com.crioprecipitati.androidpervasive1718.utils.KlaxonDate::class,
@@ -102,8 +104,6 @@ data class Response(val code: Int, val toMessage: String)
 data class Subscription(val subject: Member, val topics: List<LifeParameters>)
 
 data class TaskAssignment(val member: Member, val augmentedTask: AugmentedTask)
-
-data class MembersAdditionNotification(val members: List<Member>)
 
 data class AugmentedMembersAdditionNotification(val members: List<AugmentedMemberFromServer>)
 

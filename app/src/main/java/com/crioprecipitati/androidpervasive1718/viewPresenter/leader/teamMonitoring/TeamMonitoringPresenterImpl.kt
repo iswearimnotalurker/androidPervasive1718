@@ -67,7 +67,8 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
         TaskWSAdapter.send(message.toJson())
     }
 
-    private fun getSelectedTaskMember() = Member(this.memberList[selectedTask.memberIndex].userCF)
+    private fun getSelectedTaskMember() =
+        Member(this.memberList[selectedTask.memberIndex].member.userCF)
 
     private fun getSelectedTask() =
         this.memberList[selectedTask.memberIndex].items[selectedTask.taskIndex]
@@ -84,7 +85,7 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
     }
 
     override fun onMemberSelected(memberIndex: Int) {
-        view?.showActivitySelectionActivity(this.memberList[memberIndex].userCF)
+        view?.showActivitySelectionActivity(this.memberList[memberIndex].member.userCF)
     }
 
     override fun onTaskSelected(memberIndex: Int, taskIndex: Int) {
@@ -115,18 +116,18 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
             }
 
             fun memberAdditionHandling() {
-                val membersAddition: MembersAdditionNotification = this.objectify(body)
-                if (membersAddition.members.isNotEmpty()) memberList.add(AugmentedMember(membersAddition.members.first().userCF))
+                val newMember: MemberWithNameSurname = this.objectify(body)
+                memberList.add(AugmentedMember(newMember))
                 view?.showAndUpdateMemberAndTaskList()
                 view?.stopLoadingState()
             }
 
             fun memberListAdditionHandling() {
-                val membersAddition: AugmentedMembersAdditionNotification = this.objectify(body)
+                val newMembers: AugmentedMembersAdditionNotification = this.objectify(body)
                 with(memberList) {
                     clear()
-                    if (membersAddition.members.isNotEmpty()) membersAddition.members.forEach {
-                        this.add(AugmentedMember(it.userCF, it.items
+                    if (newMembers.members.isNotEmpty()) newMembers.members.forEach {
+                        this.add(AugmentedMember(it.member, it.items
                                 ?: mutableListOf()))
                     }
                 }
@@ -138,10 +139,10 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
                 val taskAssignment: TaskAssignment = this.objectify(body)
                 if (taskAssignment.augmentedTask.task.statusId == Status.FINISHED.id ||
                     taskAssignment.augmentedTask.task.statusId == Status.ELIMINATED.id) {
-                    val items = memberList.firstOrNull {it.userCF == taskAssignment.member.userCF}?.items
+                    val items = memberList.firstOrNull { it.member.userCF == taskAssignment.member.userCF }?.items
                     items?.remove(items.firstOrNull { it.task.name == taskAssignment.augmentedTask.task.name })
                 }else {
-                    memberList.firstOrNull { it.userCF == taskAssignment.member.userCF }?.items?.add(taskAssignment.augmentedTask)
+                    memberList.firstOrNull { it.member.userCF == taskAssignment.member.userCF }?.items?.add(taskAssignment.augmentedTask)
                 }
                 view?.stopLoadingState()
                 view?.showAndUpdateMemberAndTaskList()
@@ -155,7 +156,7 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
             when (subject) {
                 WSOperations.UPDATE -> healthParameterUpdateHandling()
                 WSOperations.LIST_MEMBERS_RESPONSE -> memberListAdditionHandling()
-                WSOperations.ADD_MEMBER -> memberAdditionHandling()
+                WSOperations.ADD_MEMBER_NOTIFICATION -> memberAdditionHandling()
                 WSOperations.ADD_TASK -> taskAssignmentHandling()
                 WSOperations.CHANGE_TASK_STATUS -> taskAssignmentHandling()
                 WSOperations.REMOVE_TASK -> taskAssignmentHandling()

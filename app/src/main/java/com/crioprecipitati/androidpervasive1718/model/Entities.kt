@@ -3,6 +3,7 @@ package com.crioprecipitati.androidpervasive1718.model
 import android.os.Parcelable
 import com.crioprecipitati.androidpervasive1718.utils.KlaxonDate
 import com.crioprecipitati.androidpervasive1718.utils.KlaxonListLifeParameter
+import com.crioprecipitati.androidpervasive1718.utils.Prefs.userCF
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup
 import kotlinx.android.parcel.Parcelize
 import java.sql.Timestamp
@@ -25,15 +26,17 @@ data class Member(val userCF: String) {
     }
 }
 
-data class AugmentedMemberFromServer(val userCF: String, val items: MutableList<AugmentedTask>?)
+data class MemberWithNameSurname(val userCF: String, val name: String, val surname: String)
 
-class AugmentedMember(val userCF: String, items: MutableList<AugmentedTask> = mutableListOf()) : ExpandableGroup<AugmentedTask>(userCF, items) {
+data class AugmentedMemberFromServer(val member: MemberWithNameSurname, val items: MutableList<AugmentedTask>?)
+
+class AugmentedMember(val member: MemberWithNameSurname, items: MutableList<AugmentedTask> = mutableListOf()) : ExpandableGroup<AugmentedTask>(userCF, items) {
 
     companion object {
-        fun emptyMember(): AugmentedMember = AugmentedMember(EmptyMember.emptyMemberName)
+        fun emptyMember(): AugmentedMember = AugmentedMember(MemberWithNameSurname("-1", "", ""))
 
         fun defaultMember(): AugmentedMember =
-            AugmentedMember("Member", mutableListOf(AugmentedTask.defaultAugmentedTask(), AugmentedTask.defaultAugmentedTask(), AugmentedTask.defaultAugmentedTask()))
+            AugmentedMember(MemberWithNameSurname("MemberCF", "nome", "cognome"), mutableListOf(AugmentedTask.defaultAugmentedTask(), AugmentedTask.defaultAugmentedTask(), AugmentedTask.defaultAugmentedTask()))
     }
 }
 
