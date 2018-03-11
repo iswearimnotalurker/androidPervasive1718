@@ -3,6 +3,8 @@ package com.crioprecipitati.androidpervasive1718.viewPresenter.leader.teamMonito
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
+import android.support.design.widget.BottomSheetBehavior
+import android.support.design.widget.BottomSheetDialog
 import android.view.View
 import com.crioprecipitati.androidpervasive1718.R
 import com.crioprecipitati.androidpervasive1718.model.LifeParameters
@@ -11,15 +13,17 @@ import com.crioprecipitati.androidpervasive1718.utils.*
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseActivity
 import com.crioprecipitati.androidpervasive1718.viewPresenter.leader.activitySelection.ActivitySelectionActivity
 import kotlinx.android.synthetic.main.activity_team_monitoring.*
+import kotlinx.android.synthetic.main.dialog_task.view.*
 
 
 class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitoringView, TeamMonitoringContract.TeamMonitoringPresenter>(), TeamMonitoringContract.TeamMonitoringView {
 
     override var presenter: TeamMonitoringContract.TeamMonitoringPresenter = TeamMonitoringPresenterImpl()
     override val layout: Int = R.layout.activity_team_monitoring
+    private lateinit var bottomSheetDialog: BottomSheetDialog
+    private lateinit var bottomSheetBehavior: BottomSheetBehavior<View>
     private lateinit var memberOnClick: (View, Int, Int) -> Unit
     private lateinit var taskOnClick: (View, Int, Int, Int) -> Unit
-    private var isRvClickable: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,9 +35,17 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
 
         btnCloseSession.setOnClickListener { presenter.onSessionCloseRequested() }
 
-        memberOnClick = { _, position, _ -> if (isRvClickable) presenter.onMemberSelected(position) }
+        val bottomSheetView = layoutInflater.inflate(R.layout.dialog_task, null)
+        bottomSheetDialog = BottomSheetDialog(getContext())
+        bottomSheetDialog.setContentView(bottomSheetView)
+        bottomSheetBehavior = BottomSheetBehavior.from(bottomSheetView.parent as View)
+        bottomSheetBehavior.peekHeight = 1000
 
-        taskOnClick = { _, memberPosition, taskPosition, _ -> if (isRvClickable) presenter.onTaskSelected(memberPosition, taskPosition) }
+        bottomSheetView.llTerminateTask.setOnClickListener { bottomSheetDialog.consumeBottomSheetDialog { presenter.onTaskCompletionRequested() } }
+        bottomSheetView.llDeleteTask.setOnClickListener { bottomSheetDialog.consumeBottomSheetDialog { presenter.onTaskDeletionRequested() } }
+
+        memberOnClick = { _, position, _ -> presenter.onMemberSelected(position) }
+        taskOnClick = { _, memberPosition, taskPosition, _ -> presenter.onTaskSelected(memberPosition, taskPosition) }
 
     }
 
@@ -45,15 +57,32 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
     override fun startLoadingState() {
         runOnUiThread {
             pbTeamSpinner.visibility = View.VISIBLE
-            isRvClickable = false
+            rvMemberList.visibility = View.GONE
         }
     }
 
     override fun stopLoadingState() {
         runOnUiThread {
             pbTeamSpinner.visibility = View.GONE
-            isRvClickable = true
+            rvMemberList.visibility = View.VISIBLE
         }
+    }
+
+    override fun showAndUpdateHealthParameters(lifeParameter: LifeParameters, value: Double) {
+        with(value.toString()) {
+            when (lifeParameter) {
+                LifeParameters.SYSTOLIC_BLOOD_PRESSURE -> tvSYS.setHealthParameterValue(this)
+                LifeParameters.DIASTOLIC_BLOOD_PRESSURE -> tvDIA.setHealthParameterValue(this)
+                LifeParameters.HEART_RATE -> tvHR.setHealthParameterValue(this)
+                LifeParameters.TEMPERATURE -> tvT.setHealthParameterValue(this)
+                LifeParameters.OXYGEN_SATURATION -> tvSp02.setHealthParameterValue(this)
+                LifeParameters.END_TIDAL_CARBON_DIOXIDE -> tvEtCO2.setHealthParameterValue(this)
+            }
+        }
+    }
+
+    override fun showTaskDialog() {
+        runOnUiThread { bottomSheetDialog.show() }
     }
 
     override fun showAndUpdateMemberAndTaskList() {
@@ -69,29 +98,13 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
         }
     }
 
-
-    override fun showAndUpdateHealthParameters(lifeParameter: LifeParameters, value: Double) {
-        with(value.toString()) {
-            when (lifeParameter) {
-                LifeParameters.SYSTOLIC_BLOOD_PRESSURE -> tvSYS.setHealthParameterValue(this)
-                LifeParameters.DIASTOLIC_BLOOD_PRESSURE -> tvDIA.setHealthParameterValue(this)
-                LifeParameters.HEART_RATE -> tvHR.setHealthParameterValue(this)
-                LifeParameters.TEMPERATURE -> tvT.setHealthParameterValue(this)
-                LifeParameters.OXYGEN_SATURATION -> tvSp02.setHealthParameterValue(this)
-                LifeParameters.END_TIDAL_CARBON_DIOXIDE -> tvEtCO2.setHealthParameterValue(this)
-            }
-        }
-    }
-
     override fun showActivitySelectionActivity(userCF: String) {
         val intent = Intent(this, ActivitySelectionActivity::class.java)
-        intent.putExtra(BundleStrings.memberExtraString,Member(userCF).generateBundle())
+        intent.putExtra(BundleStrings.memberExtraString, Member(userCF).generateBundle())
         startActivityForResult(intent, MagicNumbers.activitySelectionActivityLaunchIntentCode)
     }
 
-    override fun onSessionClosed() {
-        finish()
-    }
+    override fun onSessionClosed() = finish()
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (requestCode == MagicNumbers.activitySelectionActivityLaunchIntentCode) {

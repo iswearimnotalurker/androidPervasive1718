@@ -1,6 +1,7 @@
 package com.crioprecipitati.androidpervasive1718.utils
 
 import android.os.Bundle
+import android.support.design.widget.BottomSheetDialog
 import android.support.design.widget.TextInputEditText
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -16,6 +17,11 @@ inline fun consumeSessionButton(userCF: String, patientCF: String? = null, callb
     Prefs.userCF = userCF
     patientCF?.let { Prefs.patientCF = patientCF }
     callbackForOkParams()
+}
+
+inline fun BottomSheetDialog.consumeBottomSheetDialog(lambda: () -> Unit) {
+    this.dismiss()
+    lambda()
 }
 
 fun TextInputEditText.setTextWithBlankStringCheck(string: String) =
