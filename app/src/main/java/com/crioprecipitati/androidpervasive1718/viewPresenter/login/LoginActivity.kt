@@ -18,12 +18,11 @@ class LoginActivity : BaseActivity<LoginContract.LoginView, LoginContract.LoginP
     override var presenter: LoginContract.LoginPresenter = LoginPresenterImpl()
     override val layout: Int = R.layout.activity_login
     private lateinit var itemOnClick: (View, Int, Int) -> Unit
-    private var isRvClickable: Boolean = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        itemOnClick = { _, position, _ -> if(isRvClickable) presenter.onSessionSelected(position) }
+        itemOnClick = { _, position, _ -> presenter.onSessionSelected(position) }
 
         rgMemberType.setOnCheckedChangeListener { _, checkedId ->
             when (checkedId) {
@@ -59,18 +58,18 @@ class LoginActivity : BaseActivity<LoginContract.LoginView, LoginContract.LoginP
     override fun startLoadingState() {
         runOnUiThread {
             pbLoadingSpinner.visibility = View.VISIBLE
+            rvSessionList.visibility = View.GONE
             btnCreateNewSession.isEnabled = false
             btnRequestOpenSessions.isEnabled = false
-            isRvClickable = false
         }
     }
 
     override fun stopLoadingState() {
         runOnUiThread {
             pbLoadingSpinner.visibility = View.GONE
-            btnCreateNewSession.isEnabled = true
+            rvSessionList.visibility = View.VISIBLE
+            btnCreateNewSession.isEnabled = Prefs.memberType == MemberType.LEADER
             btnRequestOpenSessions.isEnabled = true
-            isRvClickable = true
         }
     }
 
@@ -79,7 +78,7 @@ class LoginActivity : BaseActivity<LoginContract.LoginView, LoginContract.LoginP
         etPatient.isEnabled = isEnabled
     }
 
-    override fun setupUserParams(memberType: MemberType, userCF: String, patientCF: String) {
+    override fun setupUserParams() {
 
         fun setupUIElements(leaderMode: Boolean) {
             rbLeader.isChecked = leaderMode
@@ -87,13 +86,13 @@ class LoginActivity : BaseActivity<LoginContract.LoginView, LoginContract.LoginP
             toggleLeaderMode(leaderMode)
         }
 
-        when (memberType) {
+        when (Prefs.memberType) {
             MemberType.LEADER -> setupUIElements(leaderMode = true)
             MemberType.MEMBER -> setupUIElements(leaderMode = false)
         }
 
-        etPatient.setTextWithBlankStringCheck(patientCF)
-        etUsername.setTextWithBlankStringCheck(userCF)
+        etPatient.setTextWithBlankStringCheck(Prefs.patientCF)
+        etUsername.setTextWithBlankStringCheck(Prefs.userCF)
     }
 
     override fun showAndUpdateSessionList() {

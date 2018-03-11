@@ -21,7 +21,7 @@ interface LoginContract {
 
         fun startTaskMonitoringActivity()
 
-        fun setupUserParams(memberType: MemberType, userCF: String, patientCF: String = "")
+        fun setupUserParams()
 
         fun toggleLeaderMode(isEnabled: Boolean)
     }

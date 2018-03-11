@@ -35,7 +35,7 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
     override fun resumeView() {
         WSHelper.initStartingPointWS()
         onSessionListRequested()
-        view?.setupUserParams(Prefs.memberType, Prefs.userCF, Prefs.patientCF)
+        view?.setupUserParams()
     }
 
     override fun detachView() {
