@@ -72,11 +72,19 @@ open class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContrac
                 }
             }
 
-            fun removeTask() {
-                val taskAssignment: TaskAssignment = this.objectify(body)
+            fun removeTask(passedTaskAssignment: TaskAssignment? = null) {
+                val taskAssignment: TaskAssignment = passedTaskAssignment ?: this.objectify(body)
                 currentAssignedTask?.let {
                     if (it.augmentedTask.task.name == taskAssignment.augmentedTask.task.name) removeAndUpdateCurrentTask()
                     else removeSpecificTask(taskAssignment)
+                }
+            }
+
+            fun changeTaskStatusHandling() {
+                val taskAssignment: TaskAssignment = this.objectify(body)
+                if (taskAssignment.augmentedTask.task.statusId == Status.FINISHED.id ||
+                    taskAssignment.augmentedTask.task.statusId == Status.ELIMINATED.id) {
+                    removeTask(taskAssignment)
                 }
             }
 
@@ -89,6 +97,7 @@ open class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContrac
             when (payloadWrapper.subject) {
                 WSOperations.NOTIFY -> notifyHandling()
                 WSOperations.REMOVE_TASK -> removeTask()
+                WSOperations.CHANGE_TASK_STATUS -> changeTaskStatusHandling()
                 WSOperations.UPDATE -> manageUpdate()
                 WSOperations.ADD_TASK -> newTaskAssigned()
                 WSOperations.MEMBER_COMEBACK_RESPONSE -> loadMemberTasks()
