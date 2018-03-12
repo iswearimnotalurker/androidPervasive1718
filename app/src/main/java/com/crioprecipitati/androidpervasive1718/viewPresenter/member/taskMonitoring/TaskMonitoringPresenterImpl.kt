@@ -1,6 +1,5 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonitoring
 
-import android.util.Log
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.Status
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.NotifierWSAdapter
@@ -11,6 +10,7 @@ import com.crioprecipitati.androidpervasive1718.utils.WSObserver
 import com.crioprecipitati.androidpervasive1718.utils.toJson
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BasePresenterImpl
 import model.*
+import trikita.log.Log
 import java.sql.Timestamp
 import java.util.*
 import kotlin.Comparator
@@ -18,12 +18,13 @@ import kotlin.Comparator
 open class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.TaskMonitoringView>(), TaskMonitoringContract.TaskMonitoringPresenter, WSObserver {
 
     private val channels = listOf(WSOperations.NOTIFY,
-            WSOperations.UPDATE,
-            WSOperations.MEMBER_COMEBACK_RESPONSE,
-            WSOperations.ADD_TASK,
-            WSOperations.ANSWER)
+        WSOperations.UPDATE,
+        WSOperations.MEMBER_COMEBACK_RESPONSE,
+        WSOperations.REMOVE_TASK,
+        WSOperations.ADD_TASK,
+        WSOperations.ANSWER)
 
-    private val queueAssignedTask = PriorityQueue<TaskAssignment>(10, Comparator<TaskAssignment>{ x, y ->
+    private val queueAssignedTask = PriorityQueue<TaskAssignment>(10, Comparator<TaskAssignment> { x, y ->
         x.augmentedTask.task.startTime.compareTo(y.augmentedTask.task.startTime)
     })
     private var currentAssignedTask: TaskAssignment? = null
@@ -47,7 +48,7 @@ open class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContrac
             this.augmentedTask.task.endTime = Timestamp(Date().time)
             TaskWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CHANGE_TASK_STATUS, this.toJson()).toJson())
             NotifierWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.CLOSE, Member(Prefs.userCF).toJson()).toJson())
-            updateTheCurrentTask()
+            removeAndUpdateCurrentTask()
         }
     }
 
@@ -67,18 +68,27 @@ open class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContrac
                 val task: TaskAssignment = this.objectify(body)
                 queueAssignedTask.offer(task)
                 currentAssignedTask ?: run {
-                    updateTheCurrentTask()
+                    removeAndUpdateCurrentTask()
                 }
             }
 
-            fun loadMemberTasks(){
+            fun removeTask() {
+                val taskAssignment: TaskAssignment = this.objectify(body)
+                currentAssignedTask?.let {
+                    if (it.augmentedTask.task.name == taskAssignment.augmentedTask.task.name) removeAndUpdateCurrentTask()
+                    else removeSpecificTask(taskAssignment)
+                }
+            }
+
+            fun loadMemberTasks() {
                 val members: AugmentedMembersAdditionNotification = this.objectify(body)
                 members.members.first().items?.forEach { queueAssignedTask.offer(TaskAssignment(Member(Prefs.userCF), it)) }
-                updateTheCurrentTask()
+                this@TaskMonitoringPresenterImpl.removeAndUpdateCurrentTask()
             }
 
             when (payloadWrapper.subject) {
                 WSOperations.NOTIFY -> notifyHandling()
+                WSOperations.REMOVE_TASK -> removeTask()
                 WSOperations.UPDATE -> manageUpdate()
                 WSOperations.ADD_TASK -> newTaskAssigned()
                 WSOperations.MEMBER_COMEBACK_RESPONSE -> loadMemberTasks()
@@ -87,13 +97,25 @@ open class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContrac
         }
     }
 
-    private fun updateTheCurrentTask() {
+    private fun removeAndUpdateCurrentTask() {
         try {
             currentAssignedTask = queueAssignedTask.remove()
+            updateViewAfterCurrentTaskUpdate()
         } catch (ex: NoSuchElementException) {
             currentAssignedTask = null
         }
-        currentAssignedTask?. run {
+    }
+
+    private fun removeSpecificTask(taskAssignment: TaskAssignment) {
+        try {
+            queueAssignedTask.remove(taskAssignment)
+        } catch (ex: NoSuchElementException) {
+            Log.d("removeSpecificTask: no such task found: $taskAssignment")
+        }
+    }
+
+    private fun updateViewAfterCurrentTaskUpdate() {
+        currentAssignedTask?.run {
             view?.showNewTask(currentAssignedTask!!.augmentedTask)
             NotifierWSAdapter.sendSubscribeToParametersMessage(currentAssignedTask!!.augmentedTask.linkedParameters)
         } ?: run {
