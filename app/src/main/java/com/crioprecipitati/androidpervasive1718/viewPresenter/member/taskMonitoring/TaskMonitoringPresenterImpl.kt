@@ -1,5 +1,6 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonitoring
 
+import com.crioprecipitati.androidpervasive1718.model.AugmentedMemberFromServer
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.Status
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.NotifierWSAdapter
@@ -17,10 +18,12 @@ import kotlin.Comparator
 
 open class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContract.TaskMonitoringView>(), TaskMonitoringContract.TaskMonitoringPresenter, WSObserver {
 
-    private val channels = listOf(WSOperations.NOTIFY,
+    private val channels = listOf(
+        WSOperations.NOTIFY,
         WSOperations.UPDATE,
         WSOperations.MEMBER_COMEBACK_RESPONSE,
         WSOperations.REMOVE_TASK,
+        WSOperations.CHANGE_TASK_STATUS,
         WSOperations.ADD_TASK,
         WSOperations.ANSWER)
 
@@ -89,8 +92,8 @@ open class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContrac
             }
 
             fun loadMemberTasks() {
-                val members: AugmentedMembersAdditionNotification = this.objectify(body)
-                members.members.first().items?.forEach { queueAssignedTask.offer(TaskAssignment(Member(Prefs.userCF), it)) }
+                val member: AugmentedMemberFromServer = this.objectify(body)
+                member.items?.forEach { queueAssignedTask.offer(TaskAssignment(Member(Prefs.userCF), it)) }
                 this@TaskMonitoringPresenterImpl.removeAndUpdateCurrentTask()
             }
 
@@ -109,15 +112,19 @@ open class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContrac
     private fun removeAndUpdateCurrentTask() {
         try {
             currentAssignedTask = queueAssignedTask.remove()
-            updateViewAfterCurrentTaskUpdate()
         } catch (ex: NoSuchElementException) {
             currentAssignedTask = null
         }
+        updateViewAfterCurrentTaskUpdate()
     }
 
     private fun removeSpecificTask(taskAssignment: TaskAssignment) {
         try {
-            queueAssignedTask.remove(taskAssignment)
+            with(queueAssignedTask) {
+                val temp = PriorityQueue(this)
+                clear()
+                queueAssignedTask.addAll(temp.filter { it.augmentedTask.task.name != taskAssignment.augmentedTask.task.name })
+            }
         } catch (ex: NoSuchElementException) {
             Log.d("removeSpecificTask: no such task found: $taskAssignment")
         }
