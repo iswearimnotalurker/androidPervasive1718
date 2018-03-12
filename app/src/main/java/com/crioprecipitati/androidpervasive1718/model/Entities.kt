@@ -3,7 +3,6 @@ package com.crioprecipitati.androidpervasive1718.model
 import android.os.Parcelable
 import com.crioprecipitati.androidpervasive1718.utils.KlaxonDate
 import com.crioprecipitati.androidpervasive1718.utils.KlaxonListLifeParameter
-import com.crioprecipitati.androidpervasive1718.utils.Prefs.userCF
 import com.thoughtbot.expandablerecyclerview.models.ExpandableGroup
 import kotlinx.android.parcel.Parcelize
 import java.sql.Timestamp
@@ -30,7 +29,7 @@ data class MemberWithNameSurname(val userCF: String, val name: String, val surna
 
 data class AugmentedMemberFromServer(val member: MemberWithNameSurname, val items: MutableList<AugmentedTask>?)
 
-class AugmentedMember(val member: MemberWithNameSurname, items: MutableList<AugmentedTask> = mutableListOf()) : ExpandableGroup<AugmentedTask>(userCF, items) {
+class AugmentedMember(val member: MemberWithNameSurname, items: MutableList<AugmentedTask> = mutableListOf()) : ExpandableGroup<AugmentedTask>(member.userCF, items) {
 
     companion object {
         fun emptyMember(): AugmentedMember = AugmentedMember(MemberWithNameSurname("-1", "", ""))
