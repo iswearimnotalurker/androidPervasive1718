@@ -27,6 +27,7 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
 
     private val channels = listOf(
         WSOperations.LIST_MEMBERS_RESPONSE,
+        WSOperations.ADD_MEMBER_NOTIFICATION,
         WSOperations.ADD_MEMBER,
         WSOperations.ADD_TASK,
         WSOperations.CHANGE_TASK_STATUS,
