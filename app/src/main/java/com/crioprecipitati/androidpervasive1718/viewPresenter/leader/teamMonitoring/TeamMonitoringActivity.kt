@@ -14,6 +14,7 @@ import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseActivity
 import com.crioprecipitati.androidpervasive1718.viewPresenter.leader.activitySelection.ActivitySelectionActivity
 import kotlinx.android.synthetic.main.activity_team_monitoring.*
 import kotlinx.android.synthetic.main.dialog_task.view.*
+import model.Notification
 
 
 class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitoringView, TeamMonitoringContract.TeamMonitoringPresenter>(), TeamMonitoringContract.TeamMonitoringView {
@@ -83,6 +84,19 @@ class TeamMonitoringActivity : BaseActivity<TeamMonitoringContract.TeamMonitorin
 
     override fun showTaskDialog() {
         runOnUiThread { bottomSheetDialog.show() }
+    }
+
+    override fun showAlarmedTask(notification: Notification) {
+        runOnUiThread {
+            when (notification.lifeParameter) {
+                LifeParameters.SYSTOLIC_BLOOD_PRESSURE -> tvSYS.setHealthParameterForNotification()
+                LifeParameters.DIASTOLIC_BLOOD_PRESSURE -> tvDIA.setHealthParameterForNotification()
+                LifeParameters.HEART_RATE -> tvHR.setHealthParameterForNotification()
+                LifeParameters.TEMPERATURE -> tvT.setHealthParameterForNotification()
+                LifeParameters.OXYGEN_SATURATION -> tvSp02.setHealthParameterForNotification()
+                LifeParameters.END_TIDAL_CARBON_DIOXIDE -> tvEtCO2.setHealthParameterForNotification()
+            }
+        }
     }
 
     override fun showAndUpdateMemberAndTaskList() {

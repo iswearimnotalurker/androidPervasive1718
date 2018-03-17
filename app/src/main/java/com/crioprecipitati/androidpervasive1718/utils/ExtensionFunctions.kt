@@ -1,5 +1,6 @@
 package com.crioprecipitati.androidpervasive1718.utils
 
+import android.graphics.Color
 import android.os.Bundle
 import android.support.design.widget.BottomSheetDialog
 import android.support.design.widget.TextInputEditText
@@ -11,6 +12,7 @@ import android.widget.TextView
 import com.crioprecipitati.androidpervasive1718.model.Activity
 import com.crioprecipitati.androidpervasive1718.model.Member
 import org.jetbrains.anko.doAsync
+import org.jetbrains.anko.textColor
 import org.jetbrains.anko.uiThread
 
 inline fun consumeSessionButton(userCF: String, patientCF: String? = null, callbackForOkParams: () -> Unit) {
@@ -94,6 +96,15 @@ fun TextView.setHealthParameterValue(value: String) {
     doAsync {
         uiThread {
             this@setHealthParameterValue.text = value
+            this@setHealthParameterValue.textColor = Color.BLACK
+        }
+    }
+}
+
+fun TextView.setHealthParameterForNotification() {
+    doAsync {
+        uiThread {
+            this@setHealthParameterForNotification.textColor = Color.RED
         }
     }
 }

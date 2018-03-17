@@ -34,7 +34,8 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
         WSOperations.REMOVE_TASK,
         WSOperations.ERROR_CHANGING_STATUS,
         WSOperations.ERROR_REMOVING_TASK,
-        WSOperations.UPDATE)
+        WSOperations.UPDATE,
+        WSOperations.NOTIFY)
 
     override fun attachView(view: TeamMonitoringContract.TeamMonitoringView) {
         super.attachView(view)
@@ -154,7 +155,13 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
                 view?.showError(taskError.error)
             }
 
+            fun notifyHandling() {
+                val notification: Notification = this.objectify(body)
+                view?.showAlarmedTask(notification)
+            }
+
             when (subject) {
+                WSOperations.NOTIFY -> notifyHandling()
                 WSOperations.UPDATE -> healthParameterUpdateHandling()
                 WSOperations.LIST_MEMBERS_RESPONSE -> memberListAdditionHandling()
                 WSOperations.ADD_MEMBER_NOTIFICATION -> memberAdditionHandling()

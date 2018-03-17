@@ -6,6 +6,7 @@ import com.crioprecipitati.androidpervasive1718.model.LifeParameters
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BasePresenter
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseView
+import model.Notification
 
 
 interface TeamMonitoringContract {
@@ -22,6 +23,7 @@ interface TeamMonitoringContract {
 
         fun onSessionClosed()
 
+        fun showAlarmedTask(notification: Notification)
     }
 
     interface TeamMonitoringPresenter : BasePresenter<TeamMonitoringView> {
