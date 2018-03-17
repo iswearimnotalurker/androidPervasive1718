@@ -40,7 +40,10 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
     }
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
-        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) presenter.onTaskCompletionRequested()
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) {
+            presenter.onTaskCompletionRequested()
+            return true
+        }
         return super.onKeyDown(keyCode, event)
     }
 
@@ -96,7 +99,7 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
     }
 
     private fun createNewTable(parameters: List<LifeParameters>) {
-        lifeParametersLinearLayout.setBackgroundColor(Color.LTGRAY)
+        lifeParametersLinearLayout.setBackgroundColor(Color.WHITE)
 
         parameters.forEach {
             val customWidth = lifeParametersLinearLayout.width / (parameters.size * 2)
@@ -127,10 +130,10 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
     private fun createParameterView(parameter: LifeParameters): Pair<TextView, TextView> {
         val parameterAcronymView = TextView(this)
         with(parameterAcronymView) {
-            setBackgroundColor(Color.GRAY)
+            setBackgroundColor(Color.LTGRAY)
             gravity = Gravity.CENTER
             setTextColor(Color.BLACK)
-            textSize = 18.0F
+            textSize = 20.0F
             text = parameter.acronym
         }
 
@@ -138,7 +141,7 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
         with(parameterValueView) {
             setBackgroundColor(Color.WHITE)
             gravity = Gravity.CENTER
-            textSize = 25.0F
+            textSize = 26.0F
             text = "0"
             setTextColor(Color.BLACK)
         }

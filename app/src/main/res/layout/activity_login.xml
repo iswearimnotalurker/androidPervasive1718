@@ -36,8 +36,8 @@
     </android.support.design.widget.TextInputLayout>
     <Button
             android:text="Crea nuova sessione"
-            android:layout_width="209dp"
-            android:layout_height="92dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:id="@+id/btnCreateNewSession"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/glVertical"
@@ -46,11 +46,15 @@
             android:fontFamily="monospace"
             android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/tilPatient"
+            android:textColor="@android:color/background_light"
+            android:background="@drawable/selector_button"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="8dp"
             />
     <Button
             android:text="Richiedi sessioni aperte"
-            android:layout_width="209dp"
-            android:layout_height="163dp"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
             android:id="@+id/btnRequestOpenSessions"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -58,6 +62,13 @@
             android:fontFamily="monospace"
             app:layout_constraintTop_toTopOf="@+id/glHorizontal"
             android:layout_marginTop="8dp"
+            android:textColor="@android:color/background_light"
+            android:backgroundTint="@android:color/holo_green_light"
+            android:layout_marginStart="8dp"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintVertical_bias="0.0"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
             />
     <android.support.constraint.Guideline
             android:layout_width="wrap_content"
@@ -78,12 +89,14 @@
             android:layout_width="350dp"
             android:layout_height="wrap_content"
             android:autofillHints="username"
-            app:layout_constraintStart_toStartOf="@+id/rgMemberType"
             android:id="@+id/tilUsername"
             app:layout_constraintTop_toTopOf="parent"
             android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/glVertical"
+            android:layout_marginStart="8dp"
+            app:layout_constraintHorizontal_bias="0.0"
             >
 
         <android.support.design.widget.TextInputEditText
@@ -106,6 +119,9 @@
             app:layout_constraintVertical_bias="0.0"
             app:layout_constraintStart_toStartOf="@+id/glVertical"
             android:layout_marginStart="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintHorizontal_bias="0.0"
             >
         <RadioButton
                 android:text="Leader"
@@ -159,6 +175,7 @@
             android:layout_marginStart="8dp"
             android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.0"
             >
     </android.support.v7.widget.RecyclerView>
 </android.support.constraint.ConstraintLayout>

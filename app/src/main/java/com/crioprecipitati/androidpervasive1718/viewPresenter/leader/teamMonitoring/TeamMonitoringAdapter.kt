@@ -36,20 +36,27 @@ class TeamMonitoringAdapter(private val memberList: List<AugmentedMember>,
 
     override fun onBindChildViewHolder(holder: TaskViewHolder, flatPosition: Int, group: ExpandableGroup<*>, childIndex: Int) {
         holder.onTaskClick(memberList.indexOfFirst { it.member.userCF == group.title }, childIndex, onChildClickListener)
-        holder.bind((group as AugmentedMember).items[childIndex])
+        holder.bind(childIndex + 1, (group as AugmentedMember).items[childIndex])
     }
 
     class MemberViewHolder(itemView: View) : GroupViewHolder(itemView) {
         @SuppressLint("SetTextI18n")
         fun bind(itemUser: AugmentedMember) {
-            itemView.tvUserCF.text = "${itemUser.member.name} ${itemUser.member.surname} - ${itemUser.items.size} task assegnati"
+            itemView.tvLeaderName.text = "${itemUser.member.name} ${itemUser.member.surname} (${itemUser.items.size} task)"
+            with(itemUser.items) {
+                when {
+                    isEmpty() -> itemView.tvUserFirstTask.text = "---"
+                    else -> itemView.tvUserFirstTask.text = first().activityName
+                }
+            }
         }
     }
 
     class TaskViewHolder(itemView: View) : ChildViewHolder(itemView) {
         @SuppressLint("SetTextI18n")
-        fun bind(itemActivity: AugmentedTask) {
-            itemView.tvTask.text = "Activity ${itemActivity.activityName}"
+        fun bind(ordinal: Int, itemActivity: AugmentedTask) {
+            itemView.tvOrdinal.text = "#$ordinal"
+            itemView.tvTask.text = itemActivity.activityName
         }
     }
 

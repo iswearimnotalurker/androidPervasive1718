@@ -4,6 +4,7 @@ import android.content.Context
 import android.os.Bundle
 import android.support.annotation.StringRes
 import android.support.v7.app.AppCompatActivity
+import android.view.WindowManager
 import org.jetbrains.anko.design.snackbar
 
 interface BaseView {
@@ -32,6 +33,7 @@ abstract class BaseActivity<V : BaseView, P : BasePresenter<V>> : AppCompatActiv
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(layout)
+        window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         presenter.attachView(view = this as V)
     }
 
