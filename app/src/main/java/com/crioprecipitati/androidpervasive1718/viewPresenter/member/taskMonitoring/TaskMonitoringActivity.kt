@@ -3,8 +3,8 @@ package com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonito
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.Gravity
+import android.view.KeyEvent
 import android.view.View
 import android.widget.TextView
 import com.crioprecipitati.androidpervasive1718.R
@@ -14,7 +14,6 @@ import com.crioprecipitati.androidpervasive1718.utils.setHealthParameterValue
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_task_monitoring.*
 import model.Notification
-import org.jetbrains.anko.sdk25.coroutines.onClick
 import org.jetbrains.anko.textColor
 
 open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMonitoringView, TaskMonitoringContract.TaskMonitoringPresenter>(), TaskMonitoringContract.TaskMonitoringView {
@@ -29,9 +28,7 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        btnEndOperation.onClick {
-            presenter.onTaskCompletionRequested()
-        }
+        btnEndOperation.setOnClickListener { presenter.onTaskCompletionRequested() }
 
         oldColors = activityName.textColors
     }
@@ -40,6 +37,11 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
         super.onResume()
         initializeParametersViews()
         showEmptyTask()
+    }
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_VOLUME_UP || keyCode == KeyEvent.KEYCODE_VOLUME_DOWN) presenter.onTaskCompletionRequested()
+        return super.onKeyDown(keyCode, event)
     }
 
     override fun startLoadingState() {
@@ -71,18 +73,25 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
         }
     }
 
-    override fun showAlarmedTask(notification : Notification) {
+    override fun showAlarmedTask(notification: Notification) {
         runOnUiThread {
-            parametersViews[notification.lifeParameter]!!.first.textColor = Color.RED
-            parametersViews[notification.lifeParameter]!!.second.textColor = Color.RED
+            with(parametersViews[notification.lifeParameter]!!) {
+                first.textColor = Color.RED
+                second.textColor = Color.RED
+            }
         }
     }
 
     override fun updateHealthParameterValues(parameter: LifeParameters, value: Double) {
         runOnUiThread {
-            parametersViews[parameter]!!.first.textColor = oldColors.defaultColor
-            parametersViews[parameter]!!.second.textColor = oldColors.defaultColor
-            parametersViews[parameter]!!.second.setHealthParameterValue(value.toString())
+            with(parametersViews[parameter]!!) {
+                first.textColor = oldColors.defaultColor
+
+                with(second) {
+                    textColor = oldColors.defaultColor
+                    setHealthParameterValue(value.toString())
+                }
+            }
         }
     }
 
@@ -91,14 +100,22 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
 
         parameters.forEach {
             val customWidth = lifeParametersLinearLayout.width / (parameters.size * 2)
+            with(parametersViews[it]!!) {
+                with(first) {
+                    height = lifeParametersLinearLayout.height
+                    width = customWidth
+                }
 
-            parametersViews[it]!!.first.height = lifeParametersLinearLayout.height
-            parametersViews[it]!!.first.width = customWidth
-            parametersViews[it]!!.second.height = lifeParametersLinearLayout.height
-            parametersViews[it]!!.second.width = customWidth
+                with(second) {
+                    height = lifeParametersLinearLayout.height
+                    width = customWidth
+                }
+            }
 
-            lifeParametersLinearLayout.addView(parametersViews[it]!!.first)
-            lifeParametersLinearLayout.addView(parametersViews[it]!!.second)
+            with(lifeParametersLinearLayout) {
+                addView(parametersViews[it]!!.first)
+                addView(parametersViews[it]!!.second)
+            }
 
         }
     }
@@ -109,18 +126,22 @@ open class TaskMonitoringActivity : BaseActivity<TaskMonitoringContract.TaskMoni
 
     private fun createParameterView(parameter: LifeParameters): Pair<TextView, TextView> {
         val parameterAcronymView = TextView(this)
-        parameterAcronymView.setBackgroundColor(Color.GRAY)
-        parameterAcronymView.gravity = Gravity.CENTER
-        parameterAcronymView.setTextColor(Color.BLACK)
-        parameterAcronymView.textSize = 18.0F
-        parameterAcronymView.text = parameter.acronym
+        with(parameterAcronymView) {
+            setBackgroundColor(Color.GRAY)
+            gravity = Gravity.CENTER
+            setTextColor(Color.BLACK)
+            textSize = 18.0F
+            text = parameter.acronym
+        }
 
         val parameterValueView = TextView(this)
-        parameterValueView.setBackgroundColor(Color.WHITE)
-        parameterValueView.gravity = Gravity.CENTER
-        parameterAcronymView.textSize = 25.0F
-        parameterValueView.text = "0"
-        parameterValueView.setTextColor(Color.BLACK)
+        with(parameterValueView) {
+            setBackgroundColor(Color.WHITE)
+            gravity = Gravity.CENTER
+            textSize = 25.0F
+            text = "0"
+            setTextColor(Color.BLACK)
+        }
 
         return Pair(parameterAcronymView, parameterValueView)
     }
