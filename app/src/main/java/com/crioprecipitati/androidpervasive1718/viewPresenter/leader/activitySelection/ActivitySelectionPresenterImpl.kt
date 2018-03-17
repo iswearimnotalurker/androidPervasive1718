@@ -1,17 +1,14 @@
 package com.crioprecipitati.androidpervasive1718.viewPresenter.leader.activitySelection
 
-import android.content.Intent
 import com.crioprecipitati.androidpervasive1718.model.Activity
-import com.crioprecipitati.androidpervasive1718.model.AugmentedTask
-import com.crioprecipitati.androidpervasive1718.model.Member
-import com.crioprecipitati.androidpervasive1718.networking.webSockets.NotifierWSAdapter
 import com.crioprecipitati.androidpervasive1718.networking.webSockets.TaskWSAdapter
 import com.crioprecipitati.androidpervasive1718.utils.CallbackHandler
-import com.crioprecipitati.androidpervasive1718.utils.Prefs
 import com.crioprecipitati.androidpervasive1718.utils.WSObserver
-import com.crioprecipitati.androidpervasive1718.utils.toJson
 import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BasePresenterImpl
-import model.*
+import model.ActivityAdditionNotification
+import model.PayloadWrapper
+import model.WSOperations
+import model.objectify
 
 class ActivitySelectionPresenterImpl : BasePresenterImpl<ActivitySelectionContract.ActivitySelectionView>(), ActivitySelectionContract.ActivitySelectionPresenter, WSObserver {
 
@@ -22,6 +19,8 @@ class ActivitySelectionPresenterImpl : BasePresenterImpl<ActivitySelectionContra
     override fun attachView(view: ActivitySelectionContract.ActivitySelectionView) {
         super.attachView(view)
         CallbackHandler.attach(channels, this)
+        TaskWSAdapter.sendGetActivitiesRequest()
+        view.startLoadingState()
     }
 
     override fun detachView() {
@@ -29,23 +28,17 @@ class ActivitySelectionPresenterImpl : BasePresenterImpl<ActivitySelectionContra
         CallbackHandler.detach(channels, this)
     }
 
-    override fun onActivityTypeSelected(activityTypeId: Int) {
-        TaskWSAdapter.sendGetActivitiesRequest(activityTypeId)
-        view?.startLoadingState()
-    }
-
-
-
-    override fun onActivitySelected(activityIndex: Int) {
-        view?.startTeamMonitoringActivity(activityList[activityIndex])
+    override fun onActivitySelected(activityId: Int) {
+        view?.startTeamMonitoringActivity(activityList.first { it.id == activityId })
     }
 
     override fun update(payloadWrapper: PayloadWrapper) {
         with(payloadWrapper) {
             fun activityAdditionHandling() {
                 val activityAddition: ActivityAdditionNotification = this.objectify(body)
-                activityList = activityAddition.activities.toMutableList()
-                view?.showActivityByActivityType()
+                activityList.clear()
+                activityList.addAll(activityAddition.activities.toMutableList())
+                view?.showActivitiesList()
                 view?.stopLoadingState()
             }
 

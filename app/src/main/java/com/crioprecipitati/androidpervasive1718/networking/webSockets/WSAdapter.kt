@@ -4,7 +4,6 @@ import com.crioprecipitati.androidpervasive1718.model.LifeParameters
 import com.crioprecipitati.androidpervasive1718.model.Member
 import com.crioprecipitati.androidpervasive1718.model.SessionAssignment
 import com.crioprecipitati.androidpervasive1718.utils.*
-import model.ActivityRequest
 import model.PayloadWrapper
 import model.Subscription
 import model.WSOperations
@@ -66,11 +65,11 @@ object TaskWSAdapter : WSAdapter(WS_DEFAULT_TASK_URI) {
             Unit.toJson()).toJson()
     )
 
-    fun sendGetActivitiesRequest(activityTypeId: Int) = TaskWSAdapter.send(
+    fun sendGetActivitiesRequest() = TaskWSAdapter.send(
             PayloadWrapper(
                 Prefs.sessionId,
                 WSOperations.GET_ALL_ACTIVITIES,
-                    ActivityRequest(activityTypeId).toJson()).toJson()
+                Unit.toJson()).toJson()
     )
 
     override fun changeAddress(){

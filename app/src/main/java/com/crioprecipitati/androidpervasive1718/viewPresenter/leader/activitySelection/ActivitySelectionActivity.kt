@@ -2,6 +2,7 @@ package com.crioprecipitati.androidpervasive1718.viewPresenter.leader.activitySe
 
 import android.content.Intent
 import android.os.Bundle
+import android.support.v7.widget.RecyclerView
 import android.view.View
 import com.crioprecipitati.androidpervasive1718.R
 import com.crioprecipitati.androidpervasive1718.model.Activites
@@ -17,16 +18,14 @@ class ActivitySelectionActivity : BaseActivity<ActivitySelectionContract.Activit
 
     override var presenter: ActivitySelectionContract.ActivitySelectionPresenter = ActivitySelectionPresenterImpl()
     override val layout: Int = R.layout.activity_activity_selection
-    private lateinit var itemOnClick: (View, Int, Int) -> Unit
+    private lateinit var activityOnClick: (Int) -> Unit
+    private lateinit var activitiesOnClick: (Int) -> Unit
     private lateinit var member: Member
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        itemOnClick = { _ , position , _ -> presenter.onActivitySelected(position)}
-
-        btnDrugs.setOnClickListener{presenter.onActivityTypeSelected(Activites.DRUGS.id)}
-        btnManeuvers.setOnClickListener{presenter.onActivityTypeSelected(Activites.MANEUVERS.id)}
+        activityOnClick = { activityId -> presenter.onActivitySelected(activityId) }
 
         member = Unbundler.extractMember(intent.getBundleExtra(BundleStrings.memberExtraString))
 
@@ -44,15 +43,20 @@ class ActivitySelectionActivity : BaseActivity<ActivitySelectionContract.Activit
         }
     }
 
-    override fun showActivityByActivityType() {
+    override fun showActivitiesList() {
         runOnUiThread {
-            with(rvActivityList) {
-                adapter = null
-                layoutManager = null
-                layoutManager = android.support.v7.widget.LinearLayoutManager(this@ActivitySelectionActivity, android.widget.LinearLayout.VERTICAL, false)
-                adapter = ActivityListAdapter(presenter.activityList, itemOnClick)
-                adapter.notifyDataSetChanged()
+            fun renderList(rv: RecyclerView, list: List<Activity>) {
+                with(rv) {
+                    adapter = null
+                    layoutManager = null
+                    layoutManager = android.support.v7.widget.LinearLayoutManager(this@ActivitySelectionActivity, android.widget.LinearLayout.VERTICAL, false)
+                    adapter = ActivityListAdapter(list, activityOnClick)
+                    adapter.notifyDataSetChanged()
+                }
             }
+
+            renderList(rvDrugsList, presenter.activityList.filter { it.activityTypeId == Activites.DRUGS.id })
+            renderList(rvManouversList, presenter.activityList.filter { it.activityTypeId == Activites.MANEUVERS.id })
 
         }
     }

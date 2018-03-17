@@ -67,6 +67,14 @@ fun <T : RecyclerView.ViewHolder> T.onClick(flatPosition: Int? = null, event: (v
     return this
 }
 
+fun <T : RecyclerView.ViewHolder> T.onActivityClick(activityId: Int, event: (activityId: Int) -> Unit): T {
+    this.itemView.setOnClickListener {
+        event.invoke(activityId)
+    }
+    return this
+}
+
+
 fun <T : RecyclerView.ViewHolder> T.onMemberLongClick(flatPosition: Int? = null, event: (view: View, position: Int, type: Int) -> Unit): T {
     this.itemView.setOnLongClickListener {
         event(it, flatPosition
