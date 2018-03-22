@@ -34,14 +34,12 @@ open class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContrac
 
     override fun attachView(view: TaskMonitoringContract.TaskMonitoringView) {
         super.attachView(view)
-        Log.d("Task monitoring pres", "Mi sto attaccando alla view")
         CallbackHandler.attach(channels, this)
         TaskWSAdapter.sendAddMemberMessage()
     }
 
     override fun detachView() {
         super.detachView()
-        Log.d("Task monitoring pres", "Mi sto staccando dalla view")
         CallbackHandler.detach(channels, this)
     }
 
@@ -134,8 +132,6 @@ open class TaskMonitoringPresenterImpl : BasePresenterImpl<TaskMonitoringContrac
         currentAssignedTask?.run {
             view?.showNewTask(currentAssignedTask!!.augmentedTask)
             NotifierWSAdapter.sendSubscribeToParametersMessage(currentAssignedTask!!.augmentedTask.linkedParameters)
-        } ?: run {
-            view?.showEmptyTask()
-        }
+        } ?: view?.showEmptyTask()
     }
 }
