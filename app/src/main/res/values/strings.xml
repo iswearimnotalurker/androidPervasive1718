@@ -1,6 +1,6 @@
 <resources>
     <string name="app_name">HERMESS</string>
-    <string name="title_activity_login">LoginActivity</string>
+    <string name="title_activity_login">HERMESS</string>
     <string name="title_activity_task_monitoring">TaskMonitoringActivity</string>
     <string name="title_activity_activity_selection">TaskSelectionActivity</string>
     <string name="title_activity_team_monitoring">TeamMonitoringActivity</string>
