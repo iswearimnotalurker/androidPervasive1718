@@ -99,6 +99,8 @@ class TeamMonitoringPresenterImpl : BasePresenterImpl<TeamMonitoringContract.Tea
         RestApiManager
             .createService(SessionApi::class.java)
             .closeSessionBySessionId(Prefs.sessionId)
+            .doOnSubscribe { view?.startLoadingState() }
+            .doAfterTerminate { view?.stopLoadingState() }
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe(
                 {
