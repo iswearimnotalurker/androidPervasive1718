@@ -1,7 +1,7 @@
 package com.crioprecipitati.androidpervasive1718.networking
 
 import com.crioprecipitati.androidpervasive1718.BuildConfig
-import com.crioprecipitati.androidpervasive1718.utils.HTTP_SESSION_BASE_URL
+import com.crioprecipitati.androidpervasive1718.utils.Prefs
 import io.reactivex.schedulers.Schedulers
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -22,7 +22,7 @@ class RestApiManager {
                     .build()
 
             val retrofit = Retrofit.Builder()
-                .baseUrl(HTTP_SESSION_BASE_URL)
+                .baseUrl("http://${Prefs.ip}:8500/")
                     .client(client)
                     .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
                     .addConverterFactory(GsonConverterFactory.create())

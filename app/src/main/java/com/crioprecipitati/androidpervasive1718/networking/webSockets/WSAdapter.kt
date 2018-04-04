@@ -45,7 +45,7 @@ object SessionWSAdapter : WSAdapter(WS_DEFAULT_SESSION_URI) {
         SessionWSAdapter.send(PayloadWrapper(Prefs.sessionId, WSOperations.NEW_SESSION, SessionAssignment(Prefs.patientCF, Prefs.userCF).toJson()).toJson())
 
     override fun changeAddress() {
-        super.baseAddress = WS_DEFAULT_SESSION_URI
+        super.baseAddress = "ws://${Prefs.ip}:8501/session"
     }
 
 }
@@ -79,7 +79,7 @@ object TaskWSAdapter : WSAdapter(WS_DEFAULT_TASK_URI) {
     )
 
     override fun changeAddress(){
-        super.baseAddress = "ws://$CURRENT_LOCAL_IP:820${Prefs.instanceId}/task"
+        super.baseAddress = "ws://${Prefs.ip}:820${Prefs.instanceId}/task"
     }
 
 
@@ -105,7 +105,7 @@ object NotifierWSAdapter : WSAdapter(WS_DEFAULT_NOTIFIER_URI) {
 
 
     override fun changeAddress(){
-        super.baseAddress = "ws://$CURRENT_LOCAL_IP:830${Prefs.instanceId}/instanceid/${Prefs.instanceId}/notifier"
+        super.baseAddress = "ws://${Prefs.ip}:830${Prefs.instanceId}/instanceid/${Prefs.instanceId}/notifier"
     }
 }
 
@@ -114,10 +114,12 @@ object WSHelper {
     private var alreadyOpened = false
 
     fun initStartingPointWS() {
+        SessionWSAdapter.changeAddress()
         SessionWSAdapter.initWS()
     }
 
     fun initAfterIpChange() {
+        SessionWSAdapter.changeAddress()
         SessionWSAdapter.initWS(true)
         alreadyOpened = false
     }
@@ -128,6 +130,8 @@ object WSHelper {
             NotifierWSAdapter.closeWS()
         }
         SessionWSAdapter.closeWS()
+        TaskWSAdapter.changeAddress()
+        NotifierWSAdapter.changeAddress()
         TaskWSAdapter.initWS()
         NotifierWSAdapter.initWS()
         alreadyOpened = true
