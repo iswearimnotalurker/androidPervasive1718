@@ -12,10 +12,16 @@ import trikita.log.Log
 abstract class WSAdapter(@Volatile var baseAddress: String) {
     private var webSocket: BaseWebSocket? = null
 
-    fun initWS() {
-        webSocket ?: run {
-            Log.d("[START WS] $baseAddress")
-            webSocket = BaseWebSocket(baseAddress, CallbackHandler::onMessageReceived)
+    private fun instantiateWS() {
+        Log.d("[START WS] $baseAddress")
+        webSocket = BaseWebSocket(baseAddress, CallbackHandler::onMessageReceived)
+    }
+
+    fun initWS(forceReInit: Boolean = false) {
+        when {
+            forceReInit -> instantiateWS()
+            webSocket == null -> instantiateWS()
+            else -> webSocket
         }
     }
 
@@ -105,10 +111,15 @@ object NotifierWSAdapter : WSAdapter(WS_DEFAULT_NOTIFIER_URI) {
 
 object WSHelper {
 
-    var alreadyOpened = false
+    private var alreadyOpened = false
 
     fun initStartingPointWS() {
         SessionWSAdapter.initWS()
+    }
+
+    fun initAfterIpChange() {
+        SessionWSAdapter.initWS(true)
+        alreadyOpened = false
     }
 
     fun setupWSAfterSessionHandshake() {

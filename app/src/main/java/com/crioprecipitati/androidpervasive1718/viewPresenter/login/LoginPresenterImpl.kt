@@ -43,6 +43,11 @@ class LoginPresenterImpl : BasePresenterImpl<LoginContract.LoginView>(), LoginCo
         CallbackHandler.detach(channels, this)
     }
 
+    override fun onIpChanged() {
+        WSHelper.initAfterIpChange()
+        onSessionListRequested()
+    }
+
     override fun onMemberTypeChanged(memberType: MemberType) {
         Prefs.memberType = memberType
         onSessionListRequested()

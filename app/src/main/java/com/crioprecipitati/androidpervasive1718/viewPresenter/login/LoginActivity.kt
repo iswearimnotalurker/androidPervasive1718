@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
+import android.widget.EditText
 import com.crioprecipitati.androidpervasive1718.R
 import com.crioprecipitati.androidpervasive1718.utils.Prefs
 import com.crioprecipitati.androidpervasive1718.utils.consumeSessionButton
@@ -12,6 +13,7 @@ import com.crioprecipitati.androidpervasive1718.viewPresenter.base.BaseActivity
 import com.crioprecipitati.androidpervasive1718.viewPresenter.leader.teamMonitoring.TeamMonitoringActivity
 import com.crioprecipitati.androidpervasive1718.viewPresenter.member.taskMonitoring.TaskMonitoringActivity
 import kotlinx.android.synthetic.main.activity_login.*
+import org.jetbrains.anko.*
 
 class LoginActivity : BaseActivity<LoginContract.LoginView, LoginContract.LoginPresenter>(), LoginContract.LoginView {
 
@@ -35,6 +37,21 @@ class LoginActivity : BaseActivity<LoginContract.LoginView, LoginContract.LoginP
 
         btnCreateNewSession.setOnClickListener { consumeSessionButton(etUsername.text.toString(), etPatient.text.toString()) { presenter.onNewSessionRequested() } }
         btnRequestOpenSessions.setOnClickListener { consumeSessionButton(etUsername.text.toString()) { presenter.onSessionListRequested() } }
+
+        btnShowIPDialog.setOnClickListener {
+            alert("Change main IP address") {
+                var ipAddress = EditText(ctx)
+                customView {
+                    ipAddress = editText(Prefs.ip)
+                }
+                yesButton {
+                    Prefs.ip = ipAddress.text.toString()
+                    toast("New IP set to: ${Prefs.ip}")
+                    presenter.onIpChanged()
+                }
+                noButton { "Cancel" }
+            }.show()
+        }
 
         etUsername.setOnFocusChangeListener { _, hasFocus ->
             if (!hasFocus) {

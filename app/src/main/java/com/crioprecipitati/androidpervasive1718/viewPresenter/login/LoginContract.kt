@@ -32,6 +32,8 @@ interface LoginContract {
 
         fun resumeView()
 
+        fun onIpChanged()
+
         fun onMemberTypeChanged(memberType: MemberType)
 
         fun onNewSessionRequested()
